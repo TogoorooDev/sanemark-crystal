@@ -465,7 +465,7 @@ bar
 ```````````````````````````````` example
 *→*→*→
 .
-<hr />
+<hr>
 ````````````````````````````````
 
 
@@ -533,9 +533,9 @@ optionally by any number of spaces, forms a
 ---
 ___
 .
-<hr />
-<hr />
-<hr />
+<hr>
+<hr>
+<hr>
 ````````````````````````````````
 
 
@@ -575,9 +575,9 @@ One to three spaces indent are allowed:
   ***
    ***
 .
-<hr />
-<hr />
-<hr />
+<hr>
+<hr>
+<hr>
 ````````````````````````````````
 
 
@@ -605,7 +605,7 @@ More than three characters may be used:
 ```````````````````````````````` example
 _____________________________________
 .
-<hr />
+<hr>
 ````````````````````````````````
 
 
@@ -614,21 +614,21 @@ Spaces are allowed between the characters:
 ```````````````````````````````` example
  - - -
 .
-<hr />
+<hr>
 ````````````````````````````````
 
 
 ```````````````````````````````` example
  **  * ** * ** * **
 .
-<hr />
+<hr>
 ````````````````````````````````
 
 
 ```````````````````````````````` example
 -     -      -      -
 .
-<hr />
+<hr>
 ````````````````````````````````
 
 
@@ -637,7 +637,7 @@ Spaces are allowed at the end:
 ```````````````````````````````` example
 - - - -    
 .
-<hr />
+<hr>
 ````````````````````````````````
 
 
@@ -676,7 +676,7 @@ Thematic breaks do not need blank lines before or after:
 <ul>
 <li>foo</li>
 </ul>
-<hr />
+<hr>
 <ul>
 <li>bar</li>
 </ul>
@@ -691,7 +691,7 @@ Foo
 bar
 .
 <p>Foo</p>
-<hr />
+<hr>
 <p>bar</p>
 ````````````````````````````````
 
@@ -723,7 +723,7 @@ interpretations of a line, the thematic break takes precedence:
 <ul>
 <li>Foo</li>
 </ul>
-<hr />
+<hr>
 <ul>
 <li>Bar</li>
 </ul>
@@ -739,7 +739,7 @@ If you want a thematic break in a list item, use a different bullet:
 <ul>
 <li>Foo</li>
 <li>
-<hr />
+<hr>
 </li>
 </ul>
 ````````````````````````````````
@@ -937,9 +937,9 @@ lines, and they can interrupt paragraphs:
 ## foo
 ****
 .
-<hr />
+<hr>
 <h2>foo</h2>
-<hr />
+<hr>
 ````````````````````````````````
 
 
@@ -1070,7 +1070,7 @@ Four spaces indent is too much:
 
 Foo
 </code></pre>
-<hr />
+<hr>
 ````````````````````````````````
 
 
@@ -1108,7 +1108,7 @@ Foo
 <p>Foo
 = =</p>
 <p>Foo</p>
-<hr />
+<hr>
 ````````````````````````````````
 
 
@@ -1161,7 +1161,7 @@ line] in a list item or block quote:
 <blockquote>
 <p>Foo</p>
 </blockquote>
-<hr />
+<hr>
 ````````````````````````````````
 
 
@@ -1185,7 +1185,7 @@ bar
 <ul>
 <li>Foo</li>
 </ul>
-<hr />
+<hr>
 ````````````````````````````````
 
 
@@ -1214,7 +1214,7 @@ Bar
 ---
 Baz
 .
-<hr />
+<hr>
 <h2>Foo</h2>
 <h2>Bar</h2>
 <p>Baz</p>
@@ -1239,8 +1239,8 @@ in these examples gets interpreted as a thematic break:
 ---
 ---
 .
-<hr />
-<hr />
+<hr>
+<hr>
 ````````````````````````````````
 
 
@@ -1251,7 +1251,7 @@ in these examples gets interpreted as a thematic break:
 <ul>
 <li>foo</li>
 </ul>
-<hr />
+<hr>
 ````````````````````````````````
 
 
@@ -1261,7 +1261,7 @@ in these examples gets interpreted as a thematic break:
 .
 <pre><code>foo
 </code></pre>
-<hr />
+<hr>
 ````````````````````````````````
 
 
@@ -1272,7 +1272,7 @@ in these examples gets interpreted as a thematic break:
 <blockquote>
 <p>foo</p>
 </blockquote>
-<hr />
+<hr>
 ````````````````````````````````
 
 
@@ -1336,7 +1336,7 @@ baz
 .
 <p>Foo
 bar</p>
-<hr />
+<hr>
 <p>baz</p>
 ````````````````````````````````
 
@@ -1352,7 +1352,7 @@ baz
 .
 <p>Foo
 bar</p>
-<hr />
+<hr>
 <p>baz</p>
 ````````````````````````````````
 
@@ -1530,7 +1530,7 @@ Heading
 <h2>Heading</h2>
 <pre><code>foo
 </code></pre>
-<hr />
+<hr>
 ````````````````````````````````
 
 
@@ -2449,7 +2449,7 @@ break]:
 aaa     
 bbb     
 .
-<p>aaa<br />
+<p>aaa<br>
 bbb</p>
 ````````````````````````````````
 
@@ -2635,7 +2635,7 @@ without changing the meaning:
 <blockquote>
 <p>foo</p>
 </blockquote>
-<hr />
+<hr>
 ````````````````````````````````
 
 
@@ -2823,7 +2823,7 @@ quotes:
 <blockquote>
 <p>aaa</p>
 </blockquote>
-<hr />
+<hr>
 <blockquote>
 <p>bbb</p>
 </blockquote>
@@ -4711,7 +4711,7 @@ A backslash at the end of the line is a [hard line break]:
 foo\
 bar
 .
-<p>foo<br />
+<p>foo<br>
 bar</p>
 ````````````````````````````````
 
@@ -4866,7 +4866,7 @@ shouldn't rely on HTML-specific rendering assumptions.
 (Existing implementations differ in their treatment of internal
 spaces and [line endings].  Some, including `Markdown.pl` and
 `showdown`, convert an internal [line ending] into a
-`<br />` tag.  But this makes things difficult for those who like to
+`<br>` tag.  But this makes things difficult for those who like to
 hard-wrap their paragraphs, since a line break in the midst of a code
 span will cause an unintended line break in the output.  Others just
 leave internal spaces as they are, which is fine if only HTML is being
@@ -7975,13 +7975,13 @@ foo <a href="\*">
 A line break (not in a code span or HTML tag) that is preceded
 by two or more spaces and does not occur at the end of a block
 is parsed as a [hard line break](@) (rendered
-in HTML as a `<br />` tag):
+in HTML as a `<br>` tag):
 
 ```````````````````````````````` example
 foo  
 baz
 .
-<p>foo<br />
+<p>foo<br>
 baz</p>
 ````````````````````````````````
 
@@ -7993,7 +7993,7 @@ For a more visible alternative, a backslash before the
 foo\
 baz
 .
-<p>foo<br />
+<p>foo<br>
 baz</p>
 ````````````````````````````````
 
@@ -8004,7 +8004,7 @@ More than two spaces can be used:
 foo       
 baz
 .
-<p>foo<br />
+<p>foo<br>
 baz</p>
 ````````````````````````````````
 
@@ -8015,7 +8015,7 @@ Leading spaces at the beginning of the next line are ignored:
 foo  
      bar
 .
-<p>foo<br />
+<p>foo<br>
 bar</p>
 ````````````````````````````````
 
@@ -8024,7 +8024,7 @@ bar</p>
 foo\
      bar
 .
-<p>foo<br />
+<p>foo<br>
 bar</p>
 ````````````````````````````````
 
@@ -8036,7 +8036,7 @@ that allow inline content:
 *foo  
 bar*
 .
-<p><em>foo<br />
+<p><em>foo<br>
 bar</em></p>
 ````````````````````````````````
 
@@ -8045,7 +8045,7 @@ bar</em></p>
 *foo\
 bar*
 .
-<p><em>foo<br />
+<p><em>foo<br>
 bar</em></p>
 ````````````````````````````````
 

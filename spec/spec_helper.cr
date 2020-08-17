@@ -43,7 +43,7 @@ def assert_exapmle(file, section, index, example)
   html = example["html"].gsub("→", "\t")
   line = example["line"].to_i
 
-  options = Markd::Options.new
+  options = Markd::Options.new(join_lines: true)
   it "- #{index}\n#{show_space(markdown)}", file, line do
     output = Markd.to_html(markdown, options)
     output.should eq(html), file, line
