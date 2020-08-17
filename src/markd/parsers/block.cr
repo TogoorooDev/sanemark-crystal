@@ -11,7 +11,6 @@ module Markd::Parser
       Node::Type::BlockQuote    => Rule::BlockQuote.new,
       Node::Type::Heading       => Rule::Heading.new,
       Node::Type::CodeBlock     => Rule::CodeBlock.new,
-      Node::Type::HTMLBlock     => Rule::HTMLBlock.new,
       Node::Type::ThematicBreak => Rule::ThematicBreak.new,
       Node::Type::List          => Rule::List.new,
       Node::Type::Item          => Rule::Item.new,
@@ -172,10 +171,6 @@ module Markd::Parser
         if RULES[container_type].accepts_lines?
           add_line
 
-          # if HtmlBlock, check for end condition
-          if (container_type.html_block? && match_html_block?(container))
-            token(container, @current_line)
-          end
         elsif @offset < line.size && !@blank
           # create paragraph container for line
           add_child(Node::Type::Paragraph, @offset)
@@ -325,13 +320,5 @@ module Markd::Parser
       nil
     end
 
-    private def match_html_block?(container : Node)
-      if block_type = container.data["html_block_type"]
-        block_type = block_type.as(Int32)
-        block_type >= 0 && block_type <= 4 && Rule::HTML_BLOCK_CLOSE[block_type].match(@line[@offset..-1])
-      else
-        false
-      end
-    end
   end
 end
