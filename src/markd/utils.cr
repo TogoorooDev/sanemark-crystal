@@ -12,6 +12,5 @@ module Markd
     end
 
     DECODE_ENTITIES_REGEX = Regex.new("\\\\" + Rule::ESCAPABLE_STRING, Regex::Options::IGNORE_CASE)
-
   end
 end

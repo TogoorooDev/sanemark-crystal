@@ -170,7 +170,6 @@ module Markd::Parser
 
         if RULES[container_type].accepts_lines?
           add_line
-
         elsif @offset < line.size && !@blank
           # create paragraph container for line
           add_child(Node::Type::Paragraph, @offset)
@@ -203,7 +202,7 @@ module Markd::Parser
       container.open = false
       container.source_pos = {
         container.source_pos[0],
-        {line_number, @last_line_length}
+        {line_number, @last_line_length},
       }
       RULES[container.type].token(self, container)
 
@@ -319,6 +318,5 @@ module Markd::Parser
 
       nil
     end
-
   end
 end

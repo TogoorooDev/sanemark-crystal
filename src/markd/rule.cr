@@ -7,7 +7,7 @@ module Markd
     ATTRIBUTE_NAME_STRING       = %Q([a-zA-Z_:][a-zA-Z0-9:._-]*)
     UNQUOTED_VALUE_STRING       = %Q([^"'=<>`\\x00-\\x20]+)
     SINGLE_QUOTED_VALUE_STRING  = %Q('[^']*')
-    DOUBLE_QUOTED_VALUE_STRING  = %Q("[^\"]*")
+    DOUBLE_QUOTED_VALUE_STRING  = %Q("[^"]*")
     ATTRIBUTE_VALUE_STRING      = "(?:" + UNQUOTED_VALUE_STRING + "|" + SINGLE_QUOTED_VALUE_STRING + "|" + DOUBLE_QUOTED_VALUE_STRING + ")"
     ATTRIBUTE_VALUE_SPEC_STRING = "(?:" + "\\s*=" + "\\s*" + ATTRIBUTE_VALUE_STRING + ")"
     ATTRIBUTE                   = "(?:" + "\\s+" + ATTRIBUTE_NAME_STRING + ATTRIBUTE_VALUE_SPEC_STRING + "?)"
@@ -35,7 +35,7 @@ module Markd
     HTML_TAG                      = /^#{HTML_TAG_STRING}/i
 
     LINK_TITLE = Regex.new("^(?:\"(#{ESCAPED_CHAR_STRING}|[^\"\\x00])*\"" +
-                           "|\'(#{ESCAPED_CHAR_STRING}|[^\'\\x00])*\'" +
+                           "|'(#{ESCAPED_CHAR_STRING}|[^'\\x00])*'" +
                            "|\\((#{ESCAPED_CHAR_STRING}|[^)\\x00])*\\))")
 
     LINK_LABEL = Regex.new("^\\[(?:[^\\\\\\[\\]]|" + ESCAPED_CHAR_STRING + "|\\\\){0,}\\]")
@@ -45,9 +45,9 @@ module Markd
     EMAIL_AUTO_LINK = /^<([a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*)>/
     AUTO_LINK       = /^<[A-Za-z][A-Za-z0-9.+-]{1,31}:[^<>\x00-\x20]*>/i
 
-    WHITESPACE_CHAR = /^[ \t\n\x0b\x0c\x0d]/
-    WHITESPACE      = /[ \t\n\x0b\x0c\x0d]+/
-    PUNCTUATION     = /\p{P}/
+    WHITESPACE_CHAR      = /^[ \t\n\x0b\x0c\x0d]/
+    WHITESPACE           = /[ \t\n\x0b\x0c\x0d]+/
+    PUNCTUATION          = /\p{P}/
     UNSAFE_PROTOCOL      = /^javascript:|vbscript:|file:|data:/i
     UNSAFE_DATA_PROTOCOL = /^data:image\/(?:png|gif|jpeg|webp)/i
 
