@@ -149,13 +149,13 @@ module Markd
 
     def html_block(node : Node, entering : Bool)
       cr
-      content = @options.safe ? "<!-- raw HTML omitted -->" : node.text
+      content = @options.safe ? HTML.escape(node.text) : node.text
       lit(content)
       cr
     end
 
     def html_inline(node : Node, entering : Bool)
-      content = @options.safe ? "<!-- raw HTML omitted -->" : node.text
+      content = @options.safe ? HTML.escape(node.text) : node.text
       lit(content)
     end
 
