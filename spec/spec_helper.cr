@@ -1,7 +1,7 @@
 require "spec"
 require "../src/markd"
 
-def describe_spec(file, smart = false, render = false)
+def describe_spec(file, render = false)
   specs = extract_spec_tests(file)
 
   skip_examples = [] of Int32
@@ -26,25 +26,24 @@ def describe_spec(file, smart = false, render = false)
   specs.each_with_index do |(section, examples), index|
     no = index + 1
     next if skip_examples.includes?(no)
-    assert_section(file, section, examples, smart)
+    assert_section(file, section, examples)
   end
 end
 
-def assert_section(file, section, examples, smart)
+def assert_section(file, section, examples)
   describe section do
     examples.each do |index, example|
-      assert_exapmle(file, section, index, example, smart)
+      assert_exapmle(file, section, index, example)
     end
   end
 end
 
-def assert_exapmle(file, section, index, example, smart)
+def assert_exapmle(file, section, index, example)
   markdown = example["markdown"].gsub("→", "\t").chomp
   html = example["html"].gsub("→", "\t")
   line = example["line"].to_i
 
   options = Markd::Options.new
-  options.smart = true if smart
   it "- #{index}\n#{show_space(markdown)}", file, line do
     output = Markd.to_html(markdown, options)
     output.should eq(html), file, line

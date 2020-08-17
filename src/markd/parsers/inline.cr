@@ -42,8 +42,6 @@ module Markd::Parser
               backtick(node)
             when '*', '_'
               handle_delim(char, node)
-            when '\'', '"'
-              @options.smart && handle_delim(char, node)
             when '['
               open_bracket(node)
             when '!'
