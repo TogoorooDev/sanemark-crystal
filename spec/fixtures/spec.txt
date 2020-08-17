@@ -7327,7 +7327,7 @@ about how to escape or normalize URLs in the output.
 ```````````````````````````````` example
 [link](foo%20b&auml;)
 .
-<p><a href="foo%20b%C3%A4">link</a></p>
+<p><a href="foo%20b&amp;auml;">link</a></p>
 ````````````````````````````````
 
 
@@ -7355,13 +7355,12 @@ Titles may be in single quotes, double quotes, or parentheses:
 ````````````````````````````````
 
 
-Backslash escapes and entity and numeric character references
-may be used in titles:
+Backslash escapes may be used in titles:
 
 ```````````````````````````````` example
-[link](/url "title \"&quot;")
+[link](/url "title \"")
 .
-<p><a href="/url" title="title &quot;&quot;">link</a></p>
+<p><a href="/url" title="title &quot;">link</a></p>
 ````````````````````````````````
 
 

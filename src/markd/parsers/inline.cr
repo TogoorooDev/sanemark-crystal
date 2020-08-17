@@ -52,8 +52,6 @@ module Markd::Parser
               close_bracket(node)
             when '<'
               auto_link(node) || html_tag(node)
-            when '&'
-              entity(node)
             else
               string(node)
             end
@@ -417,32 +415,6 @@ module Markd::Parser
       end
     end
 
-    private def entity(node : Node)
-      if char_at?(@pos) == '&'
-        pos = @pos + 1
-        loop do
-          char = char_at?(pos)
-          pos += 1
-          case char
-          when ';'
-            break
-          when Char::ZERO, nil
-            return false
-          else
-            nil
-          end
-        end
-        text = @text.byte_slice((@pos + 1), (pos - 1) - (@pos + 1))
-        decoded_text = HTML.decode_entity text
-
-        node.append_child(text(decoded_text))
-        @pos = pos
-        true
-      else
-        false
-      end
-    end
-
     private def string(node : Node)
       if text = match_main
         if @options.smart
@@ -497,7 +469,7 @@ module Markd::Parser
       title = match(Rule::LINK_TITLE)
       return unless title
 
-      Utils.decode_entities_string(title[1..-2])
+      title[1..-2]
     end
 
     private def link_destination
@@ -529,7 +501,8 @@ module Markd::Parser
                @text.byte_slice(save_pos, @pos - save_pos)
              end
 
-      normalize_uri(Utils.decode_entities_string(dest))
+      # normalize_uri(Utils.decode_entities_string(dest))
+      dest
     end
 
     private def handle_delim(char : Char, node : Node)
@@ -810,7 +783,7 @@ module Markd::Parser
     def decode_uri(text : String)
       decoded = URI.decode(text)
       if decoded.includes?('&') && decoded.includes?(';')
-        decoded = decoded.gsub(/^&(\w+);$/) { |chars| HTML.decode_entities(chars) }
+        decoded = decoded.gsub(/^&(\w+);$/) { |chars| chars }
       end
       decoded
     end
