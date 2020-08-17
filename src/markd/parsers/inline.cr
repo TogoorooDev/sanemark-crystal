@@ -467,7 +467,7 @@ module Markd::Parser
       title = match(Rule::LINK_TITLE)
       return unless title
 
-      title[1..-2]
+      Utils.escape(title[1..-2])
     end
 
     private def link_destination
@@ -499,8 +499,7 @@ module Markd::Parser
                @text.byte_slice(save_pos, @pos - save_pos)
              end
 
-      # normalize_uri(Utils.decode_entities_string(dest))
-      dest
+      normalize_uri(Utils.escape(dest))
     end
 
     private def handle_delim(char : Char, node : Node)
