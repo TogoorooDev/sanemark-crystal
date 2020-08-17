@@ -50,7 +50,7 @@ module Markd
 
     def thematic_break(node : Node, entering : Bool)
       cr
-      tag("hr", attrs(node), self_closing: true)
+      tag("hr", attrs(node))
       cr
     end
 
@@ -178,11 +178,11 @@ module Markd
     end
 
     def soft_break(node : Node, entering : Bool)
-      lit("\n")
+      @options.join_lines ? lit("\n") : tag("br")
     end
 
     def line_break(node : Node, entering : Bool)
-      tag("br", self_closing: true)
+      tag("br")
       cr
     end
 
@@ -194,7 +194,7 @@ module Markd
       out(node.text)
     end
 
-    private def tag(name : String, attrs = nil, self_closing = false, end_tag = false)
+    private def tag(name : String, attrs = nil, end_tag = false)
       return if @disable_tag > 0
 
       @output_io << "<"
@@ -204,7 +204,6 @@ module Markd
         @output_io << ' ' << key << '=' << '"' << value << '"'
       end
 
-      @output_io << " /" if self_closing
       @output_io << ">"
       @last_output = ">"
     end
