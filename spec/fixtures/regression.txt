@@ -12,16 +12,6 @@ bar</li>
 </ul>
 ````````````````````````````````
 
-Type 7 HTML block followed by whitespace (#98).
-
-```````````````````````````````` example
-<a>
-x
-.
-<a>
-x
-````````````````````````````````
-
 h2..h6 raw HTML blocks (jgm/CommonMark#430).
 
 ```````````````````````````````` example
