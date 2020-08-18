@@ -4817,51 +4817,25 @@ spaces:
 <p><code>``</code></p>
 ````````````````````````````````
 
-
-[Line endings] are treated like spaces:
+For the sake of those who use hard wrapping, [Line endings] are treated like spaces:
 
 ```````````````````````````````` example
-``
+`
 foo
-``
+`
 .
 <p><code>foo</code></p>
 ````````````````````````````````
 
 
-Interior spaces and [line endings] are collapsed into
-single spaces, just as they would be by a browser:
+Interior spaces are not collapsed:
 
 ```````````````````````````````` example
-`foo   bar
-  baz`
+`foo   bar`
 .
-<p><code>foo bar baz</code></p>
+<p><code>foo   bar</code></p>
 ````````````````````````````````
 
-
-Not all [Unicode whitespace] (for instance, non-breaking space) is
-collapsed, however:
-
-```````````````````````````````` example
-`a  b`
-.
-<p><code>a  b</code></p>
-````````````````````````````````
-
-
-Q: Why not just leave the spaces, since browsers will collapse them
-anyway?  A:  Because we might be targeting a non-HTML format, and we
-shouldn't rely on HTML-specific rendering assumptions.
-
-(Existing implementations differ in their treatment of internal
-spaces and [line endings].  Some, including `Markdown.pl` and
-`showdown`, convert an internal [line ending] into a
-`<br>` tag.  But this makes things difficult for those who like to
-hard-wrap their paragraphs, since a line break in the midst of a code
-span will cause an unintended line break in the output.  Others just
-leave internal spaces as they are, which is fine if only HTML is being
-targeted.)
 
 ```````````````````````````````` example
 `foo `` bar`
@@ -8044,7 +8018,7 @@ bar</em></p>
 Line breaks do not occur inside code spans
 
 ```````````````````````````````` example
-`code  
+`code
 span`
 .
 <p><code>code span</code></p>

@@ -119,7 +119,7 @@ module Markd::Parser
       while text = match(Rule::TICKS)
         if text.bytesize == num_ticks
           child = Node.new(Node::Type::Code)
-          child.text = @text.byte_slice(after_open_ticks, (@pos - num_ticks) - after_open_ticks).strip.gsub(Rule::WHITESPACE, " ")
+          child.text = @text.byte_slice(after_open_ticks, (@pos - num_ticks) - after_open_ticks).strip.gsub('\n', ' ') #TODO find a way to represent code with leading or trailing space
           node.append_child(child)
 
           return true
