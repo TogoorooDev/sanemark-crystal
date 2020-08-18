@@ -4758,8 +4758,8 @@ raw HTML:
 ````````````````````````````````
 
 
-But they work in all other contexts, including URLs and link titles,
-link references, and [info strings] in [fenced code blocks]:
+But they work in all other contexts, including URLs, link titles,
+and link references:
 
 ```````````````````````````````` example
 [foo](/bar\* "ti\*tle")
@@ -4776,15 +4776,6 @@ link references, and [info strings] in [fenced code blocks]:
 <p><a href="/bar*" title="ti*tle">foo</a></p>
 ````````````````````````````````
 
-
-```````````````````````````````` example
-``` foo\+bar
-foo
-```
-.
-<pre><code class="language-foo+bar">foo
-</code></pre>
-````````````````````````````````
 
 ## Code spans
 
