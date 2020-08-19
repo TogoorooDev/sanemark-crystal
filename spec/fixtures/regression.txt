@@ -35,16 +35,6 @@ h2..h6 raw HTML blocks (jgm/CommonMark#430).
 <h6>lorem</h6>
 ````````````````````````````````
 
-Issue #109 - tabs after setext header line
-
-
-```````````````````````````````` example
-hi
---→
-.
-<h2>hi</h2>
-````````````````````````````````
-
 Issue #108 - Chinese punctuation not recognized
 
 ```````````````````````````````` example
