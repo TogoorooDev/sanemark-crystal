@@ -64,26 +64,7 @@ module Markd::Parser
 
     private def newline(node : Node)
       @pos += 1 # assume we're at a \n
-      last_child = node.last_child?
-      # check previous node for trailing spaces
-      if last_child && last_child.type.text? &&
-         last_child.text.ends_with?(' ')
-        hard_break = if last_child.text.size == 1
-                       false # Must be space
-                     else
-                       last_child.text[-2]? == ' '
-                     end
-        last_child.text = last_child.text.rstrip ' '
-        node.append_child(Node.new(hard_break ? Node::Type::LineBreak : Node::Type::SoftBreak))
-      else
-        node.append_child(Node.new(Node::Type::SoftBreak))
-      end
-
-      # gobble leading spaces in next line
-      while char_at?(@pos) == ' '
-        @pos += 1
-      end
-
+      node.append_child(Node.new(Node::Type::SoftBreak))
       true
     end
 
