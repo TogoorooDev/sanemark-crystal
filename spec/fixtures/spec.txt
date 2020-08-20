@@ -1463,24 +1463,6 @@ baz
 ````````````````````````````````
 
 
-Other blocks can also occur before and after fenced code blocks
-without an intervening blank line:
-
-```````````````````````````````` example
-foo
----
-~~~
-bar
-~~~
-# baz
-.
-<h2>foo</h2>
-<pre><code>bar
-</code></pre>
-<h1>baz</h1>
-````````````````````````````````
-
-
 An [info string] can be provided after the opening code fence.
 Opening and closing spaces will be stripped, and the first word, prefixed
 with `language-`, is used as the value for the `class` attribute of the
@@ -3412,17 +3394,14 @@ A list item can contain a heading:
 
 ```````````````````````````````` example
 - # Foo
-- Bar
-  ---
-  baz
+
+    Bar
 .
 <ul>
 <li>
 <h1>Foo</h1>
+<p>Bar</p>
 </li>
-<li>
-<h2>Bar</h2>
-baz</li>
 </ul>
 ````````````````````````````````
 
