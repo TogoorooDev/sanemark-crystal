@@ -1993,20 +1993,6 @@ bbb
 <p>bbb</p>
 ````````````````````````````````
 
-
-Final spaces are stripped before inline parsing, so a paragraph
-that ends with two or more spaces will not end with a [hard line
-break]:
-
-```````````````````````````````` example
-aaa     
-bbb     
-.
-<p>aaa<br>
-bbb</p>
-````````````````````````````````
-
-
 ## Blank lines
 
 [Blank lines] between block-level elements are ignored,
@@ -6623,13 +6609,11 @@ As with full reference links, [whitespace] is not
 allowed between the two sets of brackets:
 
 ```````````````````````````````` example
-[foo] 
-[]
+[foo] []
 
 [foo]: /url "title"
 .
-<p><a href="/url" title="title">foo</a>
-[]</p>
+<p><a href="/url" title="title">foo</a> []</p>
 ````````````````````````````````
 
 
@@ -6951,13 +6935,11 @@ As with reference links, [whitespace] is not allowed
 between the two sets of brackets:
 
 ```````````````````````````````` example
-![foo] 
-[]
+![foo] []
 
 [foo]: /url "title"
 .
-<p><img src="/url" alt="foo" title="title" />
-[]</p>
+<p><img src="/url" alt="foo" title="title" /> []</p>
 ````````````````````````````````
 
 
