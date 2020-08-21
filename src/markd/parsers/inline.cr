@@ -49,7 +49,7 @@ module Markd::Parser
             when ']'
               close_bracket(node)
             when '<'
-              auto_link(node) || html_tag(node)
+              html_tag(node)
             else
               string(node)
             end
@@ -369,18 +369,6 @@ module Markd::Parser
       while (curr_delimiter = @delimiters) && curr_delimiter != delimiter
         remove_delimiter(curr_delimiter)
       end
-    end
-
-    private def auto_link(node : Node)
-      if text = match(Rule::EMAIL_AUTO_LINK)
-        node.append_child(link(text, true))
-        return true
-      elsif text = match(Rule::AUTO_LINK)
-        node.append_child(link(text, false))
-        return true
-      end
-
-      false
     end
 
     private def html_tag(node : Node)

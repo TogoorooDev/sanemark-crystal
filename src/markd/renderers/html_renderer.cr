@@ -109,6 +109,10 @@ module Markd
         end
 
         tag("a", attrs)
+
+        if !node.first_child?
+          out(destination)
+        end
       else
         tag("a", end_tag: true)
       end

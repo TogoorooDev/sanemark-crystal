@@ -60,9 +60,6 @@ module Markd
 
     LINK_DESTINATION_BRACES = Regex.new("^(?:[<](?:[^ <>\\t\\n\\\\\\x00]|" + ESCAPED_CHAR_STRING + "|\\\\)*[>])")
 
-    EMAIL_AUTO_LINK = /^<([a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*)>/
-    AUTO_LINK       = /^<[A-Za-z][A-Za-z0-9.+-]{1,31}:[^<>\x00-\x20]*>/i
-
     PUNCTUATION          = /\p{P}/
     UNSAFE_PROTOCOL      = /^javascript:|vbscript:|file:|data:/i
     UNSAFE_DATA_PROTOCOL = /^data:image\/(?:png|gif|jpeg|webp)/i
