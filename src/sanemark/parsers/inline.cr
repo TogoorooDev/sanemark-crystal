@@ -1,6 +1,6 @@
 require "html"
 
-module Markd::Parser
+module Sanemark::Parser
   class Inline
     include Parser
 

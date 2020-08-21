@@ -1,4 +1,4 @@
-module Markd
+module Sanemark
   abstract class Renderer
     def initialize(@options = Options.new)
       @output_io = String::Builder.new

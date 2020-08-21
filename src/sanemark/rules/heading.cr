@@ -1,4 +1,4 @@
-module Markd::Rule
+module Sanemark::Rule
   struct Heading
     include Rule
 

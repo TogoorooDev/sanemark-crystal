@@ -1,6 +1,6 @@
 require "uri"
 
-module Markd
+module Sanemark
   struct Options
     property time, gfm, toc, source_pos, safe, prettyprint
 

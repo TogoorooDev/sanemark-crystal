@@ -1,4 +1,4 @@
-module Markd::Parser
+module Sanemark::Parser
   class Block
     include Parser
 

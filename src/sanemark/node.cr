@@ -1,4 +1,4 @@
-module Markd
+module Sanemark
   class Node
     # Node Type
     enum Type

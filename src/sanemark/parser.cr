@@ -1,4 +1,4 @@
-module Markd
+module Sanemark
   module Parser
     def self.parse(source : String, options = Options.new)
       Block.parse(source, options)

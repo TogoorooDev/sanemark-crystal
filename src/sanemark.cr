@@ -1,12 +1,12 @@
-require "./markd/utils"
-require "./markd/node"
-require "./markd/rule"
-require "./markd/options"
-require "./markd/renderer"
-require "./markd/parser"
-require "./markd/version"
+require "./sanemark/utils"
+require "./sanemark/node"
+require "./sanemark/rule"
+require "./sanemark/options"
+require "./sanemark/renderer"
+require "./sanemark/parser"
+require "./sanemark/version"
 
-module Markd
+module Sanemark
   def self.to_html(source : String, options = Options.new)
     return "" if source.empty?
 

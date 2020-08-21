@@ -1,9 +1,8 @@
-name: markd
-version: 0.2.1
+name: sanemark
+version: 0.0.0
 
 authors:
   - icyleaf <icyleaf.cn@gmail.com>
+  - Yujiri <yujiri@protonmail.com>
 
-crystal: 0.35.0
-
-license: MIT
+license: LGPLv3
