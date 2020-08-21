@@ -152,15 +152,17 @@ module Markd
     end
 
     def html_block(node : Node, entering : Bool)
+      if node.text.starts_with? "<nomd>"
+        node.text = node.text.lchop("<nomd>").chomp("</nomd>").strip
+      end
       cr
-      content = @options.safe ? HTML.escape(node.text) : node.text
-      lit(content)
+      # Doesn't need escaping because the rule isn't used if escaping is on.
+      lit(node.text)
       cr
     end
 
     def html_inline(node : Node, entering : Bool)
-      content = @options.safe ? HTML.escape(node.text) : node.text
-      lit(content)
+      lit(@options.safe ? HTML.escape(node.text) : node.text)
     end
 
     def paragraph(node : Node, entering : Bool)

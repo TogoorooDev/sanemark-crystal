@@ -25,7 +25,10 @@ module Markd::Rule
     end
 
     def continue(parser : Parser, container : Node) : ContinueStatus
-      (parser.blank && {5, 6}.includes?(container.data["html_block_type"])) ? ContinueStatus::Stop : ContinueStatus::Continue
+      # The first 5 types of HTML blocks can span blank lines.
+      if container.data["html_block_type"].as(Int32) < 5
+        ContinueStatus::Continue
+      else ContinueStatus::Stop end
     end
 
     def token(parser : Parser, container : Node) : Nil

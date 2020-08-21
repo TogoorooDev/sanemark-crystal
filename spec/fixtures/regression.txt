@@ -12,29 +12,6 @@ bar</li>
 </ul>
 ````````````````````````````````
 
-h2..h6 raw HTML blocks (jgm/CommonMark#430).
-
-```````````````````````````````` example
-<h1>lorem</h1>
-
-<h2>lorem</h2>
-
-<h3>lorem</h3>
-
-<h4>lorem</h4>
-
-<h5>lorem</h5>
-
-<h6>lorem</h6>
-.
-<h1>lorem</h1>
-<h2>lorem</h2>
-<h3>lorem</h3>
-<h4>lorem</h4>
-<h5>lorem</h5>
-<h6>lorem</h6>
-````````````````````````````````
-
 Issue #108 - Chinese punctuation not recognized
 
 ```````````````````````````````` example
@@ -52,7 +29,6 @@ a***b* c*
 ````````````````````````````````
 
 Issue jgm/CommonMark#468 - backslash at end of link definition
-
 
 ```````````````````````````````` example
 [\]: test

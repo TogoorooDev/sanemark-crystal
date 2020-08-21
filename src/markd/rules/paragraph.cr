@@ -7,6 +7,7 @@ module Markd::Rule
     end
 
     def continue(parser : Parser, container : Node) : ContinueStatus
+      return ContinueStatus::Stop if parser.line.match(HTML_BLOCK_OPEN[-1])
       parser.blank ? ContinueStatus::Stop : ContinueStatus::Continue
     end
 
