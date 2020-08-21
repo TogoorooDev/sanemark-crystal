@@ -2,7 +2,7 @@ require "uri"
 
 module Markd
   struct Options
-    property time, gfm, toc, smart, source_pos, safe, prettyprint
+    property time, gfm, toc, source_pos, safe, prettyprint
 
     # If true, line breaks within paragraphs do not become <br>,
     # so they show up as joined. Defaults to false.
@@ -17,7 +17,6 @@ module Markd
       @time = false,
       @gfm = false,
       @toc = false,
-      @smart = false,
       @source_pos = false,
       @safe = false,
       @prettyprint = false,

@@ -396,27 +396,6 @@ module Markd::Parser
 
     private def string(node : Node)
       if text = match_main
-        if @options.smart
-          text = text.gsub(Rule::ELLIPSIS, '\u{2026}')
-            .gsub(Rule::DASH) do |chars|
-              en_count = em_count = 0
-              chars_length = chars.size
-
-              if chars_length % 3 == 0
-                em_count = chars_length // 3
-              elsif chars_length % 2 == 0
-                en_count = chars_length // 2
-              elsif chars_length % 3 == 2
-                en_count = 1
-                em_count = (chars_length - 2) // 3
-              else
-                en_count = 2
-                em_count = (chars_length - 4) // 3
-              end
-
-              "\u{2014}" * em_count + "\u{2013}" * en_count
-            end
-        end
         node.append_child(text(text))
         true
       else
