@@ -7,7 +7,7 @@ module Sanemark::Rule
 
     def match(parser : Parser, container : Node) : MatchValue
       if !parser.indented &&
-         (match = parser.line[parser.next_nonspace..-1].match(CODE_FENCE))
+         (match = parser.line[parser.offset..].match(CODE_FENCE))
         # fenced
         fence_length = match[0].size
 
