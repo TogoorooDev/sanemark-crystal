@@ -42,8 +42,8 @@ module Sanemark::Rule
       if container.fenced?
         # fenced
         match = indent <= 3 &&
-                line[parser.next_nonspace]? == container.fence_char[0] &&
-                line[parser.next_nonspace..-1].match(CLOSING_CODE_FENCE)
+                line[parser.offset]? == container.fence_char[0] &&
+                line[parser.offset..].match(CLOSING_CODE_FENCE)
 
         if match && match.as(Regex::MatchData)[0].size == container.fence_length
           # closing fence - we're at end of line, so we can return

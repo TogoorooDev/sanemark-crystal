@@ -714,7 +714,6 @@ aaa
 </code></pre>
 ````````````````````````````````
 
-
 The closing code fence must be exactly as long as the opening fence:
 
 ```````````````````````````````` example
@@ -748,7 +747,6 @@ aaa
 </code></pre>
 ````````````````````````````````
 
-
 Unclosed code blocks are closed by the end of the document
 (or the enclosing [block quote][block quotes] or [list item][list items]):
 
@@ -757,7 +755,6 @@ Unclosed code blocks are closed by the end of the document
 .
 <pre><code></code></pre>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 `````
@@ -770,7 +767,6 @@ aaa
 aaa
 </code></pre>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 > ```
@@ -785,7 +781,6 @@ bbb
 <p>bbb</p>
 ````````````````````````````````
 
-
 A code block can have all empty lines as its content:
 
 ```````````````````````````````` example
@@ -799,7 +794,6 @@ A code block can have all empty lines as its content:
 </code></pre>
 ````````````````````````````````
 
-
 A code block can be empty:
 
 ```````````````````````````````` example
@@ -809,7 +803,7 @@ A code block can be empty:
 <pre><code></code></pre>
 ````````````````````````````````
 
-The fences must be at the start of their lines:
+The fences must be at the start of the line:
 
 ```````````````````````````````` example
  ```
@@ -818,47 +812,6 @@ The fences must be at the start of their lines:
 .
 <p><code>aaa</code></p>
 ````````````````````````````````
-
-
-Four spaces indentation produces an indented code block:
-
-```````````````````````````````` example
-    ```
-    aaa
-    ```
-.
-<pre><code>```
-aaa
-```
-</code></pre>
-````````````````````````````````
-
-
-Closing fences may be indented by 0-3 spaces, and their indentation
-need not match that of the opening fence:
-
-```````````````````````````````` example
-```
-aaa
-  ```
-.
-<pre><code>aaa
-</code></pre>
-````````````````````````````````
-
-This is not a closing fence, because it is indented 4 spaces:
-
-```````````````````````````````` example
-```
-aaa
-    ```
-.
-<pre><code>aaa
-    ```
-</code></pre>
-````````````````````````````````
-
-
 
 Code fences (opening and closing) cannot contain internal spaces:
 
