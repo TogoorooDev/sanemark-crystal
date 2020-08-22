@@ -172,10 +172,7 @@ Markdown document.
 
 ## Thematic breaks
 
-A line consisting of 0-3 spaces of indentation, followed by a sequence
-of three or more matching `-`, `_`, or `*` characters, each followed
-optionally by any number of spaces, forms a
-[thematic break](@).
+A line consisting of three or more matching `-` or `*` characters and nothing else forms a [thematic break](@).
 
 ```````````````````````````````` example
 ***
@@ -195,33 +192,12 @@ Not enough characters:
 **</p>
 ````````````````````````````````
 
-One to three spaces indent are allowed:
+Thematic breaks cannot be indented:
 
 ```````````````````````````````` example
  ***
-  ***
-   ***
 .
-<hr>
-<hr>
-<hr>
-````````````````````````````````
-
-Four spaces is too many:
-
-```````````````````````````````` example
-    ***
-.
-<pre><code>***
-</code></pre>
-````````````````````````````````
-
-```````````````````````````````` example
-Foo
-    ***
-.
-<p>Foo
-***</p>
+<p>***</p>
 ````````````````````````````````
 
 More than three characters may be used:
@@ -232,21 +208,6 @@ More than three characters may be used:
 <hr>
 ````````````````````````````````
 
-However, no other characters may occur in the line:
-
-```````````````````````````````` example
-_ _ _ _ a
-
-a------
-
----a---
-.
-<p>_ _ _ _ a</p>
-<p>a------</p>
-<p>---a---</p>
-````````````````````````````````
-
-
 It is required that all of the [non-whitespace characters] be the same.
 So, this is not a thematic break:
 
@@ -255,7 +216,6 @@ So, this is not a thematic break:
 .
 <p><em>-</em></p>
 ````````````````````````````````
-
 
 Thematic breaks do not need blank lines before or after:
 
