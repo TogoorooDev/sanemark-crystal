@@ -1531,34 +1531,13 @@ baz</p>
 ````````````````````````````````
 
 
-The `>` characters can be indented 1-3 spaces:
+The `>` characters cannot be indented:
 
 ```````````````````````````````` example
-   > # Foo
-   > bar
- > baz
+ > Foo
 .
-<blockquote>
-<h1>Foo</h1>
-<p>bar
-baz</p>
-</blockquote>
+<p>&gt; Foo</p>
 ````````````````````````````````
-
-
-Four spaces gives us a code block:
-
-```````````````````````````````` example
-    > # Foo
-    > bar
-    > baz
-.
-<pre><code>&gt; # Foo
-&gt; bar
-&gt; baz
-</code></pre>
-````````````````````````````````
-
 
 The Laziness clause allows us to omit the `>` before
 [paragraph continuation text]:
@@ -2052,7 +2031,7 @@ how the list item is embedded in other constructions, as shown by
 this example:
 
 ```````````````````````````````` example
-   > > 1.  one
+> > 1.  one
 >>
 >>     two
 .
@@ -2081,7 +2060,7 @@ far enough past the blockquote marker:
 ```````````````````````````````` example
 >>- one
 >>
-  >  > two
+> > two
 .
 <blockquote>
 <blockquote>
