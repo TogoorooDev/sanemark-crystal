@@ -1,80 +1,45 @@
----
-title: CommonMark Spec
-author: John MacFarlane
-version: 0.27
-date: '2016-11-18'
-license: '[CC-BY-SA 4.0](http://creativecommons.org/licenses/by-sa/4.0/)'
-...
-
 In the examples, the `→` character is used to represent tabs.
-
-# Preliminaries
 
 ## Characters and lines
 
-Any sequence of [characters] is a valid CommonMark
-document.
+Any sequence of [characters] is a valid Sanemark document.
 
-A [character](@) is a Unicode code point.  Although some
-code points (for example, combining accents) do not correspond to
-characters in an intuitive sense, all code points count as characters
-for purposes of this spec.
+A [character](@) is a Unicode code point. Although some code points (for example, combining accents) do not correspond to characters in an intuitive sense, all code points count as characters for purposes of this spec.
 
-This spec does not specify an encoding; it thinks of lines as composed
-of [characters] rather than bytes.  A conforming parser may be limited
-to a certain encoding.
+This spec does not specify an encoding; it thinks of lines as composed of [characters] rather than bytes. A conforming parser may be limited to a certain encoding.
 
-A [line](@) is a sequence of zero or more [characters]
-other than newline (`U+000A`) or carriage return (`U+000D`),
-followed by a [line ending] or by the end of file.
+A [line](@) is a sequence of zero or more [characters] other than newline (`U+000A`) or carriage return (`U+000D`), followed by a [line ending] or by the end of file.
 
-A [line ending](@) is a newline (`U+000A`), a carriage return
-(`U+000D`) not followed by a newline, or a carriage return and a
-following newline.
+A [line ending](@) is a newline (`U+000A`), a carriage return (`U+000D`) not followed by a newline, or a carriage return and a following newline.
 
-A line containing no characters, or a line containing only spaces
-(`U+0020`) or tabs (`U+0009`), is called a [blank line](@).
+A line containing no characters, or a line containing only spaces (`U+0020`) or tabs (`U+0009`), is called a [blank line](@).
 
 The following definitions of character classes will be used in this spec:
 
-A [whitespace character](@) is a space
-(`U+0020`), tab (`U+0009`), newline (`U+000A`), line tabulation (`U+000B`),
-form feed (`U+000C`), or carriage return (`U+000D`).
+A [whitespace character](@) is a space (`U+0020`), tab (`U+0009`), newline (`U+000A`), line tabulation (`U+000B`), form feed (`U+000C`), or carriage return (`U+000D`).
 
-[Whitespace](@) is a sequence of one or more [whitespace
-characters].
+[Whitespace](@) is a sequence of one or more [whitespace characters].
 
-A [Unicode whitespace character](@) is
-any code point in the Unicode `Zs` class, or a tab (`U+0009`),
-carriage return (`U+000D`), newline (`U+000A`), or form feed
-(`U+000C`).
+A [Unicode whitespace character](@) is any code point in the Unicode `Zs` class, or a tab (`U+0009`), carriage return (`U+000D`), newline (`U+000A`), or form feed (`U+000C`).
 
-[Unicode whitespace](@) is a sequence of one
-or more [Unicode whitespace characters].
+[Unicode whitespace](@) is a sequence of one or more [Unicode whitespace characters].
 
 A [space](@) is `U+0020`.
 
-A [non-whitespace character](@) is any character
-that is not a [whitespace character].
+A [non-whitespace character](@) is any character that is not a [whitespace character].
 
-An [ASCII punctuation character](@)
-is `!`, `"`, `#`, `$`, `%`, `&`, `'`, `(`, `)`,
-`*`, `+`, `,`, `-`, `.`, `/`, `:`, `;`, `<`, `=`, `>`, `?`, `@`,
-`[`, `\`, `]`, `^`, `_`, `` ` ``, `{`, `|`, `}`, or `~`.
+An [ASCII punctuation character](@) is `!`, `"`, `#`, `$`, `%`, `&`, `'`, `(`, `)`, `*`, `+`, `,`, `-`, `.`, `/`, `:`, `;`, `<`, `=`, `>`, `?`, `@`, `[`, `\`, `]`, `^`, `_`, `` ` ``, `{`, `|`, `}`, or `~`.
 
-A [punctuation character](@) is an [ASCII
-punctuation character] or anything in
-the Unicode classes `Pc`, `Pd`, `Pe`, `Pf`, `Pi`, `Po`, or `Ps`.
+A [punctuation character](@) is an [ASCII punctuation character] or anything in the Unicode classes `Pc`, `Pd`, `Pe`, `Pf`, `Pi`, `Po`, or `Ps`.
 
 ## Tabs
 
-Tabs in lines are not expanded to [spaces].  However,
+Tabs in lines are not expanded to [spaces]. However,
 in contexts where whitespace helps to define block structure,
-tabs behave as if they were replaced by spaces with a tab stop
-of 4 characters.
+tabs are equivalent to 4 spaces.
 
 Thus, for example, a tab can be used instead of four spaces
-in an indented code block.  (Note, however, that internal
+in an indented code block. (Note, however, that internal
 tabs are passed through as literal tabs, not expanded to
 spaces.)
 
@@ -118,6 +83,8 @@ as indentation with four spaces would:
 </ul>
 ````````````````````````````````
 
+
+TODO The following behavior makes no bloody sense, but I haven't ripped it out yet:
 ```````````````````````````````` example
 - foo
 
@@ -134,7 +101,7 @@ as indentation with four spaces would:
 
 Normally the `>` that begins a block quote may be followed
 optionally by a space, which is not considered part of the
-content.  In the following case `>` is followed by a tab,
+content. In the following case `>` is followed by a tab,
 which is treated as if it were expanded into spaces.
 Since one of theses spaces is considered part of the
 delimiter, `foo` is considered to be indented six spaces
@@ -211,7 +178,7 @@ with the REPLACEMENT CHARACTER (`U+FFFD`).
 
 We can think of a document as a sequence of
 [blocks](@)---structural elements like paragraphs, block
-quotations, lists, headings, rules, and code blocks.  Some blocks (like
+quotations, lists, headings, rules, and code blocks. Some blocks (like
 block quotes and list items) contain other blocks; others (like
 headings and paragraphs) contain [inline](@) content---text,
 links, emphasized text, images, code, and so on.
@@ -219,7 +186,7 @@ links, emphasized text, images, code, and so on.
 ## Precedence
 
 Indicators of block structure always take precedence over indicators
-of inline structure.  So, for example, the following is a list with
+of inline structure. So, for example, the following is a list with
 two items, not a list with one item containing a code span:
 
 ```````````````````````````````` example
@@ -236,9 +203,9 @@ two items, not a list with one item containing a code span:
 This means that parsing can proceed in two steps:  first, the block
 structure of the document can be discerned; second, text lines inside
 paragraphs, headings, and other block constructs can be parsed for inline
-structure.  The second step requires information about link reference
+structure. The second step requires information about link reference
 definitions that will be available only at the end of the first
-step.  Note that the first step requires processing lines in sequence,
+step. Note that the first step requires processing lines in sequence,
 but the second can be parallelized, since the inline parsing of
 one block element does not affect the inline parsing of any other.
 
@@ -461,18 +428,18 @@ If you want a thematic break in a list item, use a different bullet:
 ````````````````````````````````
 
 
-## ATX headings
+## Headings
 
-An [ATX heading](@)
+A [heading](@)
 consists of a string of characters, parsed as inline content, between an
 opening sequence of 1--6 unescaped `#` characters and an optional
 closing sequence of any number of unescaped `#` characters.
 The opening sequence of `#` characters must be followed by a
 [space] or by the end of line. The optional closing sequence of `#`s must be
-preceded by a [space] and may be followed by spaces only.  The opening
-`#` character may be indented 0-3 spaces.  The raw contents of the
+preceded by a [space] and may be followed by spaces only. The opening
+`#` character may be indented 0-3 spaces. The raw contents of the
 heading are stripped of leading and trailing spaces before being parsed
-as inline content.  The heading level is equal to the number of `#`
+as inline content. The heading level is equal to the number of `#`
 characters in the opening sequence.
 
 Simple headings:
@@ -504,11 +471,9 @@ More than six `#` characters is not a heading:
 
 
 At least one space is required between the `#` characters and the
-heading's contents, unless the heading is empty.  Note that many
-implementations currently do not require the space.  However, the
-space was required by the
-[original ATX implementation](http://www.aaronsw.com/2002/atx/atx.py),
-and it helps prevent things like the following from being parsed as
+heading's contents, unless the heading is empty. Note that many
+implementations currently do not require the space. However, the
+space helps prevent things like the following from being parsed as
 headings:
 
 ```````````````````````````````` example
@@ -645,7 +610,7 @@ of the closing sequence:
 ````````````````````````````````
 
 
-ATX headings need not be separated from surrounding content by blank
+Headings need not be separated from surrounding content by blank
 lines, and they can interrupt paragraphs:
 
 ```````````````````````````````` example
@@ -670,7 +635,7 @@ Bar foo
 ````````````````````````````````
 
 
-ATX headings can be empty:
+Headings can be empty:
 
 ```````````````````````````````` example
 ## 
@@ -796,7 +761,7 @@ in interior blank lines:
 ````````````````````````````````
 
 
-An indented code block cannot interrupt a paragraph.  (This
+An indented code block cannot interrupt a paragraph. (This
 allows hanging indents and the like.)
 
 ```````````````````````````````` example
@@ -810,7 +775,7 @@ bar</p>
 
 
 However, any non-blank line with fewer than four leading spaces ends
-the code block immediately.  So a paragraph may occur immediately
+the code block immediately. So a paragraph may occur immediately
 after indented code:
 
 ```````````````````````````````` example
@@ -880,7 +845,7 @@ Trailing spaces are included in the code block's content:
 
 A [code fence](@) is a sequence
 of at least three consecutive backtick characters (`` ` ``) or
-tildes (`~`).  (Tildes and backticks cannot be mixed.)
+tildes (`~`). (Tildes and backticks cannot be mixed.)
 A [fenced code block](@)
 begins with a code fence, indented no more than three spaces.
 
@@ -888,26 +853,26 @@ The line with the opening code fence may optionally contain some text
 following the code fence; this is trimmed of leading and trailing
 spaces and called the [info string](@).
 The [info string] may not contain any backtick
-characters.  (The reason for this restriction is that otherwise
+characters. (The reason for this restriction is that otherwise
 some inline code would be incorrectly interpreted as the
 beginning of a fenced code block.)
 
 The content of the code block consists of all subsequent lines, until
 a closing [code fence] of the same type as the code block
 began with (backticks or tildes), and with at least as many backticks
-or tildes as the opening code fence.  If the leading code fence is
+or tildes as the opening code fence. If the leading code fence is
 indented N spaces, then up to N spaces of indentation are removed from
-each line of the content (if present).  (If a content line is not
-indented, it is preserved unchanged.  If it is indented less than N
+each line of the content (if present). (If a content line is not
+indented, it is preserved unchanged. If it is indented less than N
 spaces, all of the indentation is removed.)
 
 The closing code fence may be indented up to three spaces, and may be
-followed only by spaces, which are ignored.  If the end of the
+followed only by spaces, which are ignored. If the end of the
 containing block (or document) is reached and no closing code fence
 has been found, the code block contains all of the lines after the
 opening code fence until the end of the containing block (or
-document).  (An alternative spec would require backtracking in the
-event that a closing code fence is not found.  But this makes parsing
+document). (An alternative spec would require backtracking in the
+event that a closing code fence is not found. But this makes parsing
 much less efficient, and there seems to be no real down side to the
 behavior described here.)
 
@@ -915,9 +880,9 @@ A fenced code block may interrupt a paragraph, and does not require
 a blank line either before or after.
 
 The content of a code fence is treated as literal text, not parsed
-as inlines.  The first word of the [info string] is typically used to
+as inlines. The first word of the [info string] is typically used to
 specify the language of the code sample, and rendered in the `class`
-attribute of the `code` tag.  However, this spec does not mandate any
+attribute of the `code` tag. However, this spec does not mandate any
 particular treatment of the [info string].
 
 Here is a simple example with backticks:
@@ -1062,7 +1027,7 @@ A code block can be empty:
 ````````````````````````````````
 
 
-Fences can be indented.  If the opening fence is indented,
+Fences can be indented. If the opening fence is indented,
 content lines will have equivalent opening indentation removed,
 if present:
 
@@ -1380,9 +1345,9 @@ from the [link destination] by [whitespace].
 No further [non-whitespace characters] may occur on the line.
 
 A [link reference definition]
-does not correspond to a structural element of a document.  Instead, it
+does not correspond to a structural element of a document. Instead, it
 defines a label which can be used in [reference links]
-and reference-style [images] elsewhere in the document.  [Link
+and reference-style [images] elsewhere in the document. [Link
 reference definitions] can come either before or after the links that use
 them.
 
@@ -1661,7 +1626,7 @@ can occur one after another, without intervening blank lines.
 
 
 [Link reference definitions] can occur
-inside block containers, like lists and block quotations.  They
+inside block containers, like lists and block quotations. They
 affect the entire document, not just the container in which they
 are defined:
 
@@ -1682,7 +1647,7 @@ are defined:
 A sequence of non-blank lines that cannot be interpreted as other
 kinds of blocks forms a [paragraph](@).
 The contents of the paragraph are the result of parsing the
-paragraph's raw content as inlines.  The paragraph's raw content
+paragraph's raw content as inlines. The paragraph's raw content
 is formed by concatenating the lines and removing initial and final
 [whitespace].
 
@@ -1800,11 +1765,11 @@ aaa
 # Container blocks
 
 A [container block] is a block that has other
-blocks as its contents.  There are two basic kinds of container blocks:
+blocks as its contents. There are two basic kinds of container blocks:
 [block quotes] and [list items].
 [Lists] are meta-containers for [list items].
 
-We define the syntax for container blocks recursively.  The general
+We define the syntax for container blocks recursively. The general
 form of the definition is:
 
 > If X is a sequence of blocks, then the result of
@@ -1814,7 +1779,7 @@ form of the definition is:
 So, we explain what counts as a block quote or list item by explaining
 how these can be *generated* from their contents. This should suffice
 to define the syntax, although it does not give a recipe for *parsing*
-these constructions.  (A recipe is provided below in the section entitled
+these constructions. (A recipe is provided below in the section entitled
 [A parsing strategy](#appendix-a-parsing-strategy).)
 
 ## Block quotes
@@ -2087,7 +2052,7 @@ A blank line always separates block quotes:
 
 (Most current Markdown implementations, including John Gruber's
 original `Markdown.pl`, will parse this example as a single block quote
-with two paragraphs.  But it seems better to allow the author to decide
+with two paragraphs. But it seems better to allow the author to decide
 whether two block quotes or one are wanted.)
 
 Consecutiveness means that if we put these block quotes together,
@@ -2225,7 +2190,7 @@ baz</p>
 
 When including an indented code block in a block quote,
 remember that the [block quote marker] includes
-both the `>` and a following space.  So *five spaces* are needed after
+both the `>` and a following space. So *five spaces* are needed after
 the `>`:
 
 ```````````````````````````````` example
@@ -2254,7 +2219,7 @@ is a `-`, `+`, or `*` character.
 
 An [ordered list marker](@)
 is a sequence of 1--9 arabic digits (`0-9`), followed by either a
-`.` character or a `)` character.  (The reason for the length
+`.` character or a `)` character. (The reason for the length
 limit is that with 10 digits we start seeing integer overflows
 in some browsers.)
 
@@ -2266,7 +2231,7 @@ The following rules define [list items]:
     marker of width *W* followed by 1 ≤ *N* ≤ 4 spaces, then the result
     of prepending *M* and the following spaces to the first line of
     *Ls*, and indenting subsequent lines of *Ls* by *W + N* spaces, is a
-    list item with *Bs* as its contents.  The type of the list item
+    list item with *Bs* as its contents. The type of the list item
     (bullet or ordered) is determined by the type of its list marker.
     If the list item is ordered, then it is also assigned a start
     number, based on the ordered list marker.
@@ -2297,7 +2262,7 @@ with two lines.</p>
 ````````````````````````````````
 
 
-And let *M* be the marker `1.`, and *N* = 2.  Then rule #1 says
+And let *M* be the marker `1.`, and *N* = 2. Then rule #1 says
 that the following is an ordered list item with start number 1,
 and the same contents as *Ls*:
 
@@ -2325,7 +2290,7 @@ with two lines.</p>
 
 The most important thing to notice is that the position of
 the text after the list marker determines how much indentation
-is needed in subsequent blocks in the list item.  If the list
+is needed in subsequent blocks in the list item. If the list
 marker takes up two spaces, and there are three spaces between
 the list marker and the next [non-whitespace character], then blocks
 must be indented five spaces in order to fall under the list
@@ -2391,7 +2356,7 @@ It is tempting to think of this in terms of columns:  the continuation
 blocks must be indented at least to the column of the first
 [non-whitespace character] after the list marker. However, that is not quite right.
 The spaces after the list marker determine how much relative indentation
-is needed.  Which column this indentation reaches will depend on
+is needed. Which column this indentation reaches will depend on
 how the list item is embedded in other constructions, as shown by
 this example:
 
@@ -2417,7 +2382,7 @@ Here `two` occurs in the same column as the list marker `1.`,
 but is actually contained in the list item, because there is
 sufficient indentation after the last containing blockquote marker.
 
-The converse is also possible.  In the following example, the word `two`
+The converse is also possible. In the following example, the word `two`
 occurs far to the right of the initial text of the list item, `one`, but
 it is not considered part of the list item, because it is not indented
 far enough past the blockquote marker:
@@ -2574,9 +2539,9 @@ A start number may not be negative:
     one space, then the result of prepending *M* and the following
     space to the first line of *Ls*, and indenting subsequent lines of
     *Ls* by *W + 1* spaces, is a list item with *Bs* as its contents.
-    If a line is empty, then it need not be indented.  The type of the
+    If a line is empty, then it need not be indented. The type of the
     list item (bullet or ordered) is determined by the type of its list
-    marker.  If the list item is ordered, then it is also assigned a
+    marker. If the list item is ordered, then it is also assigned a
     start number, based on the ordered list marker.
 
 An indented code block will have to be indented four spaces beyond
@@ -2679,7 +2644,7 @@ Note that rules #1 and #2 only apply to two cases:  (a) cases
 in which the lines to be included in a list item begin with a
 [non-whitespace character], and (b) cases in which
 they begin with an indented code
-block.  In a case like the following, where the first block begins with
+block. In a case like the following, where the first block begins with
 a three-space indent, the rules do not allow us to form a list item by
 indenting the whole thing and prepending a list marker:
 
@@ -2707,7 +2672,7 @@ bar
 
 This is not a significant restriction, because when a block begins
 with 1-3 spaces indent, the indentation can always be removed without
-a change in interpretation, allowing rule #1 to be applied.  So, in
+a change in interpretation, allowing rule #1 to be applied. So, in
 the above case:
 
 ```````````````````````````````` example
@@ -2731,9 +2696,9 @@ the above case:
     then the result of prepending *M* to the first line of *Ls*, and
     indenting subsequent lines of *Ls* by *W + 1* spaces, is a list
     item with *Bs* as its contents.
-    If a line is empty, then it need not be indented.  The type of the
+    If a line is empty, then it need not be indented. The type of the
     list item (bullet or ordered) is determined by the type of its list
-    marker.  If the list item is ordered, then it is also assigned a
+    marker. If the list item is ordered, then it is also assigned a
     start number, based on the ordered list marker.
 
 Here are some list items that start with a blank line but are not empty:
@@ -2864,7 +2829,7 @@ foo
 4.  **Indentation.**  If a sequence of lines *Ls* constitutes a list item
     according to rule #1, #2, or #3, then the result of indenting each line
     of *Ls* by 1-3 spaces (the same for each line) also constitutes a
-    list item with the same contents and attributes.  If a line is
+    list item with the same contents and attributes. If a line is
     empty, then it need not be indented.
 
 Indented one space:
@@ -2965,7 +2930,7 @@ Four spaces indent gives a code block:
     some or all of the indentation from one or more lines in which the
     next [non-whitespace character] after the indentation is
     [paragraph continuation text] is a
-    list item with the same contents and attributes.  The unindented
+    list item with the same contents and attributes. The unindented
     lines are called
     [lazy continuation line](@)s.
 
@@ -3046,7 +3011,7 @@ continued here.</p>
 6.  **That's all.** Nothing that is not counted as a list item by rules
     #1--5 counts as a [list item](#list-items).
 
-The rules for sublists follow from the general rules above.  A sublist
+The rules for sublists follow from the general rules above. A sublist
 must be indented the same number of spaces a paragraph would need to be
 in order to be included in the list item.
 
@@ -3199,44 +3164,44 @@ John Gruber's Markdown spec says the following about list items:
 These rules specify that a paragraph under a list item must be indented
 four spaces (presumably, from the left margin, rather than the start of
 the list marker, but this is not said), and that code under a list item
-must be indented eight spaces instead of the usual four.  They also say
+must be indented eight spaces instead of the usual four. They also say
 that a block quote must be indented, but not by how much; however, the
-example given has four spaces indentation.  Although nothing is said
+example given has four spaces indentation. Although nothing is said
 about other kinds of block-level content, it is certainly reasonable to
 infer that *all* block elements under a list item, including other
-lists, must be indented four spaces.  This principle has been called the
+lists, must be indented four spaces. This principle has been called the
 *four-space rule*.
 
 The four-space rule is clear and principled, and if the reference
 implementation `Markdown.pl` had followed it, it probably would have
-become the standard.  However, `Markdown.pl` allowed paragraphs and
+become the standard. However, `Markdown.pl` allowed paragraphs and
 sublists to start with only two spaces indentation, at least on the
-outer level.  Worse, its behavior was inconsistent: a sublist of an
+outer level. Worse, its behavior was inconsistent: a sublist of an
 outer-level list needed two spaces indentation, but a sublist of this
-sublist needed three spaces.  It is not surprising, then, that different
+sublist needed three spaces. It is not surprising, then, that different
 implementations of Markdown have developed very different rules for
-determining what comes under a list item.  (Pandoc and python-Markdown,
+determining what comes under a list item. (Pandoc and python-Markdown,
 for example, stuck with Gruber's syntax description and the four-space
 rule, while discount, redcarpet, marked, PHP Markdown, and others
 followed `Markdown.pl`'s behavior more closely.)
 
 Unfortunately, given the divergences between implementations, there
 is no way to give a spec for list items that will be guaranteed not
-to break any existing documents.  However, the spec given here should
+to break any existing documents. However, the spec given here should
 correctly handle lists formatted with either the four-space rule or
 the more forgiving `Markdown.pl` behavior, provided they are laid out
 in a way that is natural for a human to read.
 
 The strategy here is to let the width and indentation of the list marker
 determine the indentation necessary for blocks to fall under the list
-item, rather than having a fixed and arbitrary number.  The writer can
+item, rather than having a fixed and arbitrary number. The writer can
 think of the body of the list item as a unit which gets indented to the
 right enough to fit the list marker (and any indentation on the list
-marker).  (The laziness rule, #5, then allows continuation lines to be
+marker). (The laziness rule, #5, then allows continuation lines to be
 unindented if needed.)
 
 This rule is superior, we claim, to any rule requiring a fixed level of
-indentation from the margin.  The four-space rule is clear but
+indentation from the margin. The four-space rule is clear but
 unnatural. It is quite unintuitive that
 
 ``` markdown
@@ -3273,7 +3238,7 @@ as the four-space rule demands, rather than a single list,
 </ul>
 ```
 
-The choice of four spaces is arbitrary.  It can be learned, but it is
+The choice of four spaces is arbitrary. It can be learned, but it is
 not likely to be guessed, and it trips up beginners regularly.
 
 Would it help to adopt a two-space rule?  The problem is that such
@@ -3324,8 +3289,8 @@ This is extremely unintuitive.
 
 Rather than requiring a fixed indent from the margin, we could require
 a fixed indent (say, two spaces, or even one space) from the list marker (which
-may itself be indented).  This proposal would remove the last anomaly
-discussed.  Unlike the spec presented above, it would count the following
+may itself be indented). This proposal would remove the last anomaly
+discussed. Unlike the spec presented above, it would count the following
 as a list item with a subparagraph, even though the paragraph `bar`
 is not indented as far as the first paragraph `foo`:
 
@@ -3336,8 +3301,8 @@ is not indented as far as the first paragraph `foo`:
 ```
 
 Arguably this text does read like a list item with `bar` as a subparagraph,
-which may count in favor of the proposal.  However, on this proposal indented
-code would have to be indented six spaces after the list marker.  And this
+which may count in favor of the proposal. However, on this proposal indented
+code would have to be indented six spaces after the list marker. And this
 would break a lot of existing Markdown, which has the pattern:
 
 ``` markdown
@@ -3346,22 +3311,22 @@ would break a lot of existing Markdown, which has the pattern:
         indented code
 ```
 
-where the code is indented eight spaces.  The spec above, by contrast, will
+where the code is indented eight spaces. The spec above, by contrast, will
 parse this text as expected, since the code block's indentation is measured
 from the beginning of `foo`.
 
 The one case that needs special treatment is a list item that *starts*
-with indented code.  How much indentation is required in that case, since
+with indented code. How much indentation is required in that case, since
 we don't have a "first paragraph" to measure from?  Rule #2 simply stipulates
 that in such cases, we require one space indentation from the list marker
-(and then the normal four spaces for the indented code).  This will match the
+(and then the normal four spaces for the indented code). This will match the
 four-space rule in cases where the list marker plus its initial indentation
 takes four spaces (a common case), but diverge in other cases.
 
 ## Lists
 
 A [list](@) is a sequence of one or more
-list items [of the same type].  The list items
+list items [of the same type]. The list items
 may be separated by any number of blank lines.
 
 Two list items are [of the same type](@)
@@ -3379,13 +3344,13 @@ items begin with [bullet list markers].
 
 The [start number](@)
 of an [ordered list] is determined by the list number of
-its initial list item.  The numbers of subsequent list items are
+its initial list item. The numbers of subsequent list items are
 disregarded.
 
 A list is [loose](@) if any of its constituent
 list items are separated by blank lines, or if any of its constituent
 list items directly contain two block-level elements with a blank line
-between them.  Otherwise a list is [tight](@).
+between them. Otherwise a list is [tight](@).
 (The difference in HTML output is that paragraphs in a loose list are
 wrapped in `<p>` tags, while paragraphs in a tight list are not.)
 
@@ -3450,7 +3415,7 @@ interrupt a paragraph, even though the same considerations might
 apply.
 
 In CommonMark, we do allow lists to interrupt paragraphs, for
-two reasons.  First, it is natural and not uncommon for people
+two reasons. First, it is natural and not uncommon for people
 to start lists without blank lines:
 
 ``` markdown
@@ -3494,13 +3459,13 @@ by itself should be a paragraph followed by a nested sublist.
 Since it is well established Markdown practice to allow lists to
 interrupt paragraphs inside list items, the [principle of
 uniformity] requires us to allow this outside list items as
-well.  ([reStructuredText](http://docutils.sourceforge.net/rst.html)
+well. ([reStructuredText](http://docutils.sourceforge.net/rst.html)
 takes a different approach, requiring blank lines before lists
 even inside other list items.)
 
 In order to solve of unwanted lists in paragraphs with
 hard-wrapped numerals, we allow only lists starting with `1` to
-interrupt paragraphs.  Thus,
+interrupt paragraphs. Thus,
 
 ```````````````````````````````` example
 The number of windows in my house is
@@ -3624,7 +3589,7 @@ comment:
 ````````````````````````````````
 
 
-List items need not be indented to the same level.  The following
+List items need not be indented to the same level. The following
 list items will be treated as items at the same list level,
 since none is indented enough to belong to the previous list
 item:
@@ -3790,7 +3755,7 @@ This is a tight list, because the blank lines are in a code block:
 
 
 This is a tight list, because the blank line is between two
-paragraphs of a sublist.  So the sublist is loose while
+paragraphs of a sublist. So the sublist is loose while
 the outer list is tight:
 
 ```````````````````````````````` example
@@ -4092,7 +4057,7 @@ is a string of one or more backtick characters (`` ` ``) that is neither
 preceded nor followed by a backtick.
 
 A [code span](@) begins with a backtick string and ends with
-a backtick string of equal length.  The contents of the code span are
+a backtick string of equal length. The contents of the code span are
 the characters between the two backtick strings, with leading and
 trailing spaces and [line endings] removed, and
 [whitespace] collapsed to single spaces.
@@ -4167,7 +4132,7 @@ string of *n* backtick characters as delimiters, where the code does
 not contain any strings of exactly *n* backtick characters.
 
 Code span backticks have higher precedence than any other inline
-constructs except HTML tags and autolinks.  Thus, for example, this is
+constructs except HTML tags. Thus, for example, this is
 not parsed as emphasized text, since the second `*` is part of a code
 span:
 
@@ -4232,7 +4197,7 @@ description](http://daringfireball.net/projects/markdown/syntax#em) says:
 > tag.
 
 This is enough for most users, but these rules leave much undecided,
-especially when it comes to nested emphasis.  The original
+especially when it comes to nested emphasis. The original
 `Markdown.pl` test suite makes it clear that triple `***` and
 `___` delimiters can be used for strong emphasis, and most
 implementations have also allowed the following patterns:
@@ -4256,7 +4221,7 @@ entries):
 
 Many implementations have also restricted intraword emphasis to
 the `*` forms, to avoid unwanted emphasis in words containing
-internal underscores.  (It is best practice to put these in code
+internal underscores. (It is best practice to put these in code
 spans, but users often do not.)
 
 ``` markdown
@@ -4267,7 +4232,7 @@ no emphasis: foo_bar_baz
 The rules given below capture all of these patterns, while allowing
 for efficient parsing strategies that do not backtrack.
 
-First, some definitions.  A [delimiter run](@) is either
+First, some definitions. A [delimiter run](@) is either
 a sequence of one or more `*` characters that is not preceded or
 followed by a `*` character, or a sequence of one or more `_`
 characters that is not preceded or followed by a `_` character.
@@ -5539,7 +5504,7 @@ following rules apply:
   with an open bracket `[`, a sequence of zero or more inlines, and
   a close bracket `]`.
 
-- Backtick [code spans], [autolinks], and raw [HTML tags] bind more tightly
+- Backtick [code spans], and raw [HTML tags] bind more tightly
   than the brackets in link text.  Thus, for example,
   `` [foo`]` `` could not be a link text, since the second `]`
   is part of a code span.
@@ -6073,8 +6038,7 @@ emphasis grouping:
 ````````````````````````````````
 
 
-These cases illustrate the precedence of HTML tags, code spans,
-and autolinks over link grouping:
+These cases illustrate the precedence of HTML tags and code spans over link grouping:
 
 ```````````````````````````````` example
 [foo <bar attr="][ref]">
@@ -6782,23 +6746,13 @@ where *text* does not start with `>` or `->`, does not end with `-`,
 and does not contain `--`.  (See the
 [HTML5 spec](http://www.w3.org/TR/html5/syntax.html#comments).)
 
-A [processing instruction](@)
-consists of the string `<?`, a string
-of characters not including the string `?>`, and the string
-`?>`.
-
 A [declaration](@) consists of the
 string `<!`, a name consisting of one or more uppercase ASCII letters,
 [whitespace], a string of characters not including the
 character `>`, and the character `>`.
 
-A [CDATA section](@) consists of
-the string `<![CDATA[`, a string of characters not including the string
-`]]>`, and the string `]]>`.
-
 An [HTML tag](@) consists of an [open tag], a [closing tag],
-an [HTML comment], a [processing instruction], a [declaration],
-or a [CDATA section].
+an [HTML comment], or a [declaration].
 
 Here are some simple open tags:
 
