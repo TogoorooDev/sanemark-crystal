@@ -267,8 +267,6 @@ module Sanemark::Parser
         openers_bottom = {
           '_'  => delimiter,
           '*'  => delimiter,
-          '\'' => delimiter,
-          '"'  => delimiter,
         } of Char => Delimiter?
 
         # move forward, looking for closers, and handling each
@@ -342,18 +340,6 @@ module Sanemark::Parser
                 closer = tmp_stack
               end
             end
-          when '\''
-            closer.node.text = "\u{2019}"
-            if opener
-              opener.node.text = "\u{2018}"
-            end
-            closer = closer.next?
-          when '"'
-            closer.node.text = "\u{201D}"
-            if opener
-              opener.node.text = "\u{201C}"
-            end
-            closer = closer.next?
           else
             nil
           end
@@ -457,14 +443,7 @@ module Sanemark::Parser
       num_delims = res[:num_delims]
       start_pos = @pos
       @pos += num_delims
-      text = case char
-             when '\''
-               "\u{2019}"
-             when '"'
-               "\u{201C}"
-             else
-               @text.byte_slice(start_pos, @pos - start_pos)
-             end
+      text = @text.byte_slice(start_pos, @pos - start_pos)
 
       child = text(text)
       node.append_child(child)
@@ -503,14 +482,9 @@ module Sanemark::Parser
     private def scan_delims(char : Char)
       num_delims = 0
       start_pos = @pos
-      if char == '\'' || char == '"'
+      while char_at?(@pos) == char
         num_delims += 1
         @pos += 1
-      else
-        while char_at?(@pos) == char
-          num_delims += 1
-          @pos += 1
-        end
       end
 
       return if num_delims == 0
@@ -533,9 +507,6 @@ module Sanemark::Parser
       when '_'
         can_open = left_flanking && (!right_flanking || before_is_punctuation)
         can_close = right_flanking && (!left_flanking || after_is_punctuation)
-      when '\'', '"'
-        can_open = left_flanking && !right_flanking
-        can_close = right_flanking
       else
         can_open = left_flanking
         can_close = right_flanking
