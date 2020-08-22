@@ -1033,7 +1033,7 @@ them.
 
 ```````````````````````````````` example
 [Foo bar]:
-<my%20url>
+my%20url
 'title'
 
 [Foo bar]
@@ -5142,18 +5142,14 @@ following rules apply:
 - The brackets in link text bind more tightly than markers for
   [emphasis and strong emphasis]. Thus, for example, `*[foo*](url)` is a link.
 
-A [link destination](@) consists of either
-
-- a sequence of zero or more characters between an opening `<` and a
-  closing `>` that contains no spaces, line breaks, or unescaped
-  `<` or `>` characters, or
+A [link destination](@) consists of
 
 - a nonempty sequence of characters that does not include
   ASCII space or control characters, and includes parentheses
   only if (a) they are backslash-escaped or (b) they are part of
   a balanced pair of unescaped parentheses.
 
-A [link title](@)  consists of either
+A [link title](@) consists of either
 
 - a sequence of zero or more characters between straight double-quote
   characters (`"`), including a `"` character only if it is
@@ -5207,37 +5203,20 @@ Both the title and the destination may be omitted:
 <p><a href="">link</a></p>
 ````````````````````````````````
 
-
-```````````````````````````````` example
-[link](<>)
-.
-<p><a href="">link</a></p>
-````````````````````````````````
-
-Empty anchor text makes means the anchor text is the destination:
+Empty anchor text makes the anchor text the destination:
 ```````````````````````````````` example
 [](/uri)
 .
 <p><a href="/uri">/uri</a></p>
 ````````````````````````````````
 
-
-The destination cannot contain spaces or line breaks,
-even if enclosed in pointy brackets:
+The destination cannot contain spaces or line breaks:
 
 ```````````````````````````````` example
 [link](/my uri)
 .
 <p>[link](/my uri)</p>
 ````````````````````````````````
-
-
-```````````````````````````````` example
-[link](</my uri>)
-.
-<p>[link](&lt;/my uri&gt;)</p>
-````````````````````````````````
-
 
 ```````````````````````````````` example
 [link](foo
@@ -5246,7 +5225,6 @@ bar)
 <p>[link](foo
 bar)</p>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 [link](<foo
@@ -5264,8 +5242,7 @@ Parentheses inside the link destination may be escaped:
 <p><a href="(foo)">link</a></p>
 ````````````````````````````````
 
-Any number parentheses are allowed without escaping, as long as they are
-balanced:
+Any number parentheses are allowed without escaping, as long as they are balanced:
 
 ```````````````````````````````` example
 [link](foo(and(bar)))
@@ -5273,8 +5250,7 @@ balanced:
 <p><a href="foo(and(bar))">link</a></p>
 ````````````````````````````````
 
-However, if you have unbalanced parentheses, you need to escape or use the
-`<...>` form:
+However, if you have unbalanced parentheses, you need to escape:
 
 ```````````````````````````````` example
 [link](foo\(and\(bar\))
@@ -5282,23 +5258,13 @@ However, if you have unbalanced parentheses, you need to escape or use the
 <p><a href="foo(and(bar)">link</a></p>
 ````````````````````````````````
 
-
-```````````````````````````````` example
-[link](<foo(and(bar)>)
-.
-<p><a href="foo(and(bar)">link</a></p>
-````````````````````````````````
-
-
-Parentheses and other symbols can also be escaped, as usual
-in Markdown:
+Parentheses and other symbols can also be escaped, as usual in Markdown:
 
 ```````````````````````````````` example
 [link](foo\)\:)
 .
 <p><a href="foo):">link</a></p>
 ````````````````````````````````
-
 
 A link can contain fragment identifiers and queries:
 
@@ -5314,7 +5280,6 @@ A link can contain fragment identifiers and queries:
 <p><a href="http://example.com?foo=3#frag">link</a></p>
 ````````````````````````````````
 
-
 Note that a backslash before a non-escapable character is
 just a backslash:
 
@@ -5324,16 +5289,13 @@ just a backslash:
 <p><a href="foo%5Cbar">link</a></p>
 ````````````````````````````````
 
-
-URL-escaping should be left alone inside the destination, as all
-URL-escaped characters are also valid URL characters.
+URL-escaping should be left alone inside the destination, as all URL-escaped characters are also valid URL characters. However HTML must still be escaped.
 
 ```````````````````````````````` example
 [link](foo%20b&auml;)
 .
 <p><a href="foo%20b&amp;auml;">link</a></p>
 ````````````````````````````````
-
 
 Note that, because titles can often be parsed as destinations,
 if you try to omit the destination and keep the title, you'll
@@ -5344,7 +5306,6 @@ get unexpected results:
 .
 <p><a href="%22title%22">link</a></p>
 ````````````````````````````````
-
 
 Titles may be in single quotes, double quotes, or parentheses:
 
@@ -6176,14 +6137,6 @@ My ![foo bar](/path/to/train.jpg  "title"   )
 .
 <p>My <img src="/path/to/train.jpg" alt="foo bar" title="title" /></p>
 ````````````````````````````````
-
-
-```````````````````````````````` example
-![foo](<url>)
-.
-<p><img src="url" alt="foo" /></p>
-````````````````````````````````
-
 
 ```````````````````````````````` example
 ![](/url)

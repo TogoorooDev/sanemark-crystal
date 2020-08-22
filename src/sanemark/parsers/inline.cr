@@ -405,9 +405,7 @@ module Sanemark::Parser
     end
 
     private def link_destination
-      dest = if text = match(Rule::LINK_DESTINATION_BRACES)
-               text[1..-2]
-             else
+      dest = begin
                save_pos = @pos
                open_parens = 0
                while char = char_at?(@pos)
