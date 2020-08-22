@@ -45,7 +45,7 @@ module Sanemark::Rule
                 line[parser.next_nonspace]? == container.fence_char[0] &&
                 line[parser.next_nonspace..-1].match(CLOSING_CODE_FENCE)
 
-        if match && match.as(Regex::MatchData)[0].size >= container.fence_length
+        if match && match.as(Regex::MatchData)[0].size == container.fence_length
           # closing fence - we're at end of line, so we can return
           parser.token(container, parser.current_line)
           return ContinueStatus::Return

@@ -715,19 +715,27 @@ aaa
 ````````````````````````````````
 
 
-The closing code fence must be at least as long as the opening fence:
+The closing code fence must be exactly as long as the opening fence:
 
 ```````````````````````````````` example
 ````
 aaa
 ```
-``````
 .
 <pre><code>aaa
 ```
 </code></pre>
 ````````````````````````````````
 
+```````````````````````````````` example
+```
+aaa
+````
+.
+<pre><code>aaa
+````
+</code></pre>
+````````````````````````````````
 
 ```````````````````````````````` example
 ~~~~
@@ -960,7 +968,7 @@ end
 def foo(x)
   return 3
 end
-~~~~~~~
+~~~~
 .
 <pre><code class="language-ruby">def foo(x)
   return 3
