@@ -13,7 +13,7 @@ module Sanemark
     ATTRIBUTE                   = "(?:" + "\\s+" + ATTRIBUTE_NAME_STRING + ATTRIBUTE_VALUE_SPEC_STRING + "?)"
 
     MAYBE_SPECIAL  = {'#', '`', '~', '*', '+', '_', '=', '<', '>', '-'}
-    THEMATIC_BREAK = /^(?:(?:\*[ \t]*){3,}|(?:_[ \t]*){3,}|(?:-[ \t]*){3,})[ \t]*$/
+    THEMATIC_BREAK = /^(\*{3,}|-{3,})$/
 
     ESCAPABLE = /^#{ESCAPABLE_STRING}/
 

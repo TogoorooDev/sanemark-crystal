@@ -130,12 +130,6 @@ bar
 <h1>Foo</h1>
 ````````````````````````````````
 
-```````````````````````````````` example
-*→*→*→
-.
-<hr>
-````````````````````````````````
-
 # Blocks and inlines
 
 We can think of a document as a sequence of
@@ -192,42 +186,20 @@ optionally by any number of spaces, forms a
 ```````````````````````````````` example
 ***
 ---
-___
 .
 <hr>
 <hr>
-<hr>
 ````````````````````````````````
-
-
-Wrong characters:
-
-```````````````````````````````` example
-+++
-.
-<p>+++</p>
-````````````````````````````````
-
-
-```````````````````````````````` example
-===
-.
-<p>===</p>
-````````````````````````````````
-
 
 Not enough characters:
 
 ```````````````````````````````` example
 --
 **
-__
 .
 <p>--
-**
-__</p>
+**</p>
 ````````````````````````````````
-
 
 One to three spaces indent are allowed:
 
@@ -241,7 +213,6 @@ One to three spaces indent are allowed:
 <hr>
 ````````````````````````````````
 
-
 Four spaces is too many:
 
 ```````````````````````````````` example
@@ -251,7 +222,6 @@ Four spaces is too many:
 </code></pre>
 ````````````````````````````````
 
-
 ```````````````````````````````` example
 Foo
     ***
@@ -260,47 +230,13 @@ Foo
 ***</p>
 ````````````````````````````````
 
-
 More than three characters may be used:
 
 ```````````````````````````````` example
-_____________________________________
+-------------------------------------
 .
 <hr>
 ````````````````````````````````
-
-
-Spaces are allowed between the characters:
-
-```````````````````````````````` example
- - - -
-.
-<hr>
-````````````````````````````````
-
-
-```````````````````````````````` example
- **  * ** * ** * **
-.
-<hr>
-````````````````````````````````
-
-
-```````````````````````````````` example
--     -      -      -
-.
-<hr>
-````````````````````````````````
-
-
-Spaces are allowed at the end:
-
-```````````````````````````````` example
-- - - -    
-.
-<hr>
-````````````````````````````````
-
 
 However, no other characters may occur in the line:
 
@@ -343,7 +279,6 @@ Thematic breaks do not need blank lines before or after:
 </ul>
 ````````````````````````````````
 
-
 Thematic breaks can interrupt a paragraph:
 
 ```````````````````````````````` example
@@ -361,7 +296,7 @@ interpretations of a line, the thematic break takes precedence:
 
 ```````````````````````````````` example
 * Foo
-* * *
+***
 * Bar
 .
 <ul>
@@ -373,12 +308,11 @@ interpretations of a line, the thematic break takes precedence:
 </ul>
 ````````````````````````````````
 
-
 If you want a thematic break in a list item, use a different bullet:
 
 ```````````````````````````````` example
 - Foo
-- * * *
+- ***
 .
 <ul>
 <li>Foo</li>
@@ -387,7 +321,6 @@ If you want a thematic break in a list item, use a different bullet:
 </li>
 </ul>
 ````````````````````````````````
-
 
 ## Headings
 
@@ -430,7 +363,6 @@ More than six `#` characters is not a heading:
 <p>####### foo</p>
 ````````````````````````````````
 
-
 At least one space is required between the `#` characters and the
 heading's contents, unless the heading is empty. Note that many
 implementations currently do not require the space. However, the
@@ -446,7 +378,6 @@ headings:
 <p>#hashtag</p>
 ````````````````````````````````
 
-
 This is not a heading, because the first `#` is escaped:
 
 ```````````````````````````````` example
@@ -454,7 +385,6 @@ This is not a heading, because the first `#` is escaped:
 .
 <p>## foo</p>
 ````````````````````````````````
-
 
 Contents are parsed as inlines:
 
@@ -464,7 +394,6 @@ Contents are parsed as inlines:
 <h1>foo <em>bar</em> *baz*</h1>
 ````````````````````````````````
 
-
 Leading and trailing blanks are ignored in parsing inline content:
 
 ```````````````````````````````` example
@@ -472,7 +401,6 @@ Leading and trailing blanks are ignored in parsing inline content:
 .
 <h1>foo</h1>
 ````````````````````````````````
-
 
 One to three spaces indentation are allowed:
 
@@ -486,7 +414,6 @@ One to three spaces indentation are allowed:
 <h1>foo</h1>
 ````````````````````````````````
 
-
 Four spaces are too much:
 
 ```````````````````````````````` example
@@ -496,7 +423,6 @@ Four spaces are too much:
 </code></pre>
 ````````````````````````````````
 
-
 ```````````````````````````````` example
 foo
     # bar
@@ -504,7 +430,6 @@ foo
 <p>foo
 # bar</p>
 ````````````````````````````````
-
 
 A closing sequence of `#` characters is optional:
 
@@ -516,7 +441,6 @@ A closing sequence of `#` characters is optional:
 <h3>bar</h3>
 ````````````````````````````````
 
-
 It need not be the same length as the opening sequence:
 
 ```````````````````````````````` example
@@ -527,7 +451,6 @@ It need not be the same length as the opening sequence:
 <h5>foo</h5>
 ````````````````````````````````
 
-
 Spaces are allowed after the closing sequence:
 
 ```````````````````````````````` example
@@ -535,7 +458,6 @@ Spaces are allowed after the closing sequence:
 .
 <h3>foo</h3>
 ````````````````````````````````
-
 
 A sequence of `#` characters with anything but [spaces] following it
 is not a closing sequence, but counts as part of the contents of the
@@ -547,7 +469,6 @@ heading:
 <h3>foo ### b</h3>
 ````````````````````````````````
 
-
 The closing sequence must be preceded by a space:
 
 ```````````````````````````````` example
@@ -555,7 +476,6 @@ The closing sequence must be preceded by a space:
 .
 <h1>foo#</h1>
 ````````````````````````````````
-
 
 Backslash-escaped `#` characters do not count as part
 of the closing sequence:
@@ -570,9 +490,7 @@ of the closing sequence:
 <h1>foo #</h1>
 ````````````````````````````````
 
-
-Headings need not be separated from surrounding content by blank
-lines, and they can interrupt paragraphs:
+Headings need not be separated from surrounding content by blank lines, and they can interrupt paragraphs:
 
 ```````````````````````````````` example
 ****

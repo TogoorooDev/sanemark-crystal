@@ -2,8 +2,6 @@ module Sanemark::Rule
   struct ThematicBreak
     include Rule
 
-    THEMATIC_BREAK = /^(?:(?:\*[ \t]*){3,}|(?:_[ \t]*){3,}|(?:-[ \t]*){3,})[ \t]*$/
-
     def match(parser : Parser, container : Node) : MatchValue
       if !parser.indented && parser.line[parser.next_nonspace..-1].match(THEMATIC_BREAK)
         parser.close_unmatched_blocks
