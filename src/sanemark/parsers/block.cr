@@ -145,44 +145,38 @@ module Sanemark::Parser
         end
       end
 
-      if !@all_closed && !@blank && tip.type.paragraph?
-        # lazy paragraph continuation
-        add_line
-      else
-        # not a lazy continuation
-        close_unmatched_blocks
-        if @blank && (last_child = container.last_child?)
-          last_child.last_line_blank = true
-        end
-
-        container_type = container.type
-        last_line_blank = @blank &&
-                          !(container_type.block_quote? ||
-                            (container_type.code_block? && container.fenced?) ||
-                            (container_type.item? && !container.first_child? && container.source_pos[0][0] == @current_line))
-
-        cont = container
-        while cont
-          cont.last_line_blank = last_line_blank
-          cont = cont.parent?
-        end
-
-        if @RULES[container_type].accepts_lines?
-          add_line
-
-          # if HtmlBlock, check for end condition
-          if (container_type.html_block? && match_html_block?(container))
-            token(container, @current_line)
-          end
-        elsif @offset < line.size && !@blank
-          # create paragraph container for line
-          add_child(Node::Type::Paragraph, @offset)
-          advance_next_nonspace
-          add_line
-        end
-
-        @last_line_length = line.size
+      close_unmatched_blocks
+      if @blank && (last_child = container.last_child?)
+        last_child.last_line_blank = true
       end
+
+      container_type = container.type
+      last_line_blank = @blank &&
+                        !(container_type.block_quote? ||
+                          (container_type.code_block? && container.fenced?) ||
+                          (container_type.item? && !container.first_child? && container.source_pos[0][0] == @current_line))
+
+      cont = container
+      while cont
+        cont.last_line_blank = last_line_blank
+        cont = cont.parent?
+      end
+
+      if @RULES[container_type].accepts_lines?
+        add_line
+
+        # if HtmlBlock, check for end condition
+        if (container_type.html_block? && match_html_block?(container))
+          token(container, @current_line)
+        end
+      elsif @offset < line.size && !@blank
+        # create paragraph container for line
+        add_child(Node::Type::Paragraph, @offset)
+        advance_next_nonspace
+        add_line
+      end
+
+      @last_line_length = line.size
 
       nil
     end

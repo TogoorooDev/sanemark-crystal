@@ -645,27 +645,13 @@ So, we explain what counts as a block quote or list item by explaining how these
 
 ## Block quotes
 
-A **block quote marker** consists of 0-3 spaces of initial indent, plus (a) the character `>` together with a following space, or (b) a single character `>` not followed by a space.
+A **block quote marker** consists of the character `>` at the start of its line, optionally followed by a space (the first space after it will be treated as part of the block quote marker).
 
 The following rules define block quotes:
 
-1.  **Basic case.**  If a string of lines *Ls* constitute a sequence
-    of blocks *Bs*, then the result of prepending a [block quote
-    marker] to the beginning of each line in *Ls*
-    is a block quote containing *Bs*.
+1. **Basic case.** If a string of lines *Ls* constitute a sequence of blocks *Bs*, then the result of prepending a [block quote marker] to the beginning of each line in *Ls* is a [block quote](#block-quotes) containing *Bs*.
 
-2.  **Laziness.**  If a string of lines *Ls* constitute a block
-    quote with contents *Bs*, then the result of deleting
-    the initial block quote marker from one or
-    more lines in which the next non-whitespace character after the [block
-    quote marker] is [paragraph continuation
-    text] is a block quote with *Bs* as its content.
-    **Paragraph continuation text** is text
-    that will be parsed as part of the content of a paragraph, but does
-    not occur at the beginning of the paragraph.
-
-3.  **Consecutiveness.**  A document cannot contain two block
-    quotes in a row unless there is a blank line between them.
+2. **Consecutiveness.** A document cannot contain two [block quotes] in a row unless there is a [blank line] between them.
 
 Here is a simple example:
 
@@ -681,7 +667,6 @@ baz</p>
 </blockquote>
 ````````````````````````````````
 
-
 The spaces after the `>` characters can be omitted:
 
 ```````````````````````````````` example
@@ -696,7 +681,6 @@ baz</p>
 </blockquote>
 ````````````````````````````````
 
-
 The `>` characters cannot be indented:
 
 ```````````````````````````````` example
@@ -705,8 +689,7 @@ The `>` characters cannot be indented:
 <p>&gt; Foo</p>
 ````````````````````````````````
 
-The Laziness clause allows us to omit the `>` before
-paragraph continuation text:
+The `>` character must appear before *every* line, or the block quote ends:
 
 ```````````````````````````````` example
 > # Foo
@@ -715,74 +698,10 @@ baz
 .
 <blockquote>
 <h1>Foo</h1>
-<p>bar
-baz</p>
+<p>bar</p>
 </blockquote>
+<p>baz</p>
 ````````````````````````````````
-
-
-A block quote can contain some lazy and some non-lazy
-continuation lines:
-
-```````````````````````````````` example
-> bar
-baz
-> foo
-.
-<blockquote>
-<p>bar
-baz
-foo</p>
-</blockquote>
-````````````````````````````````
-
-
-Laziness only applies to lines that would have been continuations of
-paragraphs had they been prepended with block quote markers.
-For example, the `> ` cannot be omitted in the second line of
-
-``` markdown
-> foo
-> ---
-```
-
-without changing the meaning:
-
-```````````````````````````````` example
-> foo
----
-.
-<blockquote>
-<p>foo</p>
-</blockquote>
-<hr>
-````````````````````````````````
-
-
-Similarly, if we omit the `> ` in the second line of
-
-``` markdown
-> - foo
-> - bar
-```
-
-then the block quote ends after the first line:
-
-```````````````````````````````` example
-> - foo
-- bar
-.
-<blockquote>
-<ul>
-<li>foo</li>
-</ul>
-</blockquote>
-<ul>
-<li>bar</li>
-</ul>
-````````````````````````````````
-
-For the same reason, we can't omit the `> ` in front of subsequent lines of a code block:
 
 ```````````````````````````````` example
 > ```
@@ -795,6 +714,8 @@ foo
 <p>foo</p>
 <pre><code></code></pre>
 ````````````````````````````````
+
+A block quote can be empty:
 
 ```````````````````````````````` example
 >
@@ -839,12 +760,6 @@ A blank line always separates block quotes:
 <p>bar</p>
 </blockquote>
 ````````````````````````````````
-
-
-(Most current Markdown implementations, including John Gruber's
-original `Markdown.pl`, will parse this example as a single block quote
-with two paragraphs. But it seems better to allow the author to decide
-whether two block quotes or one are wanted.)
 
 Consecutiveness means that if we put these block quotes together,
 we get a single block quote:
@@ -904,21 +819,6 @@ quotes:
 </blockquote>
 ````````````````````````````````
 
-
-However, because of laziness, a blank line is needed between
-a block quote and a following paragraph:
-
-```````````````````````````````` example
-> bar
-baz
-.
-<blockquote>
-<p>bar
-baz</p>
-</blockquote>
-````````````````````````````````
-
-
 ```````````````````````````````` example
 > bar
 
@@ -942,10 +842,7 @@ baz
 <p>baz</p>
 ````````````````````````````````
 
-
-It is a consequence of the Laziness rule that any number
-of initial `>`s may be omitted on a continuation line of a
-nested block quote:
+Nested examples:
 
 ```````````````````````````````` example
 > > > foo
@@ -954,13 +851,12 @@ bar
 <blockquote>
 <blockquote>
 <blockquote>
-<p>foo
-bar</p>
+<p>foo</p>
 </blockquote>
 </blockquote>
 </blockquote>
+<p>bar</p>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 >>> foo
@@ -970,26 +866,22 @@ bar</p>
 <blockquote>
 <blockquote>
 <blockquote>
-<p>foo
-bar
-baz</p>
+<p>foo</p>
 </blockquote>
+</blockquote>
+<p>bar</p>
+<blockquote>
+<p>baz</p>
 </blockquote>
 </blockquote>
 ````````````````````````````````
 ## List items
 
-A **list marker** is a
-bullet list marker or an ordered list marker.
+A **list marker** is a bullet list marker or an ordered list marker.
 
-A **bullet list marker**
-is a `-`, `+`, or `*` character.
+A **bullet list marker** is a `-`, `+`, or `*` character.
 
-An **ordered list marker**
-is a sequence of 1--9 arabic digits (`0-9`), followed by either a
-`.` character or a `)` character. (The reason for the length
-limit is that with 10 digits we start seeing integer overflows
-in some browsers.)
+An **ordered list marker** is a sequence of 1--9 arabic digits (`0-9`), followed by either a `.` character or a `)` character. (The reason for the length limit is that with 10 digits we start seeing integer overflows in some browsers.)
 
 The following rules define list items:
 
@@ -1024,7 +916,6 @@ with two lines.</p>
 <p>A block quote.</p>
 </blockquote>
 ````````````````````````````````
-
 
 And let *M* be the marker `1.`, and *N* = 2. Then rule #1 says
 that the following is an ordered list item with start number 1,
@@ -1481,32 +1372,11 @@ with two lines.</p>
 </ol>
 ````````````````````````````````
 
-4.  **Laziness.**  If a string of lines *Ls* constitute a [list
-    item](#list-items) with contents *Bs*, then the result of deleting
-    some or all of the indentation from one or more lines in which the
-    next non-whitespace character after the indentation is
-    paragraph continuation text is a
-    list item with the same contents and attributes. The unindented
-    lines are called
-    **lazy continuation line**s.
-
-Indentation can be partially deleted:
-
-```````````````````````````````` example
-  1.  A paragraph
-    with two lines.
-.
-<ol>
-<li>A paragraph
-with two lines.</li>
-</ol>
-````````````````````````````````
-
-These examples show how laziness can work in nested structures:
+Complex examples with nested structures (note that the blockquote continuation must match the column of the starting one):
 
 ```````````````````````````````` example
 > 1. > Blockquote
-continued here.
+>    > continued here.
 .
 <blockquote>
 <ol>
@@ -1521,19 +1391,29 @@ continued here.</p>
 ````````````````````````````````
 
 ```````````````````````````````` example
-> 1. > Blockquote
-> continued here.
+* Start item
+
+    1. Sublist
+
+       > ```
+       > code
+       > ```
+
 .
-<blockquote>
+<ul>
+<li>
+<p>Start item</p>
 <ol>
 <li>
+<p>Sublist</p>
 <blockquote>
-<p>Blockquote
-continued here.</p>
+<pre><code>code
+</code></pre>
 </blockquote>
 </li>
 </ol>
-</blockquote>
+</li>
+</ul>
 ````````````````````````````````
 
 The rules for sublists follow from the general rules above. A sublist
