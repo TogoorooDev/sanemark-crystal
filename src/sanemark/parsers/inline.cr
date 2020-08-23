@@ -18,7 +18,7 @@ module Sanemark::Parser
     def parse(node : Node)
       @pos = 0
       @delimiters = nil
-      @text = node.text.strip
+      @text = node.text.chomp("\n")
 
       loop do
         break unless process_line(node)

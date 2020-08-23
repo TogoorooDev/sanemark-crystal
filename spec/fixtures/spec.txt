@@ -334,12 +334,12 @@ Contents are parsed as inlines:
 <h1>foo <em>bar</em> *baz*</h1>
 ````````````````````````````````
 
-Leading and trailing blanks are ignored in parsing inline content:
+Leading and trailing blanks are ignored in parsing inline content (except where part of the grammar):
 
 ```````````````````````````````` example
-#                  foo                     
+#  foo 
 .
-<h1>foo</h1>
+<h1> foo </h1>
 ````````````````````````````````
 
 Heading markers must be at the beginning of the line:
