@@ -3486,10 +3486,8 @@ A backslash at the end of the line is a [hard line break]:
 foo\
 bar
 .
-<p>foo<br>
-bar</p>
+<p>foo<br>bar</p>
 ````````````````````````````````
-
 
 Backslash escapes do not work in code blocks, code spans, or raw HTML:
 
@@ -6089,30 +6087,48 @@ foo <a href="\*">
 <p>&lt;a href=&quot;&quot;&quot;&gt;</p>
 ````````````````````````````````
 
+## Soft line breaks
+
+A regular line break (not in a code span or HTML tag) that is not directly after a backslash is parsed as a [softbreak](@). A softbreak should be rendered in HTML as a newline; this will not display a line break by default, allowing hard-wrapped paragraphs to render correctly, but if you want them to render as line breaks, use this CSS:
+
+```css
+p {
+	white-space: pre-line;
+	word-break: break-word;
+}
+```
+
+An example of a soft break:
+
+```````````````````````````````` example
+foo
+baz
+.
+<p>foo
+baz</p>
+````````````````````````````````
 
 ## Hard line breaks
 
-A backslash before the [line ending] may be used to insert a <br>:
+A backslash before the [line ending] may be used to insert a line break (`<br>`) regardless of CSS:
 
 ```````````````````````````````` example
 foo\
 baz
 .
-<p>foo<br>
-baz</p>
+<p>foo<br>baz</p>
 ````````````````````````````````
 
-Line breaks can occur inside emphasis, links, and other constructs
-that allow inline content:
+Note that this must *not* be rendered with an ASCII newline after the `<br>` or else it would appear as *two* line breaks if the suggested CSS is used.
+
+Line breaks can occur inside emphasis, links, and other constructs that allow inline content:
 
 ```````````````````````````````` example
 *foo\
 bar*
 .
-<p><em>foo<br>
-bar</em></p>
+<p><em>foo<br>bar</em></p>
 ````````````````````````````````
-
 
 Line breaks do not occur inside code spans
 
@@ -6131,7 +6147,6 @@ span`
 <p><code>code\ span</code></p>
 ````````````````````````````````
 
-
 or HTML tags:
 
 ```````````````````````````````` example
@@ -6142,8 +6157,7 @@ bar">
 bar"></p>
 ````````````````````````````````
 
-Hard line breaks are for separating inline content within a block.
-They don't work at the end of a paragraph or other block element:
+Hard line breaks are for separating inline content within a block. They don't work at the end of a paragraph or other block element:
 
 ```````````````````````````````` example
 foo\
@@ -6151,39 +6165,17 @@ foo\
 <p>foo\</p>
 ````````````````````````````````
 
-
 ```````````````````````````````` example
 ### foo\
 .
 <h3>foo\</h3>
 ````````````````````````````````
 
-## Soft line breaks
-
-A regular line break (not in a code span or HTML tag) that is not
-preceded by two or more spaces or a backslash is parsed as a
-[softbreak](@).  (A softbreak may be rendered in HTML either as a
-[line ending] or as a space. The result will be the same in
-browsers. In the examples here, a [line ending] will be used.)
-
-```````````````````````````````` example
-foo
-baz
-.
-<p>foo
-baz</p>
-````````````````````````````````
-
-A conforming parser may render a soft line break in HTML either as a
-line break or as a space.
-
-A renderer may also provide an option to render soft line breaks
-as hard line breaks.
+TODO why not? This should work.
 
 ## Textual content
 
-Any characters not given an interpretation by the above rules will
-be parsed as plain textual content.
+Any characters not given an interpretation by the above rules will be parsed as plain textual content.
 
 ```````````````````````````````` example
 hello $.;'there
@@ -6191,13 +6183,11 @@ hello $.;'there
 <p>hello $.;'there</p>
 ````````````````````````````````
 
-
 ```````````````````````````````` example
 Foo χρῆν
 .
 <p>Foo χρῆν</p>
 ````````````````````````````````
-
 
 Internal spaces are preserved verbatim:
 

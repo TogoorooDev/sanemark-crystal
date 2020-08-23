@@ -176,12 +176,11 @@ module Sanemark
     end
 
     def soft_break(node : Node, entering : Bool)
-      @options.join_lines ? lit("\n") : tag("br")
+      lit("\n")
     end
 
     def line_break(node : Node, entering : Bool)
       tag("br")
-      cr
     end
 
     def strong(node : Node, entering : Bool)
@@ -192,7 +191,7 @@ module Sanemark
       out(node.text)
     end
 
-    private def tag(name : String, attrs = nil, end_tag = false)
+    private def tag(name : String, attrs = nil, self_closing = false, end_tag = false)
       return if @disable_tag > 0
 
       @output_io << "<"

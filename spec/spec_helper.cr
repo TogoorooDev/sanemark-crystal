@@ -43,7 +43,7 @@ def assert_exapmle(file, section, index, example)
   html = example["html"].gsub("→", "\t")
   line = example["line"].to_i
 
-  options = Sanemark::Options.new(join_lines: true)
+  options = Sanemark::Options.new
   it "- #{index}\n#{show_space(markdown)}", file, line do
     output = Sanemark.to_html(markdown, options)
     output.should eq(html), file, line
