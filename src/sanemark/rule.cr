@@ -17,8 +17,6 @@ module Sanemark
 
     ESCAPABLE = /^#{ESCAPABLE_STRING}/
 
-    TICKS = /`+/
-
     OPEN_TAG  = "<" + TAG_NAME_STRING + ATTRIBUTE + "*" + "\\s*/?>"
     CLOSE_TAG = "</" + TAG_NAME_STRING + "\\s*[>]"
 

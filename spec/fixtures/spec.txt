@@ -770,7 +770,7 @@ The fences must be at the start of the line:
  aaa
  ```
 .
-<p><code>aaa</code></p>
+<p>``<code> aaa </code>``</p>
 ````````````````````````````````
 
 Code fences (opening and closing) cannot contain internal spaces:
@@ -779,7 +779,7 @@ Code fences (opening and closing) cannot contain internal spaces:
 ``` ```
 aaa
 .
-<p><code></code>
+<p>``<code> </code>``
 aaa</p>
 ````````````````````````````````
 
@@ -859,7 +859,7 @@ end
 ``` aa ```
 foo
 .
-<p><code>aa</code>
+<p>``<code> aa </code>``
 foo</p>
 ````````````````````````````````
 
@@ -3479,24 +3479,7 @@ If a backslash is itself escaped, the following character is not:
 <p>\<em>emphasis</em></p>
 ````````````````````````````````
 
-
-A backslash at the end of the line is a [hard line break]:
-
-```````````````````````````````` example
-foo\
-bar
-.
-<p>foo<br>bar</p>
-````````````````````````````````
-
-Backslash escapes do not work in code blocks, code spans, or raw HTML:
-
-```````````````````````````````` example
-`` \[\` ``
-.
-<p><code>\[\`</code></p>
-````````````````````````````````
-
+Backslash escapes do not work in code blocks or HTML:
 
 ```````````````````````````````` example
     \[\]
@@ -3504,7 +3487,6 @@ Backslash escapes do not work in code blocks, code spans, or raw HTML:
 <pre><code>\[\]
 </code></pre>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 ~~~
@@ -3515,23 +3497,19 @@ Backslash escapes do not work in code blocks, code spans, or raw HTML:
 </code></pre>
 ````````````````````````````````
 
-
 ```````````````````````````````` example
 <a href="/bar\/)">
 .
 <a href="/bar\/)">
 ````````````````````````````````
 
-
-But they work in all other contexts, including URLs, link titles,
-and link references:
+But they work in all other contexts, including URLs and link references:
 
 ```````````````````````````````` example
 [foo](/bar\*)
 .
 <p><a href="/bar*">foo</a></p>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 [foo]
@@ -3541,18 +3519,9 @@ and link references:
 <p><a href="/bar*">foo</a></p>
 ````````````````````````````````
 
-
 ## Code spans
 
-A [backtick string](@)
-is a string of one or more backtick characters (`` ` ``) that is neither
-preceded nor followed by a backtick.
-
-A [code span](@) begins with a backtick string and ends with
-a backtick string of equal length. The contents of the code span are
-the characters between the two backtick strings, with leading and
-trailing spaces and [line endings] removed, and
-[whitespace] collapsed to single spaces.
+A [code span](@) begins and ends with an unescaped backtick (`\``).
 
 This is a simple code span:
 
@@ -3562,24 +3531,12 @@ This is a simple code span:
 <p><code>foo</code></p>
 ````````````````````````````````
 
-
-Here two backticks are used, because the code contains a backtick.
-This example also illustrates stripping of leading and trailing spaces:
+Whitespace is not tampered with:
 
 ```````````````````````````````` example
-`` foo ` bar  ``
+` foo  bar `
 .
-<p><code>foo ` bar</code></p>
-````````````````````````````````
-
-
-This example shows the motivation for stripping leading and trailing
-spaces:
-
-```````````````````````````````` example
-` `` `
-.
-<p><code>``</code></p>
+<p><code> foo  bar </code></p>
 ````````````````````````````````
 
 For the sake of those who use hard wrapping, [Line endings] are treated like spaces:
@@ -3589,51 +3546,35 @@ For the sake of those who use hard wrapping, [Line endings] are treated like spa
 foo
 `
 .
-<p><code>foo</code></p>
+<p><code> foo </code></p>
 ````````````````````````````````
 
-
-Interior spaces are not collapsed:
+Inside code spans, backslashes have no special meaning except before `\\` and `\``:
 
 ```````````````````````````````` example
-`foo   bar`
+`\*foo\*`
+`\\`
+`\``
 .
-<p><code>foo   bar</code></p>
+<p><code>\*foo\*</code>
+<code>\</code>
+<code>`</code></p>
 ````````````````````````````````
 
-
+Code spans cannot be empty; this causes both backticks to be taken literally:
 ```````````````````````````````` example
-`foo `` bar`
+`` foo`
 .
-<p><code>foo `` bar</code></p>
+<p>`` foo`</p>
 ````````````````````````````````
 
-
-Note that backslash escapes do not work in code spans. All backslashes
-are treated literally:
-
-```````````````````````````````` example
-`foo\`bar`
-.
-<p><code>foo\</code>bar`</p>
-````````````````````````````````
-
-
-Backslash escapes are never needed, because one can always choose a
-string of *n* backtick characters as delimiters, where the code does
-not contain any strings of exactly *n* backtick characters.
-
-Code span backticks have higher precedence than any other inline
-constructs except HTML tags. Thus, for example, this is
-not parsed as emphasized text, since the second `*` is part of a code
-span:
+Code span backticks have higher precedence than any other inline constructs except HTML tags. Thus, for example, this is not parsed as emphasized text, since the second `*` is part of a code span:
 
 ```````````````````````````````` example
 *foo`*`
 .
 <p>*foo<code>*</code></p>
 ````````````````````````````````
-
 
 And this is not parsed as a link:
 
@@ -3643,7 +3584,6 @@ And this is not parsed as a link:
 <p>[not a <code>link](/foo</code>)</p>
 ````````````````````````````````
 
-
 Code spans and HTML tags have the same precedence. Thus, this is code:
 
 ```````````````````````````````` example
@@ -3651,7 +3591,6 @@ Code spans and HTML tags have the same precedence. Thus, this is code:
 .
 <p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>
 ````````````````````````````````
-
 
 But this is an HTML tag:
 
@@ -3661,22 +3600,13 @@ But this is an HTML tag:
 <p><a href="`">`</p>
 ````````````````````````````````
 
-When a backtick string is not closed by a matching backtick string,
-we just have literal backticks:
-
-```````````````````````````````` example
-```foo``
-.
-<p>```foo``</p>
-````````````````````````````````
-
+When a backtick is not closed, we just have a literal backtick:
 
 ```````````````````````````````` example
 `foo
 .
 <p>`foo</p>
 ````````````````````````````````
-
 
 ## Emphasis and strong emphasis
 

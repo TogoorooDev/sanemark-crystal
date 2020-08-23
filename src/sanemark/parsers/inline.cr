@@ -32,7 +32,6 @@ module Sanemark::Parser
       char = char_at?(@pos)
 
       return false unless char && char != Char::ZERO
-
       res = case char
             when '\n'
               newline(node)
@@ -90,26 +89,36 @@ module Sanemark::Parser
 
     private def backtick(node : Node)
       start_pos = @pos
-      while char_at?(@pos) == '`'
+      contents = ""
+      loop do
         @pos += 1
-      end
-      return false if start_pos == @pos
-
-      num_ticks = @pos - start_pos
-      after_open_ticks = @pos
-      while text = match(Rule::TICKS)
-        if text.bytesize == num_ticks
-          child = Node.new(Node::Type::Code)
-          child.text = @text.byte_slice(after_open_ticks, (@pos - num_ticks) - after_open_ticks).strip.gsub('\n', ' ') #TODO find a way to represent code with leading or trailing space
-          node.append_child(child)
-
-          return true
+        case char_at?(@pos)
+        when nil
+          @pos = start_pos
+          return false
+        when '\\'
+          nextchar = char_at?(@pos + 1)
+          if {'\\', '`'}.includes? nextchar
+            contents += nextchar.as Char
+            @pos += 1
+          else
+            contents += '\\'
+          end
+        when '`'
+          @pos += 1
+          # No empty code spans.
+          if contents.size == 0
+            node.append_child(text "``")
+            return true
+          end
+          break
+        else
+          contents += char_at?(@pos).as Char
         end
       end
-
-      @pos = after_open_ticks
-      node.append_child(text("`" * num_ticks))
-
+      child = Node.new(Node::Type::Code)
+      child.text = contents.gsub '\n', ' '
+      node.append_child(child)
       true
     end
 
