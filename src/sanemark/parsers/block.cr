@@ -36,7 +36,7 @@ module Sanemark::Parser
       @blank = false
       @partially_consumed_tab = false
       @all_closed = true
-      @refmap = {} of String => Hash(String, String) | String
+      @refmap = {} of String => String
 
       @RULES = {
         Node::Type::Document      => Rule::Document.new,

@@ -103,11 +103,6 @@ module Sanemark
           attrs["href"] = escape(destination)
         end
 
-        if (title = node.data["title"].as(String)) && !title.empty?
-          attrs ||= {} of String => String
-          attrs["title"] = escape(title)
-        end
-
         tag("a", attrs)
 
         if !node.first_child?
@@ -143,10 +138,7 @@ module Sanemark
       else
         @disable_tag -= 1
         if @disable_tag == 0
-          if (title = node.data["title"].as(String)) && !title.empty?
-            lit(%(" title="#{escape(title)}))
-          end
-          lit(%(" />))
+          lit(%(">))
         end
       end
     end

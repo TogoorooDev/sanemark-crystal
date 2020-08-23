@@ -12,7 +12,7 @@ module Sanemark::Parser
     def initialize(@options : Options)
       @text = ""
       @pos = 0
-      @refmap = {} of String => Hash(String, String) | String
+      @refmap = {} of String => String
     end
 
     def parse(node : Node)
@@ -151,7 +151,6 @@ module Sanemark::Parser
     end
 
     private def close_bracket(node : Node)
-      title = ""
       dest = ""
       matched = false
       @pos += 1
@@ -182,10 +181,8 @@ module Sanemark::Parser
       # Inline link?
       if char_at?(@pos) == '('
         @pos += 1
-        if spnl && (dest = link_destination) &&
-           spnl && (char_at?(@pos - 1).try(&.whitespace?) &&
-           (title = link_title) || true) && spnl &&
-           char_at?(@pos) == ')'
+        dest = link_destination
+        if (dest != "") && char_at?(@pos) == ')'
           @pos += 1
           matched = true
         else
@@ -198,12 +195,13 @@ module Sanemark::Parser
         # Next, see if there's a link label
         before_label = @pos
         label_size = link_label
+        # The size includes the brackets.
         if label_size > 2
-          ref_label = normalize_refernence(@text.byte_slice(before_label, label_size + 1))
+          ref_label = normalize_reference(@text.byte_slice(before_label, label_size + 1))
         elsif !opener.bracket_after
           # Empty or missing second label means to use the first label as the reference.
           # The reference must not contain a bracket. If we know there's a bracket, we don't even bother checking it.
-          ref_label = normalize_refernence(@text.byte_slice(opener.index, start_pos - opener.index))
+          ref_label = normalize_reference(@text.byte_slice(opener.index, start_pos - opener.index))
         end
 
         if label_size == 0
@@ -213,9 +211,7 @@ module Sanemark::Parser
 
         if ref_label && @refmap[ref_label]?
           # lookup rawlabel in refmap
-          link = @refmap[ref_label].as(Hash)
-          dest = link["destination"] if link["destination"]
-          title = link["title"] if link["title"]
+          dest = @refmap[ref_label]
           matched = true
         end
       end
@@ -223,7 +219,6 @@ module Sanemark::Parser
       if matched
         child = Node.new(is_image ? Node::Type::Image : Node::Type::Link)
         child.data["destination"] = dest
-        child.data["title"] = title || ""
 
         tmp = opener.node.next?
         while tmp
@@ -382,7 +377,6 @@ module Sanemark::Parser
       destination = email ? "mailto:#{dest}" : dest
 
       node = Node.new(Node::Type::Link)
-      node.data["title"] = ""
       node.data["destination"] = normalize_uri(destination)
       node.append_child(text(dest))
       node
@@ -390,6 +384,8 @@ module Sanemark::Parser
 
     private def link_label
       text = match(Rule::LINK_LABEL)
+      # I assume markd limited label length to 1000 for security reasons?
+      # Ensure its closing bracket isn't escaped.
       if text && text.size <= 1001 && (!text.ends_with?("\\]") || text[-3]? == '\\')
         text.bytesize - 1
       else
@@ -397,40 +393,28 @@ module Sanemark::Parser
       end
     end
 
-    private def link_title
-      title = match(Rule::LINK_TITLE)
-      return unless title
-
-      Utils.escape(title[1..-2])
-    end
-
     private def link_destination
-      dest = begin
-               save_pos = @pos
-               open_parens = 0
-               while char = char_at?(@pos)
-                 case char
-                 when '\\'
-                   @pos += 1
-                   @pos += 1 if char_at?(@pos)
-                 when '('
-                   @pos += 1
-                   open_parens += 1
-                 when ')'
-                   break if open_parens < 1
-
-                   @pos += 1
-                   open_parens -= 1
-                 when .ascii_whitespace?
-                   break
-                 else
-                   @pos += 1
-                 end
-               end
-
-               @text.byte_slice(save_pos, @pos - save_pos)
-             end
-
+      save_pos = @pos
+      open_parens = 0
+      while char = char_at?(@pos)
+        case char
+        when '\\'
+          @pos += 1
+          @pos += 1 if char_at?(@pos)
+        when '('
+          @pos += 1
+          open_parens += 1
+        when ')'
+          break if open_parens < 1
+          @pos += 1
+          open_parens -= 1
+        when .ascii_whitespace?
+          break
+        else
+          @pos += 1
+        end
+      end
+      dest = @text.byte_slice(save_pos, @pos - save_pos)
       normalize_uri(Utils.escape(dest))
     end
 
@@ -540,7 +524,6 @@ module Sanemark::Parser
 
       # link url
       spnl
-
       dest = link_destination
 
       if dest.size == 0
@@ -548,43 +531,20 @@ module Sanemark::Parser
         return 0
       end
 
-      before_title = @pos
-      spnl
-      title = link_title
-      unless title
-        title = ""
-        @pos = before_title
-      end
-
-      at_line_end = true
-      unless space_at_end_of_line?
-        if title.empty?
-          at_line_end = false
-        else
-          title = ""
-          @pos = before_title
-          at_line_end = space_at_end_of_line?
-        end
-      end
-
-      unless at_line_end
+      unless char_at?(@pos) == '\n'
         @pos = startpos
         return 0
       end
+      @pos += 1
 
-      normal_label = normalize_refernence(raw_label)
+      normal_label = normalize_reference(raw_label)
+      # Fail if the normalized label is empty.
       if normal_label.empty?
         @pos = startpos
         return 0
       end
 
-      unless refmap[normal_label]?
-        refmap[normal_label] = {
-          "destination" => dest,
-          "title"       => title,
-        }
-      end
-
+      refmap[normal_label] = dest
       return @pos - startpos
     end
 
@@ -680,7 +640,7 @@ module Sanemark::Parser
 
     # Normalize reference label: collapse internal whitespace
     # to single space, remove leading/trailing whitespace, case fold.
-    def normalize_refernence(text : String)
+    def normalize_reference(text : String)
       text[1..-2].strip.downcase.gsub("\n", " ")
     end
 

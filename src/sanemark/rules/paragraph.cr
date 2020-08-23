@@ -13,7 +13,6 @@ module Sanemark::Rule
 
     def token(parser : Parser, container : Node) : Nil
       has_reference_defs = false
-
       while container.text[0]? == '[' &&
             (pos = parser.inline_lexer.reference(container.text, parser.refmap)) && pos > 0
         container.text = container.text.byte_slice(pos)

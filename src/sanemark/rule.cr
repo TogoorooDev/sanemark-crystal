@@ -47,10 +47,6 @@ module Sanemark
       /^<\/nomd>/,
     ]
 
-    LINK_TITLE = Regex.new("^(?:\"(#{ESCAPED_CHAR_STRING}|[^\"\\x00])*\"" +
-                           "|'(#{ESCAPED_CHAR_STRING}|[^'\\x00])*'" +
-                           "|\\((#{ESCAPED_CHAR_STRING}|[^)\\x00])*\\))")
-
     LINK_LABEL = Regex.new("^\\[(?:[^\\\\\\[\\]]|" + ESCAPED_CHAR_STRING + "|\\\\){0,}\\]")
 
     PUNCTUATION          = /\p{P}/
