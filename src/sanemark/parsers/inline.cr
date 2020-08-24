@@ -20,7 +20,7 @@ module Sanemark::Parser
       @delimiters = nil
       @text = node.text.chomp("\n")
 
-      loop do
+      while true
         break unless process_line(node)
       end
 

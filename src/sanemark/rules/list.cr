@@ -113,7 +113,7 @@ module Sanemark::Rule
       spaces_start_column = parser.column
       spaces_start_offset = parser.offset
 
-      loop do
+      while true
         parser.advance_offset(1, true)
         next_char = parser.line[parser.offset]?
 
