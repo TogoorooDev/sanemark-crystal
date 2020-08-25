@@ -1,8 +1,9 @@
 name: sanemark
 version: 0.0.0
+description: "An implementation of Sanemark, a simpler, saner Markdown specification."
 
 authors:
   - icyleaf <icyleaf.cn@gmail.com>
   - Yujiri <yujiri@protonmail.com>
 
-license: LGPLv3
+license: GPLv3

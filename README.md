@@ -3,7 +3,7 @@ A [Crystal](https://crystal-lang.org) implementation of [Sanemark](https://yujir
 ## Quick start
 
 ```crystal
-require "markd"
+require "sanemark"
 
 html = Sanemark.to_html(markdown)
 ```
@@ -11,8 +11,8 @@ html = Sanemark.to_html(markdown)
 Also here are options to configure the parse and render.
 
 ```crystal
-options = Markd::Options.new(safe: true)
-Markd.to_html(markdown, options)
+options = Sanemark::Options.new(safe: true)
+Sanemark.to_html(markdown, options)
 ```
 
 ## Options
@@ -31,7 +31,7 @@ If you want to use a custom renderer, it can!
 
 ```crystal
 
-class CustomRenderer < Markd::Renderer
+class CustomRenderer < Sanemark::Renderer
 
   def strong(node, entering)
   end
@@ -39,8 +39,8 @@ class CustomRenderer < Markd::Renderer
   # more methods following in render.
 end
 
-options = Markd::Options.new(time: true)
-document = Markd::Parser.parse(markdown, options)
+options = Sanemark::Options.new(time: true)
+document = Sanemark::Parser.parse(markdown, options)
 renderer = CustomRenderer.new(options)
 
 html = renderer.render(document)
