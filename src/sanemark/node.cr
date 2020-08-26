@@ -1,12 +1,13 @@
 module Sanemark
   class Node
-    # Node Type
     enum Type
       Document
       Paragraph
       Text
-      Strong
-      Emphasis
+      OpenStrong
+      CloseStrong
+      OpenEmphasis
+      CloseEmphasis
       Link
       Image
       Heading
@@ -32,8 +33,6 @@ module Sanemark
     CONTAINER_TYPES = {
       Type::Document,
       Type::Paragraph,
-      Type::Strong,
-      Type::Emphasis,
       Type::Link,
       Type::Image,
       Type::Heading,
@@ -85,16 +84,27 @@ module Sanemark
 
     def insert_after(sibling : Node)
       sibling.unlink
-
       if nxt = next?
         nxt.prev = sibling
       elsif parent = parent?
         parent.last_child = sibling
       end
       sibling.next = nxt
-
       sibling.prev = self
       @next = sibling
+      sibling.parent = parent?
+    end
+
+    def insert_before(sibling : Node)
+      sibling.unlink
+      if prev = prev?
+        prev.next = sibling
+      elsif parent = parent?
+        parent.first_child = sibling
+      end
+      sibling.prev = prev
+      sibling.next = self
+      @prev = sibling
       sibling.parent = parent?
     end
 

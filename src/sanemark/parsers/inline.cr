@@ -7,18 +7,17 @@ module Sanemark::Parser
     property refmap
     private getter! brackets
 
-    @delimiters : Delimiter?
-
     def initialize(@options : Options)
       @text = ""
       @pos = 0
       @refmap = {} of String => String
+      @delimiters = [] of Delimiter
     end
 
     def parse(node : Node)
       @pos = 0
-      @delimiters = nil
       @text = node.text.chomp("\n")
+      @delimiters = [] of Delimiter
 
       while true
         break unless process_line(node)
@@ -39,8 +38,8 @@ module Sanemark::Parser
               backslash(node)
             when '`'
               backtick(node)
-            when '*', '_'
-              handle_delim(char, node)
+            when '*'
+              delim(char, node)
             when '['
               open_bracket(node)
             when '!'
@@ -140,7 +139,7 @@ module Sanemark::Parser
 
     private def add_bracket(node : Node, index : Int32, image = false)
       brackets.bracket_after = true if brackets?
-      @brackets = Bracket.new(node, @brackets, @delimiters, index, image, true)
+      @brackets = Bracket.new(node, @brackets, [] of Delimiter, index, image, true)
     end
 
     private def remove_bracket
@@ -172,10 +171,10 @@ module Sanemark::Parser
         node.append_child(text("]"))
         return true
       end
-
       unless opener.active
         # no matched opener, just return a literal
         node.append_child(text("]"))
+        process_emphasis(opener.delimiters)
         # take opener off brackets stack
         remove_bracket
         return true
@@ -238,7 +237,7 @@ module Sanemark::Parser
         end
 
         node.append_child(child)
-        process_emphasis(opener.previous_delimiter)
+        process_emphasis(opener.delimiters)
         remove_bracket
         opener.node.unlink
 
@@ -253,111 +252,103 @@ module Sanemark::Parser
         remove_bracket
         @pos = start_pos
         node.append_child(text("]"))
+        @delimiters.concat opener.delimiters
       end
 
       true
     end
 
-    private def process_emphasis(delimiter : Delimiter?)
-      # find first closer above stack_bottom:
-      closer = @delimiters
-      while closer
-        previous = closer.previous?
-        break if previous == delimiter
-        closer = previous
-      end
-
-      if closer
-        openers_bottom = {
-          '_'  => delimiter,
-          '*'  => delimiter,
-        } of Char => Delimiter?
-
-        # move forward, looking for closers, and handling each
-        while closer
-          closer_char = closer.char
-
-          unless closer.can_close
-            closer = closer.next?
-            next
+    # While parsing, delimiters are just added as text nodes and @delimiters is set.
+    # This is called afterward to process @delimiters.
+    private def process_emphasis(delims : Array(Delimiter)?)
+      delims ||= @delimiters
+      strong_opener = nil
+      emph_opener = nil
+      delims.each do |current|
+        matched_emph = false
+        matched_strong = false
+        case current.num_delims
+        when 1
+          # If we're looking for an opener
+          if emph_opener.nil? && current.can_open
+            emph_opener = current
+          elsif !emph_opener.nil? && current.can_close
+            emph_opener.node.insert_after(Node.new Node::Type::OpenEmphasis)
+            current.node.insert_before(Node.new Node::Type::CloseEmphasis)
+            matched_emph = true
           end
-
-          # found emphasis closer. now look back for first matching opener:
-          opener = closer.previous?
-          opener_found = false
-          while opener && opener != delimiter && opener != openers_bottom[closer_char]
-            odd_match = (closer.can_open || opener.can_close) &&
-                        (opener.orig_delims + closer.orig_delims) % 3 == 0
-            if opener.char == closer.char && opener.can_open && !odd_match
-              opener_found = true
-              break
-            end
-            opener = opener.previous?
+        when 2
+          # If we're looking for an opener
+          if strong_opener.nil? && current.can_open
+            strong_opener = current
+          elsif !strong_opener.nil? && current.can_close
+            strong_opener.node.insert_after(Node.new Node::Type::OpenStrong)
+            current.node.insert_before(Node.new Node::Type::CloseStrong)
+            matched_strong = true
           end
-          opener = nil unless opener_found
-
-          old_closer = closer
-
-          case closer_char
-          when '*', '_'
-            unless opener
-              closer = closer.next?
+        else
+          if current.can_close
+            # If it's closing both, need to determine which was opened first.
+            if !strong_opener.nil? && !emph_opener.nil?
+              # Determine whether strong was opened first.
+              if delims.index(strong_opener).not_nil! < delims.index(emph_opener).not_nil!
+                emph_opener.node.insert_after(Node.new Node::Type::OpenEmphasis)
+                current.node.insert_before(Node.new Node::Type::CloseEmphasis)
+                strong_opener.node.insert_after(Node.new Node::Type::OpenStrong)
+                current.node.insert_before(Node.new Node::Type::CloseStrong)
+              else
+                strong_opener.node.insert_after(Node.new Node::Type::OpenStrong)
+                current.node.insert_before(Node.new Node::Type::CloseStrong)
+                emph_opener.node.insert_after(Node.new Node::Type::OpenEmphasis)
+                current.node.insert_before(Node.new Node::Type::CloseEmphasis)
+              end
+              matched_emph = true
+              matched_strong = true
+            # If it's not closing both, still make sure it closes either properly.
             else
-              # calculate actual number of delimiters used from closer
-              use_delims = (closer.num_delims >= 2 && opener.num_delims >= 2) ? 2 : 1
-              opener_inl = opener.node
-              closer_inl = closer.node
-
-              # remove used delimiters from stack elts and inlines
-              opener.num_delims -= use_delims
-              closer.num_delims -= use_delims
-
-              opener_inl.text = opener_inl.text[0..(-use_delims - 1)]
-              closer_inl.text = closer_inl.text[0..(-use_delims - 1)]
-
-              # build contents for new emph element
-              emph = Node.new((use_delims == 1) ? Node::Type::Emphasis : Node::Type::Strong)
-
-              tmp = opener_inl.next?
-              while tmp && tmp != closer_inl
-                next_node = tmp.next?
-                tmp.unlink
-                emph.append_child(tmp)
-                tmp = next_node
-              end
-
-              opener_inl.insert_after(emph)
-
-              # remove elts between opener and closer in delimiters stack
-              remove_delimiter_between(opener, closer)
-
-              # if opener has 0 delims, remove it and the inline
-              if opener.num_delims == 0
-                opener_inl.unlink
-                remove_delimiter(opener)
-              end
-
-              if closer.num_delims == 0
-                closer_inl.unlink
-                tmp_stack = closer.next?
-                remove_delimiter(closer)
-                closer = tmp_stack
+              if !strong_opener.nil?
+                strong_opener.node.insert_after(Node.new Node::Type::OpenStrong)
+                current.node.insert_before(Node.new Node::Type::CloseStrong)
+                matched_strong = true
+              elsif !emph_opener.nil?
+                emph_opener.node.insert_after(Node.new Node::Type::OpenEmphasis)
+                current.node.insert_before(Node.new Node::Type::CloseEmphasis)
+                matched_emph = true
               end
             end
-          else
-            nil
           end
-
-          if !opener && !odd_match
-            openers_bottom[closer_char] = old_closer.previous?
-            remove_delimiter(old_closer) if !old_closer.can_open
+          # Do this second so the same triple asterisk doesn't both close and open.
+          if current.can_open
+            strong_opener = current if strong_opener.nil?
+            emph_opener = current if emph_opener.nil?
           end
         end
-      end
-
-      # remove all delimiters
-      while (curr_delimiter = @delimiters) && curr_delimiter != delimiter
-        remove_delimiter(curr_delimiter)
+        # Remove matched parts of each delimiter.
+        if matched_strong && !strong_opener.nil?
+          strong_opener.num_delims -= 2
+          current.num_delims -= 2
+          # Also remove the characters, incase there are some that aren't going to be interpreted as emphasis markers.
+          strong_opener.node.text = strong_opener.node.text[0..-3]
+          current.node.text = current.node.text[0..-3]
+        end
+        if matched_emph && !emph_opener.nil?
+          emph_opener.num_delims -= 1
+          current.num_delims -= 1
+          emph_opener.node.text = emph_opener.node.text[0..-2]
+          current.node.text = current.node.text[0..-2]
+        end
+        # If the delimiter nodes used are empty, remove them.
+        if !strong_opener.nil? && strong_opener.num_delims == 0
+          strong_opener.node.unlink
+        end
+        if !emph_opener.nil? && emph_opener.num_delims == 0
+          emph_opener.node.unlink
+        end
+        if current.num_delims == 0
+          current.node.unlink
+        end
+        emph_opener = nil if matched_emph
+        strong_opener = nil if matched_strong
       end
     end
 
@@ -427,7 +418,7 @@ module Sanemark::Parser
       normalize_uri(Utils.escape(dest))
     end
 
-    private def handle_delim(char : Char, node : Node)
+    private def delim(char : Char, node : Node)
       res = scan_delims(char)
       return false unless res
 
@@ -439,76 +430,26 @@ module Sanemark::Parser
       child = text(text)
       node.append_child(child)
 
-      delimiter = Delimiter.new(char, num_delims, num_delims, child, @delimiters, nil, res[:can_open], res[:can_close])
-
-      if prev = delimiter.previous?
-        prev.next = delimiter
-      end
-
-      @delimiters = delimiter
-
+      delim_stack = @brackets ? @brackets.not_nil!.delimiters : @delimiters
+      delim_stack << Delimiter.new(char, num_delims, num_delims, child, res[:can_open], res[:can_close])
       true
     end
 
-    private def remove_delimiter(delimiter : Delimiter)
-      if prev = delimiter.previous?
-        prev.next = delimiter.next?
-      end
-
-      if nxt = delimiter.next?
-        nxt.previous = delimiter.previous?
-      else
-        # top of stack
-        @delimiters = delimiter.previous?
-      end
-    end
-
-    private def remove_delimiter_between(bottom : Delimiter, top : Delimiter)
-      if bottom.next? != top
-        bottom.next = top
-        top.previous = bottom
-      end
-    end
-
-    private def scan_delims(char : Char)
+    private def scan_delims(char)
       num_delims = 0
       start_pos = @pos
       while char_at?(@pos) == char
         num_delims += 1
         @pos += 1
       end
-
-      return if num_delims == 0
-
-      char_before = start_pos == 0 ? '\n' : previous_unicode_char_at(start_pos)
-      char_after = unicode_char_at?(@pos) || '\n'
-
-      # Match ASCII code 160 => \xA0 (See http://www.adamkoch.com/2009/07/25/white-space-and-character-160/)
-      after_is_whitespace = char_after.ascii_whitespace? || char_after == '\u00A0'
-      after_is_punctuation = !!char_after.to_s.match(Rule::PUNCTUATION)
-      before_is_whitespace = char_before.ascii_whitespace? || char_after == '\u00A0'
-      before_is_punctuation = !!char_before.to_s.match(Rule::PUNCTUATION)
-
-      left_flanking = !after_is_whitespace &&
-                      (!after_is_punctuation || before_is_whitespace || before_is_punctuation)
-      right_flanking = !before_is_whitespace &&
-                       (!before_is_punctuation || after_is_whitespace || after_is_punctuation)
-
-      case char
-      when '_'
-        can_open = left_flanking && (!right_flanking || before_is_punctuation)
-        can_close = right_flanking && (!left_flanking || after_is_punctuation)
-      else
-        can_open = left_flanking
-        can_close = right_flanking
-      end
+      prev_char = start_pos == 0 ? '\n' : previous_unicode_char_at(start_pos)
+      next_char = unicode_char_at?(@pos) || '\n'
 
       @pos = start_pos
-
       {
         num_delims: num_delims,
-        can_open:   can_open,
-        can_close:  can_close,
+        can_open:   !next_char.ascii_whitespace?,
+        can_close:  !prev_char.ascii_whitespace?,
       }
     end
 
@@ -674,13 +615,13 @@ module Sanemark::Parser
     class Bracket
       property node : Node
       property! previous : Bracket?
-      property previous_delimiter : Delimiter?
+      property delimiters : Array(Delimiter)
       property index : Int32
       property image : Bool
       property active : Bool
       property bracket_after : Bool
 
-      def initialize(@node, @previous, @previous_delimiter, @index, @image, @active = true)
+      def initialize(@node, @previous, @delimiters, @index, @image, @active = true)
         @bracket_after = false
       end
     end
@@ -690,13 +631,10 @@ module Sanemark::Parser
       property num_delims : Int32
       property orig_delims : Int32
       property node : Node
-      property! previous : Delimiter?
-      property! next : Delimiter?
       property can_open : Bool
       property can_close : Bool
 
-      def initialize(@char, @num_delims, @orig_delims, @node,
-                     @previous, @next, @can_open, @can_close)
+      def initialize(@char, @num_delims, @orig_delims, @node, @can_open, @can_close)
       end
     end
   end

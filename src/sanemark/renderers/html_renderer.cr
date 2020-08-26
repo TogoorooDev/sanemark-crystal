@@ -4,6 +4,11 @@ module Sanemark
   class HTMLRenderer < Renderer
     @disable_tag = 0
     @last_output = "\n"
+    enum EmphasisType
+      Bold
+      Italics
+    end
+    @emphasis_stack = [] of EmphasisType
 
     private HEADINGS = %w(h1 h2 h3 h4 h5 h6)
 
@@ -171,8 +176,25 @@ module Sanemark
       end
     end
 
-    def emphasis(node : Node, entering : Bool)
-      tag("em", end_tag: !entering)
+    def open_emphasis(node : Node)
+      @emphasis_stack << EmphasisType::Italics
+      tag("em")
+    end
+
+    def close_emphasis(node : Node)
+      if @emphasis_stack[-1] == EmphasisType::Italics
+        tag("em", end_tag: true)
+        @emphasis_stack.pop
+      # If we're closing italics, but there's an unclosed bold inside the italics,
+      # we need to close and reopen it, because HTML tags can't overlap.
+      else
+        tag("strong", end_tag: true)
+        @emphasis_stack.pop
+        tag("em", end_tag: true)
+        @emphasis_stack.pop
+        tag("strong")
+        @emphasis_stack << EmphasisType::Bold
+      end
     end
 
     def soft_break(node : Node, entering : Bool)
@@ -183,8 +205,25 @@ module Sanemark
       tag("br")
     end
 
-    def strong(node : Node, entering : Bool)
-      tag("strong", end_tag: !entering)
+    def open_strong(node : Node)
+      @emphasis_stack << EmphasisType::Bold
+      tag("strong")
+    end
+
+    def close_strong(node : Node)
+      if @emphasis_stack[-1] == EmphasisType::Bold
+        tag("strong", end_tag: true)
+        @emphasis_stack.pop
+      # If we're closing bold, but there's an unclosed italics inside the bold,
+      # we need to close and reopen it, because HTML tags can't overlap.
+      else
+        tag("em", end_tag: true)
+        @emphasis_stack.pop
+        tag("strong", end_tag: true)
+        @emphasis_stack.pop
+        tag("em")
+        @emphasis_stack << EmphasisType::Italics
+      end
     end
 
     def text(node : Node, entering : Bool)

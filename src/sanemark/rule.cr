@@ -47,7 +47,6 @@ module Sanemark
 
     LINK_LABEL = Regex.new("^\\[(?:[^\\\\\\[\\]]|" + ESCAPED_CHAR_STRING + "|\\\\){0,}\\]")
 
-    PUNCTUATION          = /\p{P}/
     UNSAFE_PROTOCOL      = /^javascript:|vbscript:|file:|data:/i
     UNSAFE_DATA_PROTOCOL = /^data:image\/(?:png|gif|jpeg|webp)/i
 

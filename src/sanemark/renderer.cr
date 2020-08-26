@@ -53,7 +53,6 @@ module Sanemark
         walker = document.walker
         while event = walker.next
           node, entering = event
-
           case node.type
           when Node::Type::Heading
             heading(node, entering)
@@ -75,14 +74,18 @@ module Sanemark
             html_inline(node, entering)
           when Node::Type::Paragraph
             paragraph(node, entering)
-          when Node::Type::Emphasis
-            emphasis(node, entering)
+          when Node::Type::OpenEmphasis
+            open_emphasis(node)
+          when Node::Type::CloseEmphasis
+            close_emphasis(node)
+          when Node::Type::OpenStrong
+            open_strong(node)
+          when Node::Type::CloseStrong
+            close_strong(node)
           when Node::Type::SoftBreak
             soft_break(node, entering)
           when Node::Type::LineBreak
             line_break(node, entering)
-          when Node::Type::Strong
-            strong(node, entering)
           when Node::Type::Link
             link(node, entering)
           when Node::Type::Image
