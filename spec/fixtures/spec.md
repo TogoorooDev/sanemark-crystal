@@ -2,7 +2,7 @@ In the examples, the `→` character is used to represent tabs.
 
 ## Tabs
 
-Tabs in lines are not expanded to [spaces]. However,
+Tabs in lines are not expanded to spaces. However,
 in contexts where whitespace helps to define block structure,
 tabs are equivalent to 4 spaces.
 
@@ -195,7 +195,7 @@ More than three characters may be used:
 <hr>
 ````````````````````````````````
 
-It is required that all of the [non-whitespace characters] be the same.
+It is required that all of the non-whitespace characters be the same.
 So, this is not a thematic break:
 
 ```````````````````````````````` example
@@ -372,12 +372,12 @@ Since the space after the `#` characters is part of the heading marker, an empty
 ## Indented code blocks
 
 An **indented code block** is composed of one or more
-[indented chunks] separated by blank lines.
+indented chunks separated by blank lines.
 An **indented chunk** is a sequence of non-blank lines,
 each indented four or more spaces. The contents of the code block are
 the literal contents of the lines, including trailing
-[line endings], minus four spaces of indentation.
-An indented code block has no [info string].
+line endings, minus four spaces of indentation.
+An indented code block has no info string.
 
 An indented code block cannot interrupt a paragraph, so there must be
 a blank line between a paragraph and a following indented code block.
@@ -396,7 +396,7 @@ paragraph.)
 
 If there is any ambiguity between an interpretation of indentation
 as a code block and as indicating that material belongs to a [list
-item][list items], the list item interpretation takes precedence:
+item]list items, the list item interpretation takes precedence:
 
 ```````````````````````````````` example
   - foo
@@ -574,13 +574,13 @@ begins with a code fence, indented no more than three spaces.
 The line with the opening code fence may optionally contain some text
 following the code fence; this is trimmed of leading and trailing
 spaces and called the **info string**.
-The [info string] may not contain any backtick
+The info string may not contain any backtick
 characters. (The reason for this restriction is that otherwise
 some inline code would be incorrectly interpreted as the
 beginning of a fenced code block.)
 
 The content of the code block consists of all subsequent lines, until
-a closing [code fence] of the same type as the code block
+a closing code fence of the same type as the code block
 began with (backticks or tildes), and with at least as many backticks
 or tildes as the opening code fence. If the leading code fence is
 indented N spaces, then up to N spaces of indentation are removed from
@@ -602,10 +602,10 @@ A fenced code block may interrupt a paragraph, and does not require
 a blank line either before or after.
 
 The content of a code fence is treated as literal text, not parsed
-as inlines. The first word of the [info string] is typically used to
+as inlines. The first word of the info string is typically used to
 specify the language of the code sample, and rendered in the `class`
 attribute of the `code` tag. However, this spec does not mandate any
-particular treatment of the [info string].
+particular treatment of the info string.
 
 Here is a simple example with backticks:
 
@@ -695,7 +695,7 @@ aaa
 ````````````````````````````````
 
 Unclosed code blocks are closed by the end of the document
-(or the enclosing [block quote][block quotes] or [list item][list items]):
+(or the enclosing block quote or list item):
 
 ```````````````````````````````` example
 ```
@@ -799,7 +799,7 @@ baz
 ````````````````````````````````
 
 
-An [info string] can be provided after the opening code fence.
+An info string can be provided after the opening code fence.
 Opening and closing spaces will be stripped, and the first word, prefixed
 with `language-`, is used as the value for the `class` attribute of the
 `code` element within the enclosing `pre` element.
@@ -840,7 +840,7 @@ end
 ````````````````````````````````
 
 
-[Info strings] for backtick code blocks cannot contain backticks:
+Info strings for backtick code blocks cannot contain backticks:
 
 ```````````````````````````````` example
 ``` aa ```
@@ -851,7 +851,7 @@ foo</p>
 ````````````````````````````````
 
 
-Closing code fences cannot have [info strings]:
+Closing code fences cannot have info strings:
 
 ```````````````````````````````` example
 ```
@@ -888,7 +888,7 @@ The end tag can occur on the same line as the start tag:
 
 
 Note that anything on the last line after the
-end tag will be included in the [HTML block]:
+end tag will be included in the HTML block:
 
 ```````````````````````````````` example
 <script>
@@ -976,7 +976,7 @@ kinds of blocks forms a **paragraph**.
 The contents of the paragraph are the result of parsing the
 paragraph's raw content as inlines. The paragraph's raw content
 is formed by concatenating the lines and removing initial and final
-[whitespace].
+whitespace.
 
 A simple example with two paragraphs:
 
@@ -1067,9 +1067,9 @@ bbb
 
 ## Blank lines
 
-[Blank lines] between block-level elements are ignored,
-except for the role they play in determining whether a [list]
-is [tight] or [loose].
+Blank lines between block-level elements are ignored,
+except for the role they play in determining whether a list
+is tight or loose.
 
 Blank lines at the beginning and end of the document are also ignored.
 
@@ -1091,10 +1091,10 @@ aaa
 
 # Container blocks
 
-A [container block] is a block that has other
+A container block is a block that has other
 blocks as its contents. There are two basic kinds of container blocks:
-[block quotes] and [list items].
-[Lists] are meta-containers for [list items].
+block quotes and list items.
+Lists are meta-containers for list items.
 
 We define the syntax for container blocks recursively. The general
 form of the definition is:
@@ -1106,8 +1106,7 @@ form of the definition is:
 So, we explain what counts as a block quote or list item by explaining
 how these can be *generated* from their contents. This should suffice
 to define the syntax, although it does not give a recipe for *parsing*
-these constructions. (A recipe is provided below in the section entitled
-[A parsing strategy](#appendix-a-parsing-strategy).)
+these constructions.
 
 ## Block quotes
 
@@ -1115,27 +1114,25 @@ A **block quote marker**
 consists of 0-3 spaces of initial indent, plus (a) the character `>` together
 with a following space, or (b) a single character `>` not followed by a space.
 
-The following rules define [block quotes]:
+The following rules define block quotes:
 
 1.  **Basic case.**  If a string of lines *Ls* constitute a sequence
     of blocks *Bs*, then the result of prepending a [block quote
     marker] to the beginning of each line in *Ls*
-    is a [block quote](#block-quotes) containing *Bs*.
+    is a block quote containing *Bs*.
 
-2.  **Laziness.**  If a string of lines *Ls* constitute a [block
-    quote](#block-quotes) with contents *Bs*, then the result of deleting
-    the initial [block quote marker] from one or
-    more lines in which the next [non-whitespace character] after the [block
+2.  **Laziness.**  If a string of lines *Ls* constitute a block
+    quote with contents *Bs*, then the result of deleting
+    the initial block quote marker from one or
+    more lines in which the next non-whitespace character after the [block
     quote marker] is [paragraph continuation
     text] is a block quote with *Bs* as its content.
     **Paragraph continuation text** is text
     that will be parsed as part of the content of a paragraph, but does
     not occur at the beginning of the paragraph.
 
-3.  **Consecutiveness.**  A document cannot contain two [block
-    quotes] in a row unless there is a [blank line] between them.
-
-Nothing else counts as a [block quote](#block-quotes).
+3.  **Consecutiveness.**  A document cannot contain two block
+    quotes in a row unless there is a blank line between them.
 
 Here is a simple example:
 
@@ -1176,7 +1173,7 @@ The `>` characters cannot be indented:
 ````````````````````````````````
 
 The Laziness clause allows us to omit the `>` before
-[paragraph continuation text]:
+paragraph continuation text:
 
 ```````````````````````````````` example
 > # Foo
@@ -1208,7 +1205,7 @@ foo</p>
 
 
 Laziness only applies to lines that would have been continuations of
-paragraphs had they been prepended with [block quote markers].
+paragraphs had they been prepended with block quote markers.
 For example, the `> ` cannot be omitted in the second line of
 
 ``` markdown
@@ -1282,8 +1279,8 @@ foo
 ````````````````````````````````
 
 
-Note that in the following case, we have a [lazy
-continuation line]:
+Note that in the following case, we have a lazy
+continuation line:
 
 ```````````````````````````````` example
 > foo
@@ -1305,7 +1302,7 @@ To see why, note that in
 
 the `- bar` is indented too far to start a list, and can't
 be an indented code block because indented code blocks cannot
-interrupt paragraphs, so it is [paragraph continuation text].
+interrupt paragraphs, so it is paragraph continuation text.
 
 A block quote can be empty:
 
@@ -1495,7 +1492,7 @@ baz</p>
 
 
 When including an indented code block in a block quote,
-remember that the [block quote marker] includes
+remember that the block quote marker includes
 both the `>` and a following space. So *five spaces* are needed after
 the `>`:
 
@@ -1518,7 +1515,7 @@ the `>`:
 ## List items
 
 A **list marker** is a
-[bullet list marker] or an [ordered list marker].
+bullet list marker or an ordered list marker.
 
 A **bullet list marker**
 is a `-`, `+`, or `*` character.
@@ -1529,10 +1526,10 @@ is a sequence of 1--9 arabic digits (`0-9`), followed by either a
 limit is that with 10 digits we start seeing integer overflows
 in some browsers.)
 
-The following rules define [list items]:
+The following rules define list items:
 
 1.  **Basic case.**  If a sequence of lines *Ls* constitute a sequence of
-    blocks *Bs* starting with a [non-whitespace character] and not separated
+    blocks *Bs* starting with a non-whitespace character and not separated
     from each other by more than one blank line, and *M* is a list
     marker of width *W* followed by 1 ≤ *N* ≤ 4 spaces, then the result
     of prepending *M* and the following spaces to the first line of
@@ -1542,9 +1539,9 @@ The following rules define [list items]:
     If the list item is ordered, then it is also assigned a start
     number, based on the ordered list marker.
 
-    Exceptions: When the first list item in a [list] interrupts
+    Exceptions: When the first list item in a list interrupts
     a paragraph---that is, when it starts on a line that would
-    otherwise count as [paragraph continuation text]---then (a)
+    otherwise count as paragraph continuation text---then (a)
     the lines *Ls* must not begin with a blank line, and (b) if
     the list item is ordered, the start number must be 1.
 
@@ -1598,7 +1595,7 @@ The most important thing to notice is that the position of
 the text after the list marker determines how much indentation
 is needed in subsequent blocks in the list item. If the list
 marker takes up two spaces, and there are three spaces between
-the list marker and the next [non-whitespace character], then blocks
+the list marker and the next non-whitespace character, then blocks
 must be indented five spaces in order to fall under the list
 item.
 
@@ -1660,7 +1657,7 @@ put under the list item:
 
 It is tempting to think of this in terms of columns:  the continuation
 blocks must be indented at least to the column of the first
-[non-whitespace character] after the list marker. However, that is not quite right.
+non-whitespace character after the list marker. However, that is not quite right.
 The spaces after the list marker determine how much relative indentation
 is needed. Which column this indentation reaches will depend on
 how the list item is embedded in other constructions, as shown by
@@ -1948,7 +1945,7 @@ inside the code block:
 
 Note that rules #1 and #2 only apply to two cases:  (a) cases
 in which the lines to be included in a list item begin with a
-[non-whitespace character], and (b) cases in which
+non-whitespace character, and (b) cases in which
 they begin with an indented code
 block. In a case like the following, where the first block begins with
 a three-space indent, the rules do not allow us to form a list item by
@@ -1996,7 +1993,7 @@ the above case:
 
 
 3.  **Item starting with a blank line.**  If a sequence of lines *Ls*
-    starting with a single [blank line] constitute a (possibly empty)
+    starting with a single blank line constitute a (possibly empty)
     sequence of blocks *Bs*, not separated from each other by more than
     one blank line, and *M* is a list marker of width *W*,
     then the result of prepending *M* to the first line of *Ls*, and
@@ -2076,7 +2073,7 @@ Here is an empty bullet list item:
 ````````````````````````````````
 
 
-It does not matter whether there are spaces following the [list marker]:
+It does not matter whether there are spaces following the list marker:
 
 ```````````````````````````````` example
 - foo
@@ -2234,13 +2231,13 @@ Four spaces indent gives a code block:
 5.  **Laziness.**  If a string of lines *Ls* constitute a [list
     item](#list-items) with contents *Bs*, then the result of deleting
     some or all of the indentation from one or more lines in which the
-    next [non-whitespace character] after the indentation is
-    [paragraph continuation text] is a
+    next non-whitespace character after the indentation is
+    paragraph continuation text is a
     list item with the same contents and attributes. The unindented
     lines are called
     **lazy continuation line**s.
 
-Here is an example with [lazy continuation lines]:
+Here is an example with lazy continuation lines:
 
 ```````````````````````````````` example
   1.  A paragraph
@@ -2315,7 +2312,7 @@ continued here.</p>
 
 
 6.  **That's all.** Nothing that is not counted as a list item by rules
-    #1--5 counts as a [list item](#list-items).
+    #1--5 counts as a list item.
 
 The rules for sublists follow from the general rules above. A sublist
 must be indented the same number of spaces a paragraph would need to be
@@ -2632,11 +2629,11 @@ takes four spaces (a common case), but diverge in other cases.
 ## Lists
 
 A **list** is a sequence of one or more
-list items [of the same type]. The list items
+list items of the same type. The list items
 may be separated by any number of blank lines.
 
 Two list items are **of the same type**
-if they begin with a [list marker] of the same type.
+if they begin with a list marker of the same type.
 Two list markers are of the
 same type if (a) they are bullet list markers using the same character
 (`-`, `+`, or `*`) or (b) they are ordered list numbers with the same
@@ -2644,12 +2641,12 @@ delimiter (either `.` or `)`).
 
 A list is an **ordered list**
 if its constituent list items begin with
-[ordered list markers], and a
+ordered list markers, and a
 **bullet list** if its constituent list
-items begin with [bullet list markers].
+items begin with bullet list markers.
 
 The **start number**
-of an [ordered list] is determined by the list number of
+of an ordered list is determined by the list number of
 its initial list item. The numbers of subsequent list items are
 disregarded.
 
@@ -2738,7 +2735,7 @@ Second, we are attracted to a
 > meaning, it will continue to have the same meaning when put into a
 > container block (such as a list item or blockquote).
 
-(Indeed, the spec for [list items] and [block quotes] presupposes
+(Indeed, the spec for list items and block quotes presupposes
 this principle.) This principle implies that if
 
 ``` markdown
@@ -3341,7 +3338,7 @@ Whitespace is not tampered with:
 <p><code> foo  bar </code></p>
 ````````````````````````````````
 
-For the sake of those who use hard wrapping, [Line endings] are treated like spaces:
+For the sake of those who use hard wrapping, Line endings are treated like spaces:
 
 ```````````````````````````````` example
 `
@@ -3462,16 +3459,16 @@ followed by a `*` character, or a sequence of one or more `_`
 characters that is not preceded or followed by a `_` character.
 
 A **left-flanking delimiter run** is
-a [delimiter run] that is (a) not followed by [Unicode whitespace],
-and (b) either not followed by a [punctuation character], or
-preceded by [Unicode whitespace] or a [punctuation character].
+a delimiter run that is (a) not followed by Unicode whitespace,
+and (b) either not followed by a punctuation character, or
+preceded by Unicode whitespace or a punctuation character.
 For purposes of this definition, the beginning and the end of
 the line count as Unicode whitespace.
 
 A **right-flanking delimiter run** is
-a [delimiter run] that is (a) not preceded by [Unicode whitespace],
-and (b) either not preceded by a [punctuation character], or
-followed by [Unicode whitespace] or a [punctuation character].
+a delimiter run that is (a) not preceded by Unicode whitespace,
+and (b) either not preceded by a punctuation character, or
+followed by Unicode whitespace or a punctuation character.
 For purposes of this definition, the beginning and the end of
 the line count as Unicode whitespace.
 
@@ -3520,56 +3517,56 @@ are a bit more complex than the ones given here.)
 The following rules define emphasis and strong emphasis:
 
 1.  A single `*` character **can open emphasis**
-    iff (if and only if) it is part of a [left-flanking delimiter run].
+    iff (if and only if) it is part of a left-flanking delimiter run.
 
-2.  A single `_` character [can open emphasis] iff
-    it is part of a [left-flanking delimiter run]
-    and either (a) not part of a [right-flanking delimiter run]
-    or (b) part of a [right-flanking delimiter run]
+2.  A single `_` character can open emphasis iff
+    it is part of a left-flanking delimiter run
+    and either (a) not part of a right-flanking delimiter run
+    or (b) part of a right-flanking delimiter run
     preceded by punctuation.
 
 3.  A single `*` character **can close emphasis**
-    iff it is part of a [right-flanking delimiter run].
+    iff it is part of a right-flanking delimiter run.
 
-4.  A single `_` character [can close emphasis] iff
-    it is part of a [right-flanking delimiter run]
-    and either (a) not part of a [left-flanking delimiter run]
-    or (b) part of a [left-flanking delimiter run]
+4.  A single `_` character can close emphasis iff
+    it is part of a right-flanking delimiter run
+    and either (a) not part of a left-flanking delimiter run
+    or (b) part of a left-flanking delimiter run
     followed by punctuation.
 
 5.  A double `**` **can open strong emphasis**
-    iff it is part of a [left-flanking delimiter run].
+    iff it is part of a left-flanking delimiter run.
 
-6.  A double `__` [can open strong emphasis] iff
-    it is part of a [left-flanking delimiter run]
-    and either (a) not part of a [right-flanking delimiter run]
-    or (b) part of a [right-flanking delimiter run]
+6.  A double `__` can open strong emphasis iff
+    it is part of a left-flanking delimiter run
+    and either (a) not part of a right-flanking delimiter run
+    or (b) part of a right-flanking delimiter run
     preceded by punctuation.
 
 7.  A double `**` **can close strong emphasis**
-    iff it is part of a [right-flanking delimiter run].
+    iff it is part of a right-flanking delimiter run.
 
-8.  A double `__` [can close strong emphasis]
-    it is part of a [right-flanking delimiter run]
-    and either (a) not part of a [left-flanking delimiter run]
-    or (b) part of a [left-flanking delimiter run]
+8.  A double `__` can close strong emphasis
+    it is part of a right-flanking delimiter run
+    and either (a) not part of a left-flanking delimiter run
+    or (b) part of a left-flanking delimiter run
     followed by punctuation.
 
-9.  Emphasis begins with a delimiter that [can open emphasis] and ends
-    with a delimiter that [can close emphasis], and that uses the same
+9.  Emphasis begins with a delimiter that can open emphasis and ends
+    with a delimiter that can close emphasis, and that uses the same
     character (`_` or `*`) as the opening delimiter.  The
     opening and closing delimiters must belong to separate
-    [delimiter runs].  If one of the delimiters can both
+    delimiter runs.  If one of the delimiters can both
     open and close emphasis, then the sum of the lengths of the
     delimiter runs containing the opening and closing delimiters
     must not be a multiple of 3.
 
 10. Strong emphasis begins with a delimiter that
-    [can open strong emphasis] and ends with a delimiter that
-    [can close strong emphasis], and that uses the same character
+    can open strong emphasis and ends with a delimiter that
+    can close strong emphasis, and that uses the same character
     (`_` or `*`) as the opening delimiter.  The
     opening and closing delimiters must belong to separate
-    [delimiter runs].  If one of the delimiters can both open
+    delimiter runs.  If one of the delimiters can both open
     and close strong emphasis, then the sum of the lengths of
     the delimiter runs containing the opening and closing
     delimiters must not be a multiple of 3.
@@ -3623,7 +3620,7 @@ Rule 1:
 
 
 This is not emphasis, because the opening `*` is followed by
-whitespace, and hence not part of a [left-flanking delimiter run]:
+whitespace, and hence not part of a left-flanking delimiter run:
 
 ```````````````````````````````` example
 a * foo bar*
@@ -3634,7 +3631,7 @@ a * foo bar*
 
 This is not emphasis, because the opening `*` is preceded
 by an alphanumeric and followed by punctuation, and hence
-not part of a [left-flanking delimiter run]:
+not part of a left-flanking delimiter run:
 
 ```````````````````````````````` example
 a*"foo"*
@@ -3776,7 +3773,7 @@ A newline also counts as whitespace:
 
 This is not emphasis, because the second `*` is
 preceded by punctuation and followed by an alphanumeric
-(hence it is not part of a [right-flanking delimiter run]:
+(hence it is not part of a right-flanking delimiter run:
 
 ```````````````````````````````` example
 *(*foo)
@@ -3891,7 +3888,7 @@ followed by whitespace:
 
 This is not strong emphasis, because the opening `**` is preceded
 by an alphanumeric and followed by punctuation, and hence
-not part of a [left-flanking delimiter run]:
+not part of a left-flanking delimiter run:
 
 ```````````````````````````````` example
 a**"foo"**
@@ -4716,7 +4713,7 @@ A link consists of anchor text encloesd in brackets followed immediately by a de
 
 - Backtick code spans and raw HTML tags bind more tightly than the brackets in anchor text. Thus, for example, `` [foo`]` `` could not be a link text, since the second `]` is part of a code span.
 
-- The brackets in link text bind more tightly than markers for [emphasis and strong emphasis]. Thus, for example, `*[foo*](url)` is a link.
+- The brackets in link text bind more tightly than markers for emphasis and strong emphasis. Thus, for example, `*[foo*](url)` is a link.
 
 The **link destination** consists of a nonempty sequence of characters that does not include ASCII space or control characters, and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a balanced pair of unescaped parentheses.
 
@@ -4809,7 +4806,7 @@ URL-escaping should be left alone inside the destination, as all URL-escaped cha
 <p><a href="foo%20b&amp;auml;">link</a></p>
 ````````````````````````````````
 
-Unescaped [whitespace] cannot appear before the destination:
+Unescaped whitespace cannot appear before the destination:
 
 ```````````````````````````````` example
 [link]( /uri)
@@ -4944,7 +4941,7 @@ Syntax for images is like the syntax for links, with the anchor text interpreted
 <p><img src="/url2" alt="foo bar"></p>
 ````````````````````````````````
 
-Though this spec is concerned with parsing, not rendering, it is recommended that in rendering to HTML, only the plain string content of the [image description] be used. Note that in the above example, the alt attribute's value is `foo bar`, not `foo [bar](/url)` or `foo <a href="/url">bar</a>`.  Only the plain string content is rendered, without formatting.
+Though this spec is concerned with parsing, not rendering, it is recommended that in rendering to HTML, only the plain string content of the image description be used. Note that in the above example, the alt attribute's value is `foo bar`, not `foo [bar](/url)` or `foo <a href="/url">bar</a>`.  Only the plain string content is rendered, without formatting.
 
 ```````````````````````````````` example
 ![foo *bar*][foobar]
@@ -4985,9 +4982,9 @@ A **tag name** consists of an ASCII letter
 followed by zero or more ASCII letters, digits, or
 hyphens (`-`).
 
-An **attribute** consists of [whitespace],
-an [attribute name], and an optional
-[attribute value specification].
+An **attribute** consists of whitespace,
+an attribute name, and an optional
+attribute value specification.
 
 An **attribute name**
 consists of an ASCII letter, `_`, or `:`, followed by zero or more ASCII
@@ -4995,13 +4992,13 @@ letters, digits, `_`, `.`, `:`, or `-`.  (Note:  This is the XML
 specification restricted to ASCII.  HTML5 is laxer.)
 
 An **attribute value specification**
-consists of optional [whitespace],
-a `=` character, optional [whitespace], and an [attribute
+consists of optional whitespace,
+a `=` character, optional whitespace, and an [attribute
 value].
 
 An **attribute value**
-consists of an [unquoted attribute value],
-a [single-quoted attribute value], or a [double-quoted attribute value].
+consists of an unquoted attribute value,
+a single-quoted attribute value, or a double-quoted attribute value.
 
 An **unquoted attribute value**
 is a nonempty string of characters not
@@ -5015,12 +5012,12 @@ A **double-quoted attribute value**
 consists of `"`, zero or more
 characters not including `"`, and a final `"`.
 
-An **open tag** consists of a `<` character, a [tag name],
-zero or more [attributes], optional [whitespace], an optional `/`
+An **open tag** consists of a `<` character, a tag name,
+zero or more attributes, optional whitespace, an optional `/`
 character, and a `>` character.
 
 A **closing tag** consists of the string `</`, a
-[tag name], optional [whitespace], and the character `>`.
+tag name, optional whitespace, and the character `>`.
 
 An **HTML comment** consists of `<!--` + *text* + `-->`,
 where *text* does not start with `>` or `->`, does not end with `-`,
@@ -5029,11 +5026,11 @@ and does not contain `--`.  (See the
 
 A **declaration** consists of the
 string `<!`, a name consisting of one or more uppercase ASCII letters,
-[whitespace], a string of characters not including the
+whitespace, a string of characters not including the
 character `>`, and the character `>`.
 
-An **HTML tag** consists of an [open tag], a [closing tag],
-an [HTML comment], or a [declaration].
+An **HTML tag** consists of an open tag, a closing tag,
+an HTML comment, or a declaration.
 
 Here are some simple open tags:
 
@@ -5053,7 +5050,7 @@ Empty elements:
 ````````````````````````````````
 
 
-[Whitespace] is allowed:
+Whitespace is allowed:
 
 ```````````````````````````````` example
 <a  /><b2
@@ -5111,7 +5108,7 @@ Illegal attribute values:
 ````````````````````````````````
 
 
-Illegal [whitespace]:
+Illegal whitespace:
 
 ```````````````````````````````` example
 < a><
@@ -5122,7 +5119,7 @@ foo&gt;&lt;bar/ &gt;</p>
 ````````````````````````````````
 
 
-Missing [whitespace]:
+Missing whitespace:
 
 ```````````````````````````````` example
 <a href='bar'title=title>
@@ -5236,7 +5233,7 @@ baz</p>
 
 ## Hard line breaks
 
-A backslash before the [line ending] may be used to insert a line break (`<br>`) regardless of CSS:
+A backslash before the line ending may be used to insert a line break (`<br>`) regardless of CSS:
 
 ```````````````````````````````` example
 foo\
