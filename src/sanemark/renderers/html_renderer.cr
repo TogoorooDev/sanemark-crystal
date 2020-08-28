@@ -97,7 +97,7 @@ module Sanemark
         attrs = attrs(node)
         destination = node.data["destination"].as(String)
 
-        unless @options.safe && potentially_unsafe(destination)
+        if @options.allow_html || !potentially_unsafe(destination)
           attrs ||= {} of String => String
           destination = resolve_uri(destination, node)
           attrs["href"] = escape(destination)
@@ -127,7 +127,7 @@ module Sanemark
       if entering
         if @disable_tag == 0
           destination = node.data["destination"].as(String)
-          if @options.safe && potentially_unsafe(destination)
+          if !@options.allow_html && potentially_unsafe(destination)
             lit(%(<img src="" alt=""))
           else
             destination = resolve_uri(destination, node)
@@ -154,7 +154,7 @@ module Sanemark
     end
 
     def html_inline(node : Node, entering : Bool)
-      lit(@options.safe ? HTML.escape(node.text) : node.text)
+      lit(@options.allow_html ? node.text : HTML.escape(node.text))
     end
 
     def paragraph(node : Node, entering : Bool)

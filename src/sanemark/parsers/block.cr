@@ -50,7 +50,7 @@ module Sanemark::Parser
         Node::Type::Paragraph     => Rule::Paragraph.new,
       }
       # Don't consider the HTML rule if HTML is all being escaped.
-      @RULES.delete Node::Type::HTMLBlock if @options.safe
+      @RULES.delete Node::Type::HTMLBlock unless @options.allow_html
     end
 
     def parse(source : String)

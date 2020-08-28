@@ -33,17 +33,17 @@ end
 def assert_section(file, section, examples)
   describe section do
     examples.each do |index, example|
-      assert_exapmle(file, section, index, example)
+      assert_example(file, section, index, example)
     end
   end
 end
 
-def assert_exapmle(file, section, index, example)
+def assert_example(file, section, index, example)
   markdown = example["markdown"].gsub("→", "\t").chomp
   html = example["html"].gsub("→", "\t")
   line = example["line"].to_i
 
-  options = Sanemark::Options.new
+  options = Sanemark::Options.new(allow_html: true)
   it "- #{index}\n#{show_space(markdown)}", file, line do
     output = Sanemark.to_html(markdown, options)
     output.should eq(html), file, line

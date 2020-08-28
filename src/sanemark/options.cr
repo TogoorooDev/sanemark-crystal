@@ -2,7 +2,7 @@ require "uri"
 
 module Sanemark
   struct Options
-    property time, gfm, toc, source_pos, safe, prettyprint
+    property time, gfm, toc, source_pos, allow_html, prettyprint
 
     # If `base_url` is not `nil`, it is used to resolve URLs of relative
     # links. It act's like HTML's `<base href="base_url">` in the context
@@ -14,7 +14,7 @@ module Sanemark
       @gfm = false,
       @toc = false,
       @source_pos = false,
-      @safe = false,
+      @allow_html = false,
       @prettyprint = false,
       @base_url = nil
     )
