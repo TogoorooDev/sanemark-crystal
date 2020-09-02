@@ -1,6 +1,6 @@
 A [Crystal](https://crystal-lang.org) implementation of [Sanemark](https://yujiri.xyz/sanemark). Forked from [markd](https://github.com/icyleaf/markd), an implementation of commonmark.
 
-Because this library was forked from markd, it supports reference links despite that not being in the Sanemark spec. I separated out that part of the spec into [here](spec/fixtures/reference_links.md). The obscure options are also from markd.
+Because this library was forked from markd, it supports a couple of options that are not part of the Sanemark spec.
 
 ## Quick start
 

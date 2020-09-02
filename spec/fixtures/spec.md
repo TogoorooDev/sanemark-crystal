@@ -2207,7 +2207,7 @@ with a blank line between them:
 - a
 - b
 
-  [ref]: /url
+  > c
 - d
 .
 <ul>
@@ -2216,6 +2216,9 @@ with a blank line between them:
 </li>
 <li>
 <p>b</p>
+<blockquote>
+<p>c</p>
+</blockquote>
 </li>
 <li>
 <p>d</p>
@@ -3163,9 +3166,7 @@ Syntax for images is like the syntax for links, with the anchor text interpreted
 Though this spec is concerned with parsing, not rendering, it is recommended that in rendering to HTML, only the plain string content of the image description be used. Note that in the above example, the alt attribute's value is `foo bar`, not `foo [bar](/url)` or `foo <a href="/url">bar</a>`.  Only the plain string content is rendered, without formatting.
 
 ```````````````````````````````` example
-![foo *bar*][foobar]
-
-[FOOBAR]: train.jpg
+![foo *bar*](train.jpg)
 .
 <p><img src="train.jpg" alt="foo bar"></p>
 ````````````````````````````````

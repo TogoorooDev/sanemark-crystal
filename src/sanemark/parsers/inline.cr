@@ -4,13 +4,11 @@ module Sanemark::Parser
   class Inline
     include Parser
 
-    property refmap
     private getter! brackets
 
     def initialize(@options : Options)
       @text = ""
       @pos = 0
-      @refmap = {} of String => String
       @delimiters = [] of Delimiter
     end
 
@@ -198,32 +196,6 @@ module Sanemark::Parser
         end
       end
 
-      ref_label = nil
-      unless matched
-        # Next, see if there's a link label
-        before_label = @pos
-        label_size = link_label
-        # The size includes the brackets.
-        if label_size > 2
-          ref_label = normalize_reference(@text.byte_slice(before_label, label_size + 1))
-        elsif !opener.bracket_after
-          # Empty or missing second label means to use the first label as the reference.
-          # The reference must not contain a bracket. If we know there's a bracket, we don't even bother checking it.
-          ref_label = normalize_reference(@text.byte_slice(opener.index, start_pos - opener.index))
-        end
-
-        if label_size == 0
-          # If shortcut reference link, rewind before spaces we skipped.
-          @pos = save_pos
-        end
-
-        if ref_label && @refmap[ref_label]?
-          # lookup rawlabel in refmap
-          dest = @refmap[ref_label]
-          matched = true
-        end
-      end
-
       if matched
         child = Node.new(is_image ? Node::Type::Image : Node::Type::Link)
         child.data["destination"] = dest
@@ -382,17 +354,6 @@ module Sanemark::Parser
       node
     end
 
-    private def link_label
-      text = match(Rule::LINK_LABEL)
-      # I assume markd limited label length to 1000 for security reasons?
-      # Ensure its closing bracket isn't escaped.
-      if text && text.size <= 1001 && (!text.ends_with?("\\]") || text[-3]? == '\\')
-        text.bytesize - 1
-      else
-        0
-      end
-    end
-
     private def link_destination
       save_pos = @pos
       open_parens = 0
@@ -451,51 +412,6 @@ module Sanemark::Parser
         can_open:   !next_char.ascii_whitespace?,
         can_close:  !prev_char.ascii_whitespace?,
       }
-    end
-
-    def reference(text : String, refmap)
-      @text = text
-      @pos = 0
-
-      startpos = @pos
-      match_chars = link_label
-
-      # label
-      return 0 if match_chars == 0
-      raw_label = @text.byte_slice(0, match_chars + 1)
-
-      # colon
-      if char_at?(@pos) == ':'
-        @pos += 1
-      else
-        @pos = startpos
-        return 0
-      end
-
-      # link url
-      spnl
-      dest = link_destination
-
-      if dest.size == 0
-        @pos = startpos
-        return 0
-      end
-
-      unless char_at?(@pos) == '\n'
-        @pos = startpos
-        return 0
-      end
-      @pos += 1
-
-      normal_label = normalize_reference(raw_label)
-      # Fail if the normalized label is empty.
-      if normal_label.empty?
-        @pos = startpos
-        return 0
-      end
-
-      refmap[normal_label] = dest
-      return @pos - startpos
     end
 
     private def space_at_end_of_line?

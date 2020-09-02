@@ -10,8 +10,7 @@ module Sanemark::Parser
     property! tip : Node?
     property offset, column
 
-    getter line, current_line, blank, inline_lexer,
-      indent, next_nonspace, refmap
+    getter line, current_line, blank, inline_lexer, indent, next_nonspace
 
     def initialize(@options : Options)
       @inline_lexer = Inline.new(@options)
@@ -35,7 +34,6 @@ module Sanemark::Parser
       @blank = false
       @partially_consumed_tab = false
       @all_closed = true
-      @refmap = {} of String => String
 
       @RULES = {
         Node::Type::Document      => Rule::Document.new,
@@ -191,7 +189,6 @@ module Sanemark::Parser
 
     private def process_inlines
       walker = @document.walker
-      @inline_lexer.refmap = @refmap
       while (event = walker.next)
         node, entering = event
         if !entering && (node.type.paragraph? || node.type.heading?)
