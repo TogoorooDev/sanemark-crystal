@@ -1,29 +1,14 @@
 ## Reference links
 
-There are three kinds of **reference link**s:
-[full](#full-reference-link), [collapsed](#collapsed-reference-link),
-and [shortcut](#shortcut-reference-link).
+There are three kinds of **reference link**s: [full](#full-reference-link), [collapsed](#collapsed-reference-link), and [shortcut](#shortcut-reference-link).
 
-A **full reference link**
-consists of a link text] immediately followed by a link label
-that matches a link reference definition elsewhere in the document.
+A **full reference link** consists of a link text] immediately followed by a link label that matches a link reference definition elsewhere in the document.
 
-A **link label**  begins with a left bracket (`[`) and ends
-with the first right bracket (`]`) that is not backslash-escaped.
-Between these brackets there must be at least one [non-whitespace character].
-Unescaped square bracket characters are not allowed in
-[link labels].
+A **link label**  begins with a left bracket (`[`) and ends with the first right bracket (`]`) that is not backslash-escaped. Between these brackets there must be at least one [non-whitespace character]. Unescaped square bracket characters are not allowed in link labels.
 
-One label **matches**
-another just in case their normalized forms are equal.  To normalize a
-label, perform the *Unicode case fold* and collapse consecutive internal
-[whitespace] to a single space.  If there are multiple
-matching reference link definitions, the one that comes first in the
-document is used.  (It is desirable in such cases to emit a warning.)
+One label **matches** another just in case their normalized forms are equal.  To normalize a label, perform the *Unicode case fold* and collapse consecutive internal whitespace to a single space.  If there are multiple matching reference link definitions, the one that comes first in the document is used.  (It is desirable in such cases to emit a warning.)
 
-The contents of the first link label are parsed as inlines, which are
-used as the link's text.  The link's URI and title are provided by the
-matching link reference definition.
+The contents of the first link label are parsed as inlines, which are used as the link's text.  The link's URI and title are provided by the matching link reference definition.
 
 Here is a simple example:
 
@@ -91,10 +76,9 @@ However, links may not contain other links, at any level of nesting.
 <p>[foo <em>bar <a href="/uri">baz</a></em>]<a href="/uri">ref</a></p>
 ````````````````````````````````
 
-(In the examples above, we have two [shortcut reference links] instead of one full reference link.)
+(In the examples above, we have two shortcut reference links instead of one full reference link.)
 
-The following cases illustrate the precedence of link text grouping over
-emphasis grouping:
+The following cases illustrate the precedence of link text grouping over emphasis grouping:
 
 ```````````````````````````````` example
 *[foo*][ref]
@@ -104,7 +88,6 @@ emphasis grouping:
 <p>*<a href="/uri">foo*</a></p>
 ````````````````````````````````
 
-
 ```````````````````````````````` example
 [foo *bar][ref]
 
@@ -112,7 +95,6 @@ emphasis grouping:
 .
 <p><a href="/uri">foo *bar</a></p>
 ````````````````````````````````
-
 
 These cases illustrate the precedence of HTML tags and code spans over link grouping:
 
@@ -123,7 +105,6 @@ These cases illustrate the precedence of HTML tags and code spans over link grou
 .
 <p>[foo <bar attr="][ref]"></p>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 [foo`][ref]`
@@ -164,8 +145,7 @@ Consecutive internal whitespace is treated as one space for purposes of determin
 <p><a href="/url">Baz</a></p>
 ````````````````````````````````
 
-No whitespace is allowed between the link text and the
-link label:
+No whitespace is allowed between the link text and the link label:
 
 ```````````````````````````````` example
 [foo] [bar]
@@ -185,9 +165,7 @@ link label:
 <a href="/url">bar</a></p>
 ````````````````````````````````
 
-Note that matching is performed on normalized strings, not parsed
-inline content.  So the following does not match, even though the
-labels define equivalent inline content:
+Note that matching is performed on normalized strings, not parsed inline content. So the following does not match, even though the labels define equivalent inline content:
 
 ```````````````````````````````` example
 [bar][foo\!]
@@ -307,14 +285,7 @@ allowed between the two sets of brackets:
 <p><a href="/url">foo</a> []</p>
 ````````````````````````````````
 
-A **shortcut reference link**
-consists of a link label that matches a
-link reference definition elsewhere in the
-document and is not followed by `[]` or a link label.
-The contents of the first link label are parsed as inlines,
-which are used as the link's text.  The link's URI and title
-are provided by the matching link reference definition.
-Thus, `[foo]` is equivalent to `[foo][]`.
+A **shortcut reference link** consists of a link label that matches a link reference definition elsewhere in the document and is not followed by `[]` or a link label. The contents of the first link label are parsed as inlines, which are used as the link's text.  The link's URI and title are provided by the matching link reference definition. Thus, `[foo]` is equivalent to `[foo][]`.
 
 ```````````````````````````````` example
 [foo]
@@ -388,8 +359,7 @@ Note that this is a link, because a link label ends with the first following clo
 <p>*<a href="/url">foo*</a></p>
 ````````````````````````````````
 
-Full and compact references take precedence over shortcut
-references:
+Full and compact references take precedence over shortcut references:
 
 ```````````````````````````````` example
 [foo][bar]
@@ -426,8 +396,7 @@ Inline links also take precedence:
 <p><a href="/url1">foo</a>(not a link)</p>
 ````````````````````````````````
 
-In the following case `[bar][baz]` is parsed as a reference,
-`[foo]` as normal text:
+In the following case `[bar][baz]` is parsed as a reference, `[foo]` as normal text:
 
 ```````````````````````````````` example
 [foo][bar][baz]
@@ -539,8 +508,7 @@ As noted in the section on [Links], matching of labels is case-insensitive (see 
 <p><a href="/%CF%86%CE%BF%CF%85">αγω</a></p>
 ````````````````````````````````
 
-Here is a link reference definition with no corresponding link.
-It contributes nothing to the document.
+Here is a link reference definition with no corresponding link. It contributes nothing to the document.
 
 ```````````````````````````````` example
 [foo]: /url
@@ -558,8 +526,7 @@ bar
 <p>bar</p>
 ````````````````````````````````
 
-This is not a link reference definition, because there are
-non-whitespace characters after the title:
+This is not a link reference definition, because there are non-whitespace characters after the title:
 
 ```````````````````````````````` example
 [foo]: /url foo
@@ -567,8 +534,7 @@ non-whitespace characters after the title:
 <p>[foo]: /url foo</p>
 ````````````````````````````````
 
-This is not a link reference definition, because it occurs inside
-a code block:
+This is not a link reference definition, because it occurs inside a code block:
 
 ```````````````````````````````` example
 ```

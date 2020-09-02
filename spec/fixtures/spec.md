@@ -2,41 +2,9 @@ In the examples, the `→` character is used to represent tabs.
 
 ## Tabs
 
-Tabs in lines are not expanded to spaces. However,
-in contexts where whitespace helps to define block structure,
-tabs are equivalent to 4 spaces.
+Tabs in lines are not expanded to spaces. However, in contexts where whitespace helps to define block structure, tabs are equivalent to 4 spaces.
 
-Thus, for example, a tab can be used instead of four spaces
-in an indented code block. (Note, however, that internal
-tabs are passed through as literal tabs, not expanded to
-spaces.)
-
-```````````````````````````````` example
-→foo→baz→→bim
-.
-<pre><code>foo→baz→→bim
-</code></pre>
-````````````````````````````````
-
-```````````````````````````````` example
-  →foo→baz→→bim
-.
-<pre><code>foo→baz→→bim
-</code></pre>
-````````````````````````````````
-
-```````````````````````````````` example
-    a→a
-    ὐ→a
-.
-<pre><code>a→a
-ὐ→a
-</code></pre>
-````````````````````````````````
-
-In the following example, a continuation paragraph of a list
-item is indented with a tab; this has exactly the same effect
-as indentation with four spaces would:
+In the following example, a continuation paragraph of a list item is indented with a tab; this has exactly the same effect as indentation with four spaces would:
 
 ```````````````````````````````` example
   - foo
@@ -49,61 +17,6 @@ as indentation with four spaces would:
 <p>bar</p>
 </li>
 </ul>
-````````````````````````````````
-
-TODO The following behavior makes no bloody sense, but I haven't ripped it out yet:
-
-```````````````````````````````` example
-- foo
-
-→→bar
-.
-<ul>
-<li>
-<p>foo</p>
-<pre><code>  bar
-</code></pre>
-</li>
-</ul>
-````````````````````````````````
-
-Normally the `>` that begins a block quote may be followed
-optionally by a space, which is not considered part of the
-content. In the following case `>` is followed by a tab,
-which is treated as if it were expanded into spaces.
-Since one of theses spaces is considered part of the
-delimiter, `foo` is considered to be indented six spaces
-inside the block quote context, so we get an indented
-code block starting with two spaces.
-
-```````````````````````````````` example
->→→foo
-.
-<blockquote>
-<pre><code>  foo
-</code></pre>
-</blockquote>
-````````````````````````````````
-
-```````````````````````````````` example
--→→foo
-.
-<ul>
-<li>
-<pre><code>  foo
-</code></pre>
-</li>
-</ul>
-````````````````````````````````
-
-
-```````````````````````````````` example
-    foo
-→bar
-.
-<pre><code>foo
-bar
-</code></pre>
 ````````````````````````````````
 
 ```````````````````````````````` example
@@ -369,295 +282,18 @@ Since the space after the `#` characters is part of the heading marker, an empty
 <p>#</p>
 ````````````````````````````````
 
-## Indented code blocks
+## Code blocks
 
-An **indented code block** is composed of one or more
-indented chunks separated by blank lines.
-An **indented chunk** is a sequence of non-blank lines,
-each indented four or more spaces. The contents of the code block are
-the literal contents of the lines, including trailing
-line endings, minus four spaces of indentation.
-An indented code block has no info string.
+A **code fence** is a sequence of at least three consecutive backtick characters (`` ` ``). A **code block** is a block between two code fences of the same length, and its contents are not parsed as Sanemark.
 
-An indented code block cannot interrupt a paragraph, so there must be
-a blank line between a paragraph and a following indented code block.
-(A blank line is not needed, however, between a code block and a following
-paragraph.)
-
-```````````````````````````````` example
-    a simple
-      indented code block
-.
-<pre><code>a simple
-  indented code block
-</code></pre>
-````````````````````````````````
-
-
-If there is any ambiguity between an interpretation of indentation
-as a code block and as indicating that material belongs to a [list
-item]list items, the list item interpretation takes precedence:
-
-```````````````````````````````` example
-  - foo
-
-    bar
-.
-<ul>
-<li>
-<p>foo</p>
-<p>bar</p>
-</li>
-</ul>
-````````````````````````````````
-
-
-```````````````````````````````` example
-1.  foo
-
-    - bar
-.
-<ol>
-<li>
-<p>foo</p>
-<ul>
-<li>bar</li>
-</ul>
-</li>
-</ol>
-````````````````````````````````
-
-
-
-The contents of a code block are literal text, and do not get parsed
-as Markdown:
-
-```````````````````````````````` example
-    <a/>
-    *hi*
-
-    - one
-.
-<pre><code>&lt;a/&gt;
-*hi*
-
-- one
-</code></pre>
-````````````````````````````````
-
-
-Here we have three chunks separated by blank lines:
-
-```````````````````````````````` example
-    chunk1
-
-    chunk2
-  
- 
- 
-    chunk3
-.
-<pre><code>chunk1
-
-chunk2
-
-
-
-chunk3
-</code></pre>
-````````````````````````````````
-
-
-Any initial spaces beyond four will be included in the content, even
-in interior blank lines:
-
-```````````````````````````````` example
-    chunk1
-      
-      chunk2
-.
-<pre><code>chunk1
-  
-  chunk2
-</code></pre>
-````````````````````````````````
-
-
-An indented code block cannot interrupt a paragraph. (This
-allows hanging indents and the like.)
-
-```````````````````````````````` example
-Foo
-    bar
-
-.
-<p>Foo
-bar</p>
-````````````````````````````````
-
-
-However, any non-blank line with fewer than four leading spaces ends
-the code block immediately. So a paragraph may occur immediately
-after indented code:
-
-```````````````````````````````` example
-    foo
-bar
-.
-<pre><code>foo
-</code></pre>
-<p>bar</p>
-````````````````````````````````
-
-
-And indented code can occur immediately before and after other kinds of
-blocks:
-
-```````````````````````````````` example
-# Heading
-    foo
-----
-.
-<h1>Heading</h1>
-<pre><code>foo
-</code></pre>
-<hr>
-````````````````````````````````
-
-
-The first line can be indented more than four spaces:
-
-```````````````````````````````` example
-        foo
-    bar
-.
-<pre><code>    foo
-bar
-</code></pre>
-````````````````````````````````
-
-
-Blank lines preceding or following an indented code block
-are not included in it:
-
-```````````````````````````````` example
-
-    
-    foo
-    
-
-.
-<pre><code>foo
-</code></pre>
-````````````````````````````````
-
-
-Trailing spaces are included in the code block's content:
-
-```````````````````````````````` example
-    foo  
-.
-<pre><code>foo  
-</code></pre>
-````````````````````````````````
-
-
-
-## Fenced code blocks
-
-A **code fence** is a sequence
-of at least three consecutive backtick characters (`` ` ``) or
-tildes (`~`). (Tildes and backticks cannot be mixed.)
-A **fenced code block**
-begins with a code fence, indented no more than three spaces.
-
-The line with the opening code fence may optionally contain some text
-following the code fence; this is trimmed of leading and trailing
-spaces and called the **info string**.
-The info string may not contain any backtick
-characters. (The reason for this restriction is that otherwise
-some inline code would be incorrectly interpreted as the
-beginning of a fenced code block.)
-
-The content of the code block consists of all subsequent lines, until
-a closing code fence of the same type as the code block
-began with (backticks or tildes), and with at least as many backticks
-or tildes as the opening code fence. If the leading code fence is
-indented N spaces, then up to N spaces of indentation are removed from
-each line of the content (if present). (If a content line is not
-indented, it is preserved unchanged. If it is indented less than N
-spaces, all of the indentation is removed.)
-
-The closing code fence may be indented up to three spaces, and may be
-followed only by spaces, which are ignored. If the end of the
-containing block (or document) is reached and no closing code fence
-has been found, the code block contains all of the lines after the
-opening code fence until the end of the containing block (or
-document). (An alternative spec would require backtracking in the
-event that a closing code fence is not found. But this makes parsing
-much less efficient, and there seems to be no real down side to the
-behavior described here.)
-
-A fenced code block may interrupt a paragraph, and does not require
-a blank line either before or after.
-
-The content of a code fence is treated as literal text, not parsed
-as inlines. The first word of the info string is typically used to
-specify the language of the code sample, and rendered in the `class`
-attribute of the `code` tag. However, this spec does not mandate any
-particular treatment of the info string.
-
-Here is a simple example with backticks:
+Here is a simple example:
 
 ```````````````````````````````` example
 ```
-<
- >
+*code*
 ```
 .
-<pre><code>&lt;
- &gt;
-</code></pre>
-````````````````````````````````
-
-
-With tildes:
-
-```````````````````````````````` example
-~~~
-<
- >
-~~~
-.
-<pre><code>&lt;
- &gt;
-</code></pre>
-````````````````````````````````
-
-
-The closing code fence must use the same character as the opening
-fence:
-
-```````````````````````````````` example
-```
-aaa
-~~~
-```
-.
-<pre><code>aaa
-~~~
-</code></pre>
-````````````````````````````````
-
-
-```````````````````````````````` example
-~~~
-aaa
-```
-~~~
-.
-<pre><code>aaa
-```
+<pre><code>*code*
 </code></pre>
 ````````````````````````````````
 
@@ -680,17 +316,6 @@ aaa
 .
 <pre><code>aaa
 ````
-</code></pre>
-````````````````````````````````
-
-```````````````````````````````` example
-~~~~
-aaa
-~~~
-~~~~
-.
-<pre><code>aaa
-~~~
 </code></pre>
 ````````````````````````````````
 
@@ -750,7 +375,7 @@ A code block can be empty:
 <pre><code></code></pre>
 ````````````````````````````````
 
-The fences must be at the start of the line:
+The fences must be at the start of the line (or at the start of any structure they're nested in):
 
 ```````````````````````````````` example
  ```
@@ -758,6 +383,17 @@ The fences must be at the start of the line:
  ```
 .
 <p>``<code> aaa </code>``</p>
+````````````````````````````````
+
+```````````````````````````````` example
+> ```
+> aaa
+> ```
+.
+<blockquote>
+<pre><code>aaa
+</code></pre>
+</blockquote>
 ````````````````````````````````
 
 Code fences (opening and closing) cannot contain internal spaces:
@@ -770,20 +406,7 @@ aaa
 aaa</p>
 ````````````````````````````````
 
-
-```````````````````````````````` example
-~~~~~~
-aaa
-~~~ ~~
-.
-<pre><code>aaa
-~~~ ~~
-</code></pre>
-````````````````````````````````
-
-
-Fenced code blocks can interrupt paragraphs, and can be followed
-directly by paragraphs, without a blank line between:
+Fenced code blocks can interrupt paragraphs, and can be followed directly by paragraphs, without a blank line between:
 
 ```````````````````````````````` example
 foo
@@ -798,11 +421,7 @@ baz
 <p>baz</p>
 ````````````````````````````````
 
-
-An info string can be provided after the opening code fence.
-Opening and closing spaces will be stripped, and the first word, prefixed
-with `language-`, is used as the value for the `class` attribute of the
-`code` element within the enclosing `pre` element.
+An **info string** can appear after the opening fence. It is normally used to indicate the language of the code block (such as for syntax highlighting) and, prefixed with `language-`, used as a CSS class for the `code` element.
 
 ```````````````````````````````` example
 ```ruby
@@ -817,29 +436,6 @@ end
 </code></pre>
 ````````````````````````````````
 
-
-```````````````````````````````` example
-~~~~    ruby startline=3 $%@#$
-def foo(x)
-  return 3
-end
-~~~~
-.
-<pre><code class="language-ruby">def foo(x)
-  return 3
-end
-</code></pre>
-````````````````````````````````
-
-
-```````````````````````````````` example
-````;
-````
-.
-<pre><code class="language-;"></code></pre>
-````````````````````````````````
-
-
 Info strings for backtick code blocks cannot contain backticks:
 
 ```````````````````````````````` example
@@ -849,7 +445,6 @@ foo
 <p>``<code> aa </code>``
 foo</p>
 ````````````````````````````````
-
 
 Closing code fences cannot have info strings:
 
@@ -862,10 +457,9 @@ Closing code fences cannot have info strings:
 </code></pre>
 ````````````````````````````````
 
-
 ## HTML blocks
 
-When HTML escaping is not enabled, certain HTML blocks will not be processed as Markdown text: `<script>`, `<style>`, `<pre>`, HTML comments, and declarations like `<!DOCTYPE html>`.
+Sanemark processors are expected to escape all HTML by default, but have an option to allow it for trusted input. When HTML is being allowed, certain HTML blocks will not be processed as Markdown text: `<script>`, `<style>`, `<pre>`, HTML comments, and declarations like `<!DOCTYPE html>`.
 
 The end tag can occur on the same line as the start tag:
 
@@ -877,7 +471,6 @@ The end tag can occur on the same line as the start tag:
 <p><em>foo</em></p>
 ````````````````````````````````
 
-
 ```````````````````````````````` example
 <!-- foo -->*bar*
 *baz*
@@ -886,9 +479,7 @@ The end tag can occur on the same line as the start tag:
 <p><em>baz</em></p>
 ````````````````````````````````
 
-
-Note that anything on the last line after the
-end tag will be included in the HTML block:
+Note that anything on the last line after the end tag will be included in the HTML block:
 
 ```````````````````````````````` example
 <script>
@@ -899,7 +490,6 @@ foo
 foo
 </script>1. *bar*
 ````````````````````````````````
-
 
 A comment:
 
@@ -925,13 +515,15 @@ A declaration:
 <!DOCTYPE html>
 ````````````````````````````````
 
-HTML tags other than these will be treated as inline, meaning their contents are processed as Markdown and they will create a paragraph:
+HTML tags other than these, if not on a line by themselves, will be treated as inline, meaning their contents are processed as Sanemark and they will create a paragraph:
 
 ```````````````````````````````` example
 <div>*foo*</div>
 .
 <p><div><em>foo</em></div></p>
 ````````````````````````````````
+
+If the opening tag is on a line by itself, the tag itself will be passed through without creating a paragraph, but the element's contents will be processed as Sanemark:
 
 ```````````````````````````````` example
 <div>
@@ -971,12 +563,7 @@ To prevent all Markdown processing for an HTML element other than the special on
 
 ## Paragraphs
 
-A sequence of non-blank lines that cannot be interpreted as other
-kinds of blocks forms a **paragraph**.
-The contents of the paragraph are the result of parsing the
-paragraph's raw content as inlines. The paragraph's raw content
-is formed by concatenating the lines and removing initial and final
-whitespace.
+A sequence of non-blank lines that cannot be interpreted as other kinds of blocks forms a **paragraph**. The contents of the paragraph are the result of parsing the paragraph's raw content as inlines. The paragraph's raw content is formed by concatenating the lines and removing initial and final whitespace.
 
 A simple example with two paragraphs:
 
@@ -988,7 +575,6 @@ bbb
 <p>aaa</p>
 <p>bbb</p>
 ````````````````````````````````
-
 
 Paragraphs can contain multiple lines, but no blank lines:
 
@@ -1005,7 +591,6 @@ bbb</p>
 ddd</p>
 ````````````````````````````````
 
-
 Multiple blank lines between paragraph have no effect:
 
 ```````````````````````````````` example
@@ -1018,7 +603,6 @@ bbb
 <p>bbb</p>
 ````````````````````````````````
 
-
 Leading spaces are skipped:
 
 ```````````````````````````````` example
@@ -1029,47 +613,9 @@ Leading spaces are skipped:
 bbb</p>
 ````````````````````````````````
 
-
-Lines after the first may be indented any amount, since indented
-code blocks cannot interrupt paragraphs.
-
-```````````````````````````````` example
-aaa
-             bbb
-                                       ccc
-.
-<p>aaa
-bbb
-ccc</p>
-````````````````````````````````
-
-
-However, the first line may be indented at most three spaces,
-or an indented code block will be triggered:
-
-```````````````````````````````` example
-   aaa
-bbb
-.
-<p>aaa
-bbb</p>
-````````````````````````````````
-
-
-```````````````````````````````` example
-    aaa
-bbb
-.
-<pre><code>aaa
-</code></pre>
-<p>bbb</p>
-````````````````````````````````
-
 ## Blank lines
 
-Blank lines between block-level elements are ignored,
-except for the role they play in determining whether a list
-is tight or loose.
+Blank lines between block-level elements are ignored, except for the role they play in determining whether a list is tight or loose.
 
 Blank lines at the beginning and end of the document are also ignored.
 
@@ -1087,32 +633,19 @@ aaa
 <h1>aaa</h1>
 ````````````````````````````````
 
-
-
 # Container blocks
 
-A container block is a block that has other
-blocks as its contents. There are two basic kinds of container blocks:
-block quotes and list items.
-Lists are meta-containers for list items.
+A container block is a block that has other blocks as its contents. There are two basic kinds of container blocks: block quotes and list items. Lists are meta-containers for list items.
 
-We define the syntax for container blocks recursively. The general
-form of the definition is:
+We define the syntax for container blocks recursively. The general form of the definition is:
 
-> If X is a sequence of blocks, then the result of
-> transforming X in such-and-such a way is a container of type Y
-> with these blocks as its content.
+> If X is a sequence of blocks, then the result of transforming X in such-and-such a way is a container of type Y with these blocks as its content.
 
-So, we explain what counts as a block quote or list item by explaining
-how these can be *generated* from their contents. This should suffice
-to define the syntax, although it does not give a recipe for *parsing*
-these constructions.
+So, we explain what counts as a block quote or list item by explaining how these can be *generated* from their contents. This should suffice to define the syntax, although it does not give a recipe for *parsing* these constructions.
 
 ## Block quotes
 
-A **block quote marker**
-consists of 0-3 spaces of initial indent, plus (a) the character `>` together
-with a following space, or (b) a single character `>` not followed by a space.
+A **block quote marker** consists of 0-3 spaces of initial indent, plus (a) the character `>` together with a following space, or (b) a single character `>` not followed by a space.
 
 The following rules define block quotes:
 
