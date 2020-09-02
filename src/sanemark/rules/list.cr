@@ -6,23 +6,19 @@ module Sanemark::Rule
     ORDERED_LIST_MARKERS = {'.', ')'}
 
     def match(parser : Parser, container : Node) : MatchValue
-      if (!parser.indented || container.type.list?)
-        data = parse_list_marker(parser, container)
-        return MatchValue::None unless data && !data.empty?
+      data = parse_list_marker(parser, container)
+      return MatchValue::None unless data && !data.empty?
 
-        parser.close_unmatched_blocks
-        if !parser.tip.type.list? || !list_match?(container.data, data)
-          list_node = parser.add_child(Node::Type::List, parser.next_nonspace)
-          list_node.data = data
-        end
-
-        item_node = parser.add_child(Node::Type::Item, parser.next_nonspace)
-        item_node.data = data
-
-        MatchValue::Container
-      else
-        MatchValue::None
+      parser.close_unmatched_blocks
+      if !parser.tip.type.list? || !list_match?(container.data, data)
+        list_node = parser.add_child(Node::Type::List, parser.next_nonspace)
+        list_node.data = data
       end
+
+      item_node = parser.add_child(Node::Type::Item, parser.next_nonspace)
+      item_node.data = data
+
+      MatchValue::Container
     end
 
     def continue(parser : Parser, container : Node) : ContinueStatus

@@ -11,7 +11,7 @@ module Sanemark::Parser
     property offset, column
 
     getter line, current_line, blank, inline_lexer,
-      indent, indented, next_nonspace, refmap
+      indent, next_nonspace, refmap
 
     def initialize(@options : Options)
       @inline_lexer = Inline.new(@options)
@@ -32,7 +32,6 @@ module Sanemark::Parser
       @next_nonspace_column = 0
 
       @indent = 0
-      @indented = false
       @blank = false
       @partially_consumed_tab = false
       @all_closed = true
@@ -121,12 +120,10 @@ module Sanemark::Parser
         find_next_nonspace
 
         # this is a little performance optimization
-        unless @indented
-          first_char = @line[@next_nonspace]?
-          unless first_char && (Rule::MAYBE_SPECIAL.includes?(first_char) || first_char.ascii_number?)
-            advance_next_nonspace
-            break
-          end
+        first_char = @line[@next_nonspace]?
+        unless first_char && (Rule::MAYBE_SPECIAL.includes?(first_char) || first_char.ascii_number?)
+          advance_next_nonspace
+          break
         end
 
         matched = @RULES.each_value do |rule|
@@ -224,7 +221,7 @@ module Sanemark::Parser
       if @partially_consumed_tab
         @offset += 1 # skip over tab
         # add space characters
-        chars_to_tab = Rule::CODE_INDENT - (@column % 4)
+        chars_to_tab = 4 - (@column % 4)
         tip.text += " " * chars_to_tab
       end
 
@@ -287,7 +284,6 @@ module Sanemark::Parser
       @next_nonspace = offset
       @next_nonspace_column = column
       @indent = @next_nonspace_column - @column
-      @indented = @indent >= Rule::CODE_INDENT
 
       nil
     end
@@ -296,7 +292,7 @@ module Sanemark::Parser
       line = @line
       while count > 0 && (char = line[@offset]?)
         if char == '\t'
-          chars_to_tab = Rule::CODE_INDENT - (@column % 4)
+          chars_to_tab = 4 - (@column % 4)
           if columns
             @partially_consumed_tab = chars_to_tab > count
             chars_to_advance = chars_to_tab > count ? count : chars_to_tab

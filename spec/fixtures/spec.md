@@ -782,22 +782,7 @@ then the block quote ends after the first line:
 </ul>
 ````````````````````````````````
 
-
-For the same reason, we can't omit the `> ` in front of
-subsequent lines of an indented or fenced code block:
-
-```````````````````````````````` example
->     foo
-    bar
-.
-<blockquote>
-<pre><code>foo
-</code></pre>
-</blockquote>
-<pre><code>bar
-</code></pre>
-````````````````````````````````
-
+For the same reason, we can't omit the `> ` in front of subsequent lines of a code block:
 
 ```````````````````````````````` example
 > ```
@@ -810,34 +795,6 @@ foo
 <p>foo</p>
 <pre><code></code></pre>
 ````````````````````````````````
-
-
-Note that in the following case, we have a lazy
-continuation line:
-
-```````````````````````````````` example
-> foo
-    - bar
-.
-<blockquote>
-<p>foo
-- bar</p>
-</blockquote>
-````````````````````````````````
-
-
-To see why, note that in
-
-```markdown
-> foo
->     - bar
-```
-
-the `- bar` is indented too far to start a list, and can't
-be an indented code block because indented code blocks cannot
-interrupt paragraphs, so it is paragraph continuation text.
-
-A block quote can be empty:
 
 ```````````````````````````````` example
 >
@@ -856,7 +813,6 @@ A block quote can be empty:
 </blockquote>
 ````````````````````````````````
 
-
 A block quote can have initial or final blank lines:
 
 ```````````````````````````````` example
@@ -868,7 +824,6 @@ A block quote can have initial or final blank lines:
 <p>foo</p>
 </blockquote>
 ````````````````````````````````
-
 
 A blank line always separates block quotes:
 
@@ -1022,29 +977,6 @@ baz</p>
 </blockquote>
 </blockquote>
 ````````````````````````````````
-
-
-When including an indented code block in a block quote,
-remember that the block quote marker includes
-both the `>` and a following space. So *five spaces* are needed after
-the `>`:
-
-```````````````````````````````` example
->     code
-
->    not code
-.
-<blockquote>
-<pre><code>code
-</code></pre>
-</blockquote>
-<blockquote>
-<p>not code</p>
-</blockquote>
-````````````````````````````````
-
-
-
 ## List items
 
 A **list marker** is a
@@ -1084,14 +1016,10 @@ For example, let *Ls* be the lines
 A paragraph
 with two lines.
 
-    indented code
-
 > A block quote.
 .
 <p>A paragraph
 with two lines.</p>
-<pre><code>indented code
-</code></pre>
 <blockquote>
 <p>A block quote.</p>
 </blockquote>
@@ -1106,16 +1034,12 @@ and the same contents as *Ls*:
 1.  A paragraph
     with two lines.
 
-        indented code
-
     > A block quote.
 .
 <ol>
 <li>
 <p>A paragraph
 with two lines.</p>
-<pre><code>indented code
-</code></pre>
 <blockquote>
 <p>A block quote.</p>
 </blockquote>
@@ -1159,20 +1083,6 @@ put under the list item:
 </li>
 </ul>
 ````````````````````````````````
-
-
-```````````````````````````````` example
- -    one
-
-     two
-.
-<ul>
-<li>one</li>
-</ul>
-<pre><code> two
-</code></pre>
-````````````````````````````````
-
 
 ```````````````````````````````` example
  -    one
@@ -1296,30 +1206,6 @@ A list item may contain any kind of block:
 </ol>
 ````````````````````````````````
 
-
-A list item that contains an indented code block will preserve
-empty lines within the code block verbatim.
-
-```````````````````````````````` example
-- Foo
-
-      bar
-
-
-      baz
-.
-<ul>
-<li>
-<p>Foo</p>
-<pre><code>bar
-
-
-baz
-</code></pre>
-</li>
-</ul>
-````````````````````````````````
-
 Note that ordered list start numbers must be nine digits or less:
 
 ```````````````````````````````` example
@@ -1366,123 +1252,7 @@ A start number may not be negative:
 <p>-1. not ok</p>
 ````````````````````````````````
 
-
-
-2.  **Item starting with indented code.**  If a sequence of lines *Ls*
-    constitute a sequence of blocks *Bs* starting with an indented code
-    block and not separated from each other by more than one blank line,
-    and *M* is a list marker of width *W* followed by
-    one space, then the result of prepending *M* and the following
-    space to the first line of *Ls*, and indenting subsequent lines of
-    *Ls* by *W + 1* spaces, is a list item with *Bs* as its contents.
-    If a line is empty, then it need not be indented. The type of the
-    list item (bullet or ordered) is determined by the type of its list
-    marker. If the list item is ordered, then it is also assigned a
-    start number, based on the ordered list marker.
-
-An indented code block will have to be indented four spaces beyond
-the edge of the region where text will be included in the list item.
-In the following case that is 6 spaces:
-
-```````````````````````````````` example
-- foo
-
-      bar
-.
-<ul>
-<li>
-<p>foo</p>
-<pre><code>bar
-</code></pre>
-</li>
-</ul>
-````````````````````````````````
-
-
-And in this case it is 11 spaces:
-
-```````````````````````````````` example
-  10.  foo
-
-           bar
-.
-<ol start="10">
-<li>
-<p>foo</p>
-<pre><code>bar
-</code></pre>
-</li>
-</ol>
-````````````````````````````````
-
-
-If the *first* block in the list item is an indented code block,
-then by rule #2, the contents must be indented *one* space after the
-list marker:
-
-```````````````````````````````` example
-    indented code
-
-paragraph
-
-    more code
-.
-<pre><code>indented code
-</code></pre>
-<p>paragraph</p>
-<pre><code>more code
-</code></pre>
-````````````````````````````````
-
-
-```````````````````````````````` example
-1.     indented code
-
-   paragraph
-
-       more code
-.
-<ol>
-<li>
-<pre><code>indented code
-</code></pre>
-<p>paragraph</p>
-<pre><code>more code
-</code></pre>
-</li>
-</ol>
-````````````````````````````````
-
-
-Note that an additional space indent is interpreted as space
-inside the code block:
-
-```````````````````````````````` example
-1.      indented code
-
-   paragraph
-
-       more code
-.
-<ol>
-<li>
-<pre><code> indented code
-</code></pre>
-<p>paragraph</p>
-<pre><code>more code
-</code></pre>
-</li>
-</ol>
-````````````````````````````````
-
-
-Note that rules #1 and #2 only apply to two cases:  (a) cases
-in which the lines to be included in a list item begin with a
-non-whitespace character, and (b) cases in which
-they begin with an indented code
-block. In a case like the following, where the first block begins with
-a three-space indent, the rules do not allow us to form a list item by
-indenting the whole thing and prepending a list marker:
+Note that rule #1 only applies to cases in which the lines to be included in a list item begin with a non-whitespace character. In a case like the following, where the first block begins with a three-space indent, the rules do not allow us to form a list item by indenting the whole thing and prepending a list marker:
 
 ```````````````````````````````` example
    foo
@@ -1525,7 +1295,7 @@ the above case:
 ````````````````````````````````
 
 
-3.  **Item starting with a blank line.**  If a sequence of lines *Ls*
+2.  **Item starting with a blank line.**  If a sequence of lines *Ls*
     starting with a single blank line constitute a (possibly empty)
     sequence of blocks *Bs*, not separated from each other by more than
     one blank line, and *M* is a list marker of width *W*,
@@ -1546,8 +1316,6 @@ Here are some list items that start with a blank line but are not empty:
   ```
   bar
   ```
--
-      baz
 .
 <ul>
 <li>foo</li>
@@ -1555,15 +1323,10 @@ Here are some list items that start with a blank line but are not empty:
 <pre><code>bar
 </code></pre>
 </li>
-<li>
-<pre><code>baz
-</code></pre>
-</li>
 </ul>
 ````````````````````````````````
 
-When the list item starts with a blank line, the number of spaces
-following the list marker doesn't change the required indentation:
+When the list item starts with a blank line, the number of spaces following the list marker doesn't change the required indentation:
 
 ```````````````````````````````` example
 -   
@@ -1574,10 +1337,7 @@ following the list marker doesn't change the required indentation:
 </ul>
 ````````````````````````````````
 
-
-A list item can begin with at most one blank line.
-In the following example, `foo` is not part of the list
-item:
+A list item can begin with at most one blank line. In the following example, `foo` is not part of the list item:
 
 ```````````````````````````````` example
 -
@@ -1589,7 +1349,6 @@ item:
 </ul>
 <p>foo</p>
 ````````````````````````````````
-
 
 Here is an empty bullet list item:
 
@@ -1620,7 +1379,6 @@ It does not matter whether there are spaces following the list marker:
 </ul>
 ````````````````````````````````
 
-
 Here is an empty ordered list item:
 
 ```````````````````````````````` example
@@ -1634,7 +1392,6 @@ Here is an empty ordered list item:
 <li>bar</li>
 </ol>
 ````````````````````````````````
-
 
 A list may start or end with an empty list item:
 
@@ -1661,8 +1418,7 @@ foo
 1.</p>
 ````````````````````````````````
 
-
-4.  **Indentation.**  If a sequence of lines *Ls* constitutes a list item
+3.  **Indentation.**  If a sequence of lines *Ls* constitutes a list item
     according to rule #1, #2, or #3, then the result of indenting each line
     of *Ls* by 1-3 spaces (the same for each line) also constitutes a
     list item with the same contents and attributes. If a line is
@@ -1674,23 +1430,18 @@ Indented one space:
  1.  A paragraph
      with two lines.
 
-         indented code
-
      > A block quote.
 .
 <ol>
 <li>
 <p>A paragraph
 with two lines.</p>
-<pre><code>indented code
-</code></pre>
 <blockquote>
 <p>A block quote.</p>
 </blockquote>
 </li>
 </ol>
 ````````````````````````````````
-
 
 Indented two spaces:
 
@@ -1698,23 +1449,18 @@ Indented two spaces:
   1.  A paragraph
       with two lines.
 
-          indented code
-
       > A block quote.
 .
 <ol>
 <li>
 <p>A paragraph
 with two lines.</p>
-<pre><code>indented code
-</code></pre>
 <blockquote>
 <p>A block quote.</p>
 </blockquote>
 </li>
 </ol>
 ````````````````````````````````
-
 
 Indented three spaces:
 
@@ -1722,16 +1468,12 @@ Indented three spaces:
    1.  A paragraph
        with two lines.
 
-           indented code
-
        > A block quote.
 .
 <ol>
 <li>
 <p>A paragraph
 with two lines.</p>
-<pre><code>indented code
-</code></pre>
 <blockquote>
 <p>A block quote.</p>
 </blockquote>
@@ -1739,29 +1481,7 @@ with two lines.</p>
 </ol>
 ````````````````````````````````
 
-
-Four spaces indent gives a code block:
-
-```````````````````````````````` example
-    1.  A paragraph
-        with two lines.
-
-            indented code
-
-        > A block quote.
-.
-<pre><code>1.  A paragraph
-    with two lines.
-
-        indented code
-
-    &gt; A block quote.
-</code></pre>
-````````````````````````````````
-
-
-
-5.  **Laziness.**  If a string of lines *Ls* constitute a [list
+4.  **Laziness.**  If a string of lines *Ls* constitute a [list
     item](#list-items) with contents *Bs*, then the result of deleting
     some or all of the indentation from one or more lines in which the
     next non-whitespace character after the indentation is
@@ -1769,30 +1489,6 @@ Four spaces indent gives a code block:
     list item with the same contents and attributes. The unindented
     lines are called
     **lazy continuation line**s.
-
-Here is an example with lazy continuation lines:
-
-```````````````````````````````` example
-  1.  A paragraph
-with two lines.
-
-          indented code
-
-      > A block quote.
-.
-<ol>
-<li>
-<p>A paragraph
-with two lines.</p>
-<pre><code>indented code
-</code></pre>
-<blockquote>
-<p>A block quote.</p>
-</blockquote>
-</li>
-</ol>
-````````````````````````````````
-
 
 Indentation can be partially deleted:
 
@@ -1805,7 +1501,6 @@ Indentation can be partially deleted:
 with two lines.</li>
 </ol>
 ````````````````````````````````
-
 
 These examples show how laziness can work in nested structures:
 
@@ -1825,7 +1520,6 @@ continued here.</p>
 </blockquote>
 ````````````````````````````````
 
-
 ```````````````````````````````` example
 > 1. > Blockquote
 > continued here.
@@ -1841,11 +1535,6 @@ continued here.</p>
 </ol>
 </blockquote>
 ````````````````````````````````
-
-
-
-6.  **That's all.** Nothing that is not counted as a list item by rules
-    #1--5 counts as a list item.
 
 The rules for sublists follow from the general rules above. A sublist
 must be indented the same number of spaces a paragraph would need to be
@@ -2372,11 +2061,7 @@ There can be any number of blank lines between items:
 </ul>
 ````````````````````````````````
 
-
-To separate consecutive lists of the same type, or to separate a
-list from an indented code block that would otherwise be parsed
-as a subparagraph of the final list item, you can insert a blank HTML
-comment:
+To separate consecutive lists of the same type, you can insert a blank HTML comment:
 
 ```````````````````````````````` example
 - foo
@@ -2397,33 +2082,6 @@ comment:
 <li>bim</li>
 </ul>
 ````````````````````````````````
-
-
-```````````````````````````````` example
--   foo
-
-    notcode
-
--   foo
-
-<!-- -->
-
-    code
-.
-<ul>
-<li>
-<p>foo</p>
-<p>notcode</p>
-</li>
-<li>
-<p>foo</p>
-</li>
-</ul>
-<!-- -->
-<pre><code>code
-</code></pre>
-````````````````````````````````
-
 
 List items need not be indented to the same level. The following
 list items will be treated as items at the same list level,
@@ -2822,16 +2480,9 @@ If a backslash is itself escaped, the following character is not:
 Backslash escapes do not work in code blocks or HTML:
 
 ```````````````````````````````` example
-    \[\]
-.
-<pre><code>\[\]
-</code></pre>
-````````````````````````````````
-
-```````````````````````````````` example
-~~~
+```
 \[\]
-~~~
+```
 .
 <pre><code>\[\]
 </code></pre>

@@ -41,8 +41,7 @@ module Sanemark::Rule
     end
 
     private def match?(parser : Parser, regex : Regex) : Regex::MatchData?
-      match = parser.line[parser.offset..].match(regex)
-      !parser.indented && match ? match : nil
+      parser.line[parser.offset..].match(regex)
     end
   end
 end

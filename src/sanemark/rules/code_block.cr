@@ -2,38 +2,26 @@ module Sanemark::Rule
   struct CodeBlock
     include Rule
 
-    CODE_FENCE         = /^`{3,}(?!.*`)|^~{3,}(?!.*~)/
-    CLOSING_CODE_FENCE = /^(?:`{3,}|~{3,})(?= *$)/
+    CODE_FENCE         = /^`{3,}(?!.*`)/
+    CLOSING_CODE_FENCE = /^(?:`{3,})(?= *$)/
 
     def match(parser : Parser, container : Node) : MatchValue
-      if !parser.indented &&
-         (match = parser.line[parser.offset..].match(CODE_FENCE))
-        # fenced
-        fence_length = match[0].size
+      return MatchValue::None if !(match = parser.line[parser.offset..].match(CODE_FENCE))
+      match = match.not_nil!
 
-        parser.close_unmatched_blocks
-        node = parser.add_child(Node::Type::CodeBlock, parser.next_nonspace)
-        node.fenced = true
-        node.fence_length = fence_length
-        node.fence_char = match[0][0].to_s
-        node.fence_offset = parser.indent
+      fence_length = match.[0].size
 
-        parser.advance_next_nonspace
-        parser.advance_offset(fence_length, false)
+      parser.close_unmatched_blocks
+      node = parser.add_child(Node::Type::CodeBlock, parser.next_nonspace)
+      node.fenced = true
+      node.fence_length = fence_length
+      node.fence_char = match[0][0].to_s
+      node.fence_offset = parser.indent
 
-        MatchValue::Leaf
-      elsif parser.indented && !parser.blank && (tip = parser.tip) &&
-            !tip.type.paragraph? &&
-            (!container.type.list? || container.data["padding"].as(Int32) >= 4)
-        # indented
-        parser.advance_offset(Rule::CODE_INDENT, true)
-        parser.close_unmatched_blocks
-        parser.add_child(Node::Type::CodeBlock, parser.offset)
+      parser.advance_next_nonspace
+      parser.advance_offset(fence_length, false)
 
-        MatchValue::Leaf
-      else
-        MatchValue::None
-      end
+      MatchValue::Leaf
     end
 
     def continue(parser : Parser, container : Node) : ContinueStatus
@@ -57,31 +45,15 @@ module Sanemark::Rule
             index -= 1
           end
         end
-      else
-        # indented
-        if indent >= Rule::CODE_INDENT
-          parser.advance_offset(Rule::CODE_INDENT, true)
-        elsif parser.blank
-          parser.advance_next_nonspace
-        else
-          return ContinueStatus::Stop
-        end
       end
 
       ContinueStatus::Continue
     end
 
     def token(parser : Parser, container : Node) : Nil
-      if container.fenced?
-        # fenced
-        first_line, _, text = container.text.partition('\n')
-
-        container.fence_language = first_line.strip
-        container.text = text
-      else
-        # indented
-        container.text = container.text.gsub(/(\n *)+$/, "\n")
-      end
+      first_line, _, text = container.text.partition('\n')
+      container.fence_language = first_line.strip
+      container.text = text
     end
 
     def can_contain?(type)

@@ -50,8 +50,6 @@ module Sanemark
     UNSAFE_PROTOCOL      = /^javascript:|vbscript:|file:|data:/i
     UNSAFE_DATA_PROTOCOL = /^data:image\/(?:png|gif|jpeg|webp)/i
 
-    CODE_INDENT = 4
-
     # Match Value
     #
     # - None: no match

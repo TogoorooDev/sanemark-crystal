@@ -36,7 +36,7 @@ module Sanemark::Rule
     end
 
     private def match?(parser)
-      !parser.indented && parser.line[parser.offset]? == '>'
+      parser.line[parser.offset]? == '>'
     end
 
     private def seek(parser : Parser)
