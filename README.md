@@ -33,7 +33,7 @@ If you want to use a custom renderer, it can!
 
 class CustomRenderer < Sanemark::Renderer
 
-  def strong(node, entering)
+  def open_strong(node)
   end
 
   # more methods following in render.
