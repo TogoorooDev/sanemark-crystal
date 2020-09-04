@@ -104,7 +104,6 @@ module Sanemark
 
         if @options.allow_html || !potentially_unsafe(destination)
           attrs ||= {} of String => String
-          destination = resolve_uri(destination, node)
           attrs["href"] = escape(destination)
         end
 
@@ -118,16 +117,6 @@ module Sanemark
       end
     end
 
-    private def resolve_uri(destination, node)
-      base_url = @options.base_url
-      return destination unless base_url
-
-      uri = URI.parse(destination)
-      return destination if uri.absolute?
-
-      base_url.resolve(uri).to_s
-    end
-
     def image(node : Node, entering : Bool)
       if entering
         if @disable_tag == 0
@@ -135,7 +124,6 @@ module Sanemark
           if !@options.allow_html && potentially_unsafe(destination)
             lit(%(<img src="" alt=""))
           else
-            destination = resolve_uri(destination, node)
             lit(%(<img src="#{escape(destination)}" alt="))
           end
         end
