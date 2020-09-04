@@ -39,18 +39,11 @@ In the following example, a continuation paragraph of a list item is indented wi
 
 # Blocks and inlines
 
-We can think of a document as a sequence of
-**blocks**---structural elements like paragraphs, block
-quotations, lists, headings, rules, and code blocks. Some blocks (like
-block quotes and list items) contain other blocks; others (like
-headings and paragraphs) contain **inline** content---text,
-links, emphasized text, images, code, and so on.
+We can think of a document as a sequence of **blocks** - structural elements like paragraphs, block quotations, lists, headings, rules, and code blocks. Some blocks (like block quotes and list items) contain other blocks; others (like headings and paragraphs) contain **inline** content - text, links, emphasized text, images, code, and so on.
 
 ## Precedence
 
-Indicators of block structure always take precedence over indicators
-of inline structure. So, for example, the following is a list with
-two items, not a list with one item containing a code span:
+Indicators of block structure always take precedence over indicators of inline structure. So, for example, the following is a list with two items, not a list with one item containing a code span:
 
 ```````````````````````````````` example
 - `one
@@ -162,7 +155,7 @@ interpretations of a line, the thematic break takes precedence:
 </ul>
 ````````````````````````````````
 
-If you want a thematic break in a list item, use a different bullet:
+If you want a thematic break in a list item, use the other bullet:
 
 ```````````````````````````````` example
 - Foo
@@ -197,7 +190,6 @@ Simple headings:
 <h5>foo</h5>
 <h6>foo</h6>
 ````````````````````````````````
-
 
 More than six `#` characters is not a heading:
 
@@ -319,8 +311,7 @@ aaa
 </code></pre>
 ````````````````````````````````
 
-Unclosed code blocks are closed by the end of the document
-(or the enclosing block quote or list item):
+Unclosed code blocks are closed by the end of the document (or the enclosing block quote or list item):
 
 ```````````````````````````````` example
 ```
@@ -649,9 +640,9 @@ A **block quote marker** consists of the character `>` at the start of its line,
 
 The following rules define block quotes:
 
-1. **Basic case.** If a string of lines *Ls* constitute a sequence of blocks *Bs*, then the result of prepending a [block quote marker] to the beginning of each line in *Ls* is a [block quote](#block-quotes) containing *Bs*.
+1. **Basic case.** If a string of lines *Ls* constitute a sequence of blocks *Bs*, then the result of prepending a block quote marker to the beginning of each line in *Ls* is a block quote containing *Bs*.
 
-2. **Consecutiveness.** A document cannot contain two [block quotes] in a row unless there is a [blank line] between them.
+2. **Consecutiveness.** A document cannot contain two block quotes in a row unless there is a blank line between them.
 
 Here is a simple example:
 
@@ -724,7 +715,6 @@ A block quote can be empty:
 </blockquote>
 ````````````````````````````````
 
-
 ```````````````````````````````` example
 >
 >  
@@ -761,8 +751,7 @@ A blank line always separates block quotes:
 </blockquote>
 ````````````````````````````````
 
-Consecutiveness means that if we put these block quotes together,
-we get a single block quote:
+Consecutiveness means that if we put these block quotes together, we get a single block quote:
 
 ```````````````````````````````` example
 > foo
@@ -773,7 +762,6 @@ we get a single block quote:
 bar</p>
 </blockquote>
 ````````````````````````````````
-
 
 To get a block quote with two paragraphs, use:
 
@@ -788,7 +776,6 @@ To get a block quote with two paragraphs, use:
 </blockquote>
 ````````````````````````````````
 
-
 Block quotes can interrupt paragraphs:
 
 ```````````````````````````````` example
@@ -801,9 +788,7 @@ foo
 </blockquote>
 ````````````````````````````````
 
-
-In general, blank lines are not needed before or after block
-quotes:
+In general, blank lines are not needed before or after block quotes:
 
 ```````````````````````````````` example
 > aaa
@@ -829,7 +814,6 @@ baz
 </blockquote>
 <p>baz</p>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 > bar
@@ -897,8 +881,8 @@ The following rules define list items:
     number, based on the ordered list marker.
 
     Exceptions: When the first list item in a list interrupts
-    a paragraph---that is, when it starts on a line that would
-    otherwise count as paragraph continuation text---then (a)
+    a paragraph - that is, when it starts on a line that would
+    otherwise count as paragraph continuation text - then (a)
     the lines *Ls* must not begin with a blank line, and (b) if
     the list item is ordered, the start number must be 1.
 
@@ -938,7 +922,6 @@ with two lines.</p>
 </ol>
 ````````````````````````````````
 
-
 The most important thing to notice is that the position of
 the text after the list marker determines how much indentation
 is needed in subsequent blocks in the list item. If the list
@@ -960,7 +943,6 @@ put under the list item:
 </ul>
 <p>two</p>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 - one
@@ -988,7 +970,6 @@ put under the list item:
 </ul>
 ````````````````````````````````
 
-
 It is tempting to think of this in terms of columns:  the continuation
 blocks must be indented at least to the column of the first
 non-whitespace character after the list marker. However, that is not quite right.
@@ -1013,7 +994,6 @@ this example:
 </blockquote>
 </blockquote>
 ````````````````````````````````
-
 
 Here `two` occurs in the same column as the list marker `1.`,
 but is actually contained in the list item, because there is
@@ -1052,9 +1032,7 @@ any following content, so these are not list items:
 <p>2.two</p>
 ````````````````````````````````
 
-
-A list item may contain blocks that are separated by more than
-one blank line.
+A list item may contain blocks that are separated by more than one blank line.
 
 ```````````````````````````````` example
 - foo
@@ -2292,12 +2270,9 @@ Here the outer list is loose, the inner list tight:
 </ul>
 ````````````````````````````````
 
-
 # Inlines
 
-Inlines are parsed sequentially from the beginning of the character
-stream to the end (left to right, in left-to-right languages).
-Thus, for example, in
+Inlines are parsed sequentially from the beginning of the character stream to the end (left to right, in left-to-right languages). Thus, for example, in
 
 ```````````````````````````````` example
 `hi`lo`
@@ -2305,9 +2280,7 @@ Thus, for example, in
 <p><code>hi</code>lo`</p>
 ````````````````````````````````
 
-
-`hi` is parsed as code, leaving the backtick at the end as a literal
-backtick.
+`hi` is parsed as code, leaving the backtick at the end as a literal backtick.
 
 ## Backslash escapes
 
@@ -2319,9 +2292,7 @@ Any ASCII punctuation character may be backslash-escaped:
 <p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~</p>
 ````````````````````````````````
 
-
-Backslashes before other characters are treated as literal
-backslashes:
+Backslashes before other characters are treated as literal backslashes:
 
 ```````````````````````````````` example
 \→\A\a\ \3\φ\«
@@ -2329,13 +2300,11 @@ backslashes:
 <p>\→\A\a\ \3\φ\«</p>
 ````````````````````````````````
 
-
-Escaped characters are treated as regular characters and do
-not have their usual Markdown meanings:
+Escaped characters are treated as regular characters and do not have their usual Markdown meanings:
 
 ```````````````````````````````` example
 \*not emphasized*
-\<br/> not a tag
+\<br> not a tag
 \[not a link](/foo)
 \`not code`
 1\. not a list
@@ -2343,14 +2312,13 @@ not have their usual Markdown meanings:
 \# not a heading
 .
 <p>*not emphasized*
-&lt;br/&gt; not a tag
+&lt;br&gt; not a tag
 [not a link](/foo)
 `not code`
 1. not a list
 * not a list
 # not a heading</p>
 ````````````````````````````````
-
 
 If a backslash is itself escaped, the following character is not:
 
@@ -2428,6 +2396,7 @@ Inside code spans, backslashes have no special meaning except before `\\` and `\
 ````````````````````````````````
 
 Code spans cannot be empty; this causes both backticks to be taken literally:
+
 ```````````````````````````````` example
 `` foo`
 .
@@ -2819,7 +2788,6 @@ A link consists of anchor text encloesd in brackets followed immediately by a de
 
 The **link destination** consists of a nonempty sequence of characters that does not include ASCII space or control characters, and includes parentheses only if (a) they are backslash-escaped or (b) they are part of a balanced pair of unescaped parentheses.
 
-
 Here is a simple link:
 
 ```````````````````````````````` example
@@ -3140,7 +3108,6 @@ Here are some simple open tags:
 <p><a><bab><c2c></p>
 ````````````````````````````````
 
-
 Empty elements:
 
 ```````````````````````````````` example
@@ -3148,7 +3115,6 @@ Empty elements:
 .
 <p><a/><b2/></p>
 ````````````````````````````````
-
 
 Whitespace is allowed:
 
@@ -3160,7 +3126,6 @@ data="foo" >
 data="foo" ></p>
 ````````````````````````````````
 
-
 With attributes:
 
 ```````````````````````````````` example
@@ -3171,7 +3136,6 @@ _boolean zoop:33=zoop:33 />
 _boolean zoop:33=zoop:33 /></p>
 ````````````````````````````````
 
-
 Custom tag names can be used:
 
 ```````````````````````````````` example
@@ -3179,7 +3143,6 @@ Foo <responsive-image src="foo.jpg" />
 .
 <p>Foo <responsive-image src="foo.jpg" /></p>
 ````````````````````````````````
-
 
 Illegal tag names, not parsed as HTML:
 
@@ -3189,7 +3152,6 @@ Illegal tag names, not parsed as HTML:
 <p>&lt;33&gt; &lt;__&gt;</p>
 ````````````````````````````````
 
-
 Illegal attribute names:
 
 ```````````````````````````````` example
@@ -3198,7 +3160,6 @@ Illegal attribute names:
 <p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>
 ````````````````````````````````
 
-
 Illegal attribute values:
 
 ```````````````````````````````` example
@@ -3206,7 +3167,6 @@ Illegal attribute values:
 .
 <p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>
 ````````````````````````````````
-
 
 Illegal whitespace:
 
@@ -3218,7 +3178,6 @@ foo><bar/ >
 foo&gt;&lt;bar/ &gt;</p>
 ````````````````````````````````
 
-
 Missing whitespace:
 
 ```````````````````````````````` example
@@ -3226,7 +3185,6 @@ Missing whitespace:
 .
 <p>&lt;a href='bar'title=title&gt;</p>
 ````````````````````````````````
-
 
 Closing tags:
 
@@ -3236,7 +3194,6 @@ Closing tags:
 <p></a></foo ></p>
 ````````````````````````````````
 
-
 Illegal attributes in closing tag:
 
 ```````````````````````````````` example
@@ -3244,7 +3201,6 @@ Illegal attributes in closing tag:
 .
 <p>&lt;/a href=&quot;foo&quot;&gt;</p>
 ````````````````````````````````
-
 
 Comments:
 
@@ -3256,13 +3212,11 @@ comment - with hyphen -->
 comment - with hyphen --></p>
 ````````````````````````````````
 
-
 ```````````````````````````````` example
 foo <!-- not a comment -- two hyphens -->
 .
 <p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>
 ````````````````````````````````
-
 
 Not comments:
 
@@ -3275,7 +3229,6 @@ foo <!-- foo--->
 <p>foo &lt;!-- foo---&gt;</p>
 ````````````````````````````````
 
-
 Declarations:
 
 ```````````````````````````````` example
@@ -3284,16 +3237,13 @@ foo <!ELEMENT br EMPTY>
 <p>foo <!ELEMENT br EMPTY></p>
 ````````````````````````````````
 
-
-Entity and numeric character references are preserved in HTML
-attributes:
+Entity and numeric character references are preserved in HTML attributes:
 
 ```````````````````````````````` example
 foo <a href="&ouml;">
 .
 <p>foo <a href="&ouml;"></p>
 ````````````````````````````````
-
 
 Backslash escapes do not work in HTML attributes:
 
@@ -3302,7 +3252,6 @@ foo <a href="\*">
 .
 <p>foo <a href="\*"></p>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 <a href="\"">
@@ -3361,7 +3310,6 @@ span`
 .
 <p><code>code span</code></p>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 `code\
