@@ -20,12 +20,12 @@ module Sanemark
     OPEN_TAG  = "<" + TAG_NAME_STRING + ATTRIBUTE + "*" + "\\s*/?>"
     CLOSE_TAG = "</" + TAG_NAME_STRING + "\\s*[>]"
 
-    OPEN_TAG_STRING               = "<#{TAG_NAME_STRING}#{ATTRIBUTE}*" + "\\s*/?>"
-    CLOSE_TAG_STRING              = "</#{TAG_NAME_STRING}\\s*[>]"
-    COMMENT_STRING                = "<!---->|<!--(?:-?[^>-])(?:-?[^-])*-->"
-    DECLARATION_STRING            = "<![A-Z]+" + "\\s+[^>]*>"
-    HTML_TAG_STRING               = "(?:#{OPEN_TAG_STRING}|#{CLOSE_TAG_STRING}|#{COMMENT_STRING}|#{DECLARATION_STRING})"
-    HTML_TAG                      = /^#{HTML_TAG_STRING}/i
+    OPEN_TAG_STRING    = "<#{TAG_NAME_STRING}#{ATTRIBUTE}*" + "\\s*/?>"
+    CLOSE_TAG_STRING   = "</#{TAG_NAME_STRING}\\s*[>]"
+    COMMENT_STRING     = "<!---->|<!--(?:-?[^>-])(?:-?[^-])*-->"
+    DECLARATION_STRING = "<![A-Z]+" + "\\s+[^>]*>"
+    HTML_TAG_STRING    = "(?:#{OPEN_TAG_STRING}|#{CLOSE_TAG_STRING}|#{COMMENT_STRING}|#{DECLARATION_STRING})"
+    HTML_TAG           = /^#{HTML_TAG_STRING}/i
 
     HTML_BLOCK_OPEN = [
       /^<script(?:\s|>|$)/i,

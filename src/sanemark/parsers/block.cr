@@ -6,7 +6,6 @@ module Sanemark::Parser
       new(options).parse(source)
     end
 
-
     property! tip : Node?
     property offset, column
 

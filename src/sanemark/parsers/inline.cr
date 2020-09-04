@@ -276,7 +276,7 @@ module Sanemark::Parser
               end
               matched_emph = true
               matched_strong = true
-            # If it's not closing both, still make sure it closes either properly.
+              # If it's not closing both, still make sure it closes either properly.
             else
               if !strong_opener.nil?
                 strong_opener.node.insert_after(Node.new Node::Type::OpenStrong)

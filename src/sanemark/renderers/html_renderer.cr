@@ -185,8 +185,8 @@ module Sanemark
       if @emphasis_stack[-1] == EmphasisType::Italics
         tag("em", end_tag: true)
         @emphasis_stack.pop
-      # If we're closing italics, but there's an unclosed bold inside the italics,
-      # we need to close and reopen it, because HTML tags can't overlap.
+        # If we're closing italics, but there's an unclosed bold inside the italics,
+        # we need to close and reopen it, because HTML tags can't overlap.
       else
         tag("strong", end_tag: true)
         @emphasis_stack.pop
@@ -214,8 +214,8 @@ module Sanemark
       if @emphasis_stack[-1] == EmphasisType::Bold
         tag("strong", end_tag: true)
         @emphasis_stack.pop
-      # If we're closing bold, but there's an unclosed italics inside the bold,
-      # we need to close and reopen it, because HTML tags can't overlap.
+        # If we're closing bold, but there's an unclosed italics inside the bold,
+        # we need to close and reopen it, because HTML tags can't overlap.
       else
         tag("em", end_tag: true)
         @emphasis_stack.pop
