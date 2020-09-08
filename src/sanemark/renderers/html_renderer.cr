@@ -33,11 +33,7 @@ module Sanemark
     def code_block(node : Node, entering : Bool)
       languages = node.fence_language ? node.fence_language.split : nil
       code_tag_attrs = attrs(node)
-      pre_tag_attrs = if @options.prettyprint
-                        {"class" => "prettyprint"}
-                      else
-                        nil
-                      end
+      pre_tag_attrs = nil
 
       if languages && languages.size > 0 && (lang = languages[0]) && !lang.empty?
         code_tag_attrs ||= {} of String => String
