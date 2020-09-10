@@ -248,11 +248,7 @@ module Sanemark
     end
 
     private def attrs(node : Node)
-      if @options.source_pos && (pos = node.source_pos)
-        {"data-source-pos" => "#{pos[0][0]}:#{pos[0][1]}-#{pos[1][0]}:#{pos[1][1]}"}
-      else
-        nil
-      end
+      nil
     end
   end
 end

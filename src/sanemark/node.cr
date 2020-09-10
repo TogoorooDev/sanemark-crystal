@@ -126,10 +126,6 @@ module Sanemark
       @prev = nil
     end
 
-    def walker
-      Walker.new(self)
-    end
-
     def to_s(io : IO)
       io << "#<" << {{@type.name.id.stringify}} << ":0x"
       object_id.to_s(16, io)
@@ -142,6 +138,10 @@ module Sanemark
 
       io << ">"
       nil
+    end
+
+    def walker
+      Walker.new(self)
     end
 
     private class Walker

@@ -21,8 +21,7 @@ Sanemark.to_html(markdown, options)
 | Name        | Type   | Default value | Description                                                                                                                                                                   |
 | ----------- | ------ | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | allow_html  | `Bool` | false         | let HTML through according to the Sanemark spec. By default, all HTML is escaped. This option also turns off sanitization of dangerous link protocols.                        |
-| time        | `Bool` | false         | render parse cost time during read source, parse blocks, parse inline.                                                                                                        |
-| source_pos  | `Bool` | false         | if **true**, source position information for block-level elements will be rendered in the data-sourcepos attribute (for HTML)                                                 |
+| time        | `Bool` | false         | render time spent during block parsing, inline parsing, and rendering.                                                                                                        |
 
 ## Advanced
 

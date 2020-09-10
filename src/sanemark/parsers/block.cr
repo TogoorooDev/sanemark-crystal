@@ -151,8 +151,7 @@ module Sanemark::Parser
 
       container_type = container.type
       last_line_blank = @blank &&
-                        !(container_type.block_quote? ||
-                          (container_type.code_block? && container.fenced?) ||
+                        !(container_type.block_quote? || container.fenced? ||
                           (container_type.item? && !container.first_child? && container.source_pos[0][0] == @current_line))
 
       cont = container
