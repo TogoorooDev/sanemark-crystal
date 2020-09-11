@@ -199,7 +199,7 @@ More than six `#` characters is not a heading:
 <p>####### foo</p>
 ````````````````````````````````
 
-At least one space is required after the `#` characters. This helps prevent things like the following from being parsed as headings:
+A space is required after the `#` characters. This prevents things like the following from being parsed as headings:
 
 ```````````````````````````````` example
 #5 bolt
@@ -226,7 +226,7 @@ Contents are parsed as inlines:
 <h1>foo <em>bar</em> *baz*</h1>
 ````````````````````````````````
 
-Leading and trailing blanks are ignored in parsing inline content (except where part of the grammar):
+Leading and trailing blanks are preserved in inline content (except the first space, since that's part of the heading marker):
 
 ```````````````````````````````` example
 #  foo 
@@ -373,7 +373,9 @@ The fences must be at the start of the line (or at the start of any structure th
  aaa
  ```
 .
-<p>``<code> aaa </code>``</p>
+<p>``<code>
+aaa
+</code>``</p>
 ````````````````````````````````
 
 ```````````````````````````````` example
@@ -2368,19 +2370,11 @@ This is a simple code span:
 Whitespace is not tampered with:
 
 ```````````````````````````````` example
-` foo  bar `
+` foo  bar 
+baz`
 .
-<p><code> foo  bar </code></p>
-````````````````````````````````
-
-For the sake of those who use hard wrapping, Line endings are treated like spaces:
-
-```````````````````````````````` example
-`
-foo
-`
-.
-<p><code> foo </code></p>
+<p><code> foo  bar 
+baz</code></p>
 ````````````````````````````````
 
 Inside code spans, backslashes have no special meaning except before `\\` and `\``:
@@ -3302,20 +3296,14 @@ bar*
 <p><em>foo<br>bar</em></p>
 ````````````````````````````````
 
-Line breaks do not occur inside code spans
+Hard line breaks are not processed inside code spans:
 
 ```````````````````````````````` example
-`code
-span`
+`q\
+w`
 .
-<p><code>code span</code></p>
-````````````````````````````````
-
-```````````````````````````````` example
-`code\
-span`
-.
-<p><code>code\ span</code></p>
+<p><code>q\
+w</code></p>
 ````````````````````````````````
 
 or HTML tags:

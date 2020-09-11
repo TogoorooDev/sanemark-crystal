@@ -15,7 +15,7 @@ module Sanemark::Parser
     def parse(node : Node)
       @pos = 0
       @text = node.text.chomp("\n")
-      @delimiters = [] of Delimiter
+      @delimiters.clear
 
       while true
         break unless process_line(node)
@@ -114,7 +114,7 @@ module Sanemark::Parser
         end
       end
       child = Node.new(Node::Type::Code)
-      child.text = contents.gsub '\n', ' '
+      child.text = contents
       node.append_child(child)
       true
     end
@@ -496,12 +496,9 @@ module Sanemark::Parser
     end
 
     private def unicode_char_at?(byte_index)
-      if byte_index < @text.bytesize
-        reader = Char::Reader.new(@text, byte_index)
-        reader.current_char
-      else
-        nil
-      end
+      return nil if byte_index >= @text.bytesize
+      reader = Char::Reader.new(@text, byte_index)
+      reader.current_char
     end
 
     # Normalize reference label: collapse internal whitespace
