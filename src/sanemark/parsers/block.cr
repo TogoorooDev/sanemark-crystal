@@ -150,9 +150,8 @@ module Sanemark::Parser
       end
 
       container_type = container.type
-      last_line_blank = @blank &&
-                        !(container_type.block_quote? || container.fenced? ||
-                          (container_type.item? && !container.first_child? && container.source_pos[0][0] == @current_line))
+      last_line_blank = @blank && !(container_type.block_quote? || container.fenced? ||
+                          (container_type.item? && !container.first_child?))
 
       cont = container
       while cont
@@ -195,10 +194,6 @@ module Sanemark::Parser
       container_parent = container.parent?
 
       container.open = false
-      container.source_pos = {
-        container.source_pos[0],
-        {line_number, @last_line_length},
-      }
       @RULES[container.type].token(self, container)
 
       @tip = container_parent
@@ -227,7 +222,6 @@ module Sanemark::Parser
       column_number = offset + 1 # offset 0 = column 1
 
       node = Node.new(type)
-      node.source_pos = { {@current_line, column_number}, {0, 0} }
       node.text = ""
       tip.append_child(node)
       @tip = node
