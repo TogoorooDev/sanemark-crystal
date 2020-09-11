@@ -27,7 +27,6 @@ module Sanemark::Parser
 
     private def process_line(node : Node)
       char = char_at?(@pos)
-
       return false unless char && char != Char::ZERO
       res = case char
             when '\n'
@@ -49,12 +48,10 @@ module Sanemark::Parser
             else
               string(node)
             end
-
       unless res
         @pos += 1
         node.append_child(text(char))
       end
-
       true
     end
 
@@ -66,7 +63,6 @@ module Sanemark::Parser
 
     private def backslash(node : Node)
       @pos += 1
-
       char = @pos < @text.bytesize ? char_at(@pos).to_s : nil
       child = if char_at?(@pos) == '\n'
                 @pos += 1
@@ -78,18 +74,16 @@ module Sanemark::Parser
               else
                 text("\\")
               end
-
       node.append_child(child)
-
       true
     end
 
     private def backtick(node : Node)
       start_pos = @pos
       contents = ""
-      loop do
+      while true
         @pos += 1
-        case char_at?(@pos)
+        case char = char_at?(@pos)
         when nil
           @pos = start_pos
           return false
@@ -110,7 +104,8 @@ module Sanemark::Parser
           end
           break
         else
-          contents += char_at?(@pos).as Char
+          c = char_at?(@pos).as Char
+          contents += c
         end
       end
       child = Node.new(Node::Type::Code)
@@ -403,8 +398,8 @@ module Sanemark::Parser
         num_delims += 1
         @pos += 1
       end
-      prev_char = start_pos == 0 ? '\n' : previous_unicode_char_at(start_pos)
-      next_char = unicode_char_at?(@pos) || '\n'
+      prev_char = start_pos == 0 ? '\n' : @text[start_pos - 1]
+      next_char = @text[@pos]? || '\n'
 
       @pos = start_pos
       {
@@ -463,7 +458,7 @@ module Sanemark::Parser
       if start_pos == @pos
         nil
       else
-        @text.byte_slice(start_pos, @pos - start_pos)
+        @text[start_pos, @pos - start_pos]
       end
     end
 
@@ -482,29 +477,12 @@ module Sanemark::Parser
       node
     end
 
-    private def char_at?(byte_index)
-      @text.byte_at?(byte_index).try &.unsafe_chr
+    private def char_at?(index)
+      return @text[index]?
     end
 
-    private def char_at(byte_index)
-      @text.byte_at(byte_index).unsafe_chr
-    end
-
-    private def previous_unicode_char_at(byte_index)
-      reader = Char::Reader.new(@text, byte_index)
-      reader.previous_char
-    end
-
-    private def unicode_char_at?(byte_index)
-      return nil if byte_index >= @text.bytesize
-      reader = Char::Reader.new(@text, byte_index)
-      reader.current_char
-    end
-
-    # Normalize reference label: collapse internal whitespace
-    # to single space, remove leading/trailing whitespace, case fold.
-    def normalize_reference(text : String)
-      text[1..-2].strip.downcase.gsub("\n", " ")
+    private def char_at(index)
+      return @text[index]
     end
 
     private RESERVED_CHARS = ['&', '+', ',', '(', ')', '#', '*', '!', '#', '$', '/', ':', ';', '?', '@', '=']
