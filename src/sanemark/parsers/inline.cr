@@ -26,7 +26,7 @@ module Sanemark::Parser
     end
 
     private def process_line(node : Node)
-      char = char_at?(@pos)
+      char = @text[@pos]?
       return false unless char && char != Char::ZERO
       res = case char
             when '\n'
@@ -63,8 +63,8 @@ module Sanemark::Parser
 
     private def backslash(node : Node)
       @pos += 1
-      char = @pos < @text.bytesize ? char_at(@pos).to_s : nil
-      child = if char_at?(@pos) == '\n'
+      char = @pos < @text.bytesize ? @text[@pos].to_s : nil
+      child = if @text[@pos]? == '\n'
                 @pos += 1
                 Node.new(Node::Type::LineBreak)
               elsif char && char.match(Rule::ESCAPABLE)
@@ -83,12 +83,12 @@ module Sanemark::Parser
       contents = ""
       while true
         @pos += 1
-        case char = char_at?(@pos)
+        case char = @text[@pos]?
         when nil
           @pos = start_pos
           return false
         when '\\'
-          nextchar = char_at?(@pos + 1)
+          nextchar = @text[@pos + 1]?
           if {'\\', '`'}.includes? nextchar
             contents += nextchar.as Char
             @pos += 1
@@ -104,7 +104,7 @@ module Sanemark::Parser
           end
           break
         else
-          c = char_at?(@pos).as Char
+          c = @text[@pos]?.as Char
           contents += c
         end
       end
@@ -117,7 +117,7 @@ module Sanemark::Parser
     private def bang(node : Node)
       start_pos = @pos
       @pos += 1
-      if char_at?(@pos) == '['
+      if @text[@pos]? == '['
         @pos += 1
         child = text("![")
         node.append_child(child)
@@ -180,10 +180,10 @@ module Sanemark::Parser
       save_pos = @pos
 
       # Inline link?
-      if char_at?(@pos) == '('
+      if @text[@pos]? == '('
         @pos += 1
         dest = link_destination
-        if (dest != "") && char_at?(@pos) == ')'
+        if (dest != "") && @text[@pos]? == ')'
           @pos += 1
           matched = true
         else
@@ -352,11 +352,11 @@ module Sanemark::Parser
     private def link_destination
       save_pos = @pos
       open_parens = 0
-      while char = char_at?(@pos)
+      while char = @text[@pos]?
         case char
         when '\\'
           @pos += 1
-          @pos += 1 if char_at?(@pos)
+          @pos += 1 if @text[@pos]?
         when '('
           @pos += 1
           open_parens += 1
@@ -394,7 +394,7 @@ module Sanemark::Parser
     private def scan_delims(char)
       num_delims = 0
       start_pos = @pos
-      while char_at?(@pos) == char
+      while @text[@pos]? == char
         num_delims += 1
         @pos += 1
       end
@@ -410,11 +410,11 @@ module Sanemark::Parser
     end
 
     private def space_at_end_of_line?
-      while char_at?(@pos) == ' '
+      while @text[@pos]? == ' '
         @pos += 1
       end
 
-      case char_at?(@pos)
+      case @text[@pos]?
       when '\n'
         @pos += 1
       when Char::ZERO
@@ -427,7 +427,7 @@ module Sanemark::Parser
     # Parse zero or more space characters, including at most one newline
     private def spnl
       seen_newline = false
-      while c = char_at?(@pos)
+      while c = @text[@pos]?
         if !seen_newline && c == '\n'
           seen_newline = true
         elsif c != ' '
@@ -451,7 +451,7 @@ module Sanemark::Parser
     private def match_main : String?
       # This is the same as match(/^[^\n`\[\]\\!<&*_'"]+/m) but done manually (faster)
       start_pos = @pos
-      while (char = char_at?(@pos)) && main_char?(char)
+      while (char = @text[@pos]?) && main_char?(char)
         @pos += 1
       end
 
@@ -475,14 +475,6 @@ module Sanemark::Parser
       node = Node.new(Node::Type::Text)
       node.text = text.to_s
       node
-    end
-
-    private def char_at?(index)
-      return @text[index]?
-    end
-
-    private def char_at(index)
-      return @text[index]
     end
 
     private RESERVED_CHARS = ['&', '+', ',', '(', ')', '#', '*', '!', '#', '$', '/', ':', ';', '?', '@', '=']
