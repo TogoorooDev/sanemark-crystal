@@ -320,6 +320,7 @@ module Sanemark::Parser
     end
 
     private def html_tag(node : Node)
+      return false if !@options.allow_html
       if text = match(Rule::HTML_TAG)
         child = Node.new(Node::Type::HTMLInline)
         child.text = text
