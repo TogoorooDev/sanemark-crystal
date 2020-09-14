@@ -17,7 +17,6 @@ module Sanemark
       if entering
         cr
         tag(tag_name, attrs(node))
-        # toc(node) if @options.toc
       else
         tag(tag_name, end_tag: true)
         cr
@@ -236,15 +235,6 @@ module Sanemark
 
     private def potentially_unsafe(url : String)
       url.match(Rule::UNSAFE_PROTOCOL) && !url.match(Rule::UNSAFE_DATA_PROTOCOL)
-    end
-
-    private def toc(node : Node)
-      return unless node.type.heading?
-
-      title = URI.encode(node.text)
-
-      @output_io << %(<a id="anchor-) << title << %(" class="anchor" href="#) << title %("></a>)
-      @last_output = ">"
     end
 
     private def attrs(node : Node)
