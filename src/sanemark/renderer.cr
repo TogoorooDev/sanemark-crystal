@@ -5,9 +5,6 @@ module Sanemark
       @last_output = "\n"
     end
 
-    def out(string : String)
-      lit(escape(string))
-    end
 
     def lit(string : String)
       @output_io << string
@@ -16,36 +13,6 @@ module Sanemark
 
     def cr
       lit("\n") if @last_output != "\n"
-    end
-
-    private ESCAPES = {
-      '&' => "&amp;",
-      '"' => "&quot;",
-      '<' => "&lt;",
-      '>' => "&gt;",
-    }
-
-    def escape(text)
-      # If we can determine that the text has no escape chars
-      # then we can return the text as is, avoiding an allocation
-      # and a lot of processing in `String#gsub`.
-      if has_escape_char?(text)
-        text.gsub(ESCAPES)
-      else
-        text
-      end
-    end
-
-    private def has_escape_char?(text)
-      text.each_byte do |byte|
-        case byte
-        when '&', '"', '<', '>'
-          return true
-        else
-          next
-        end
-      end
-      false
     end
 
     def render(document : Node)

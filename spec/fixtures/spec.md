@@ -3033,66 +3033,37 @@ My ![foo bar](/path/to/train.jpg)
 
 ## Raw HTML
 
-Text between `<` and `>` that looks like an HTML tag is parsed as a
-raw HTML tag and will be rendered in HTML without escaping.
-Tag and attribute names are not limited to current HTML tags,
-so custom tags (and even, say, DocBook tags) may be used.
+When HTML is being escaped, this section should not be considered.
 
-Here is the grammar for tags:
+When HTML is being allowed, text between `<` and `>` that looks like an HTML tag will not be processed as Sanemark. Tag and attribute names are not limited to current HTML tags, so custom tags (and even, say, DocBook tags) may be used.
 
-A **tag name** consists of an ASCII letter
-followed by zero or more ASCII letters, digits, or
-hyphens (`-`).
+Including most of the complexity of the official grammar for HTML tags is very unfortunate, but we do it because Sanemark processing should not happen to tag contents, so we must know whether something is an HTML tag. Here is the grammar for tags:
 
-An **attribute** consists of whitespace,
-an attribute name, and an optional
-attribute value specification.
+A **tag name** consists of an ASCII letter followed by zero or more ASCII letters, digits, or hyphens (`-`).
 
-An **attribute name**
-consists of an ASCII letter, `_`, or `:`, followed by zero or more ASCII
-letters, digits, `_`, `.`, `:`, or `-`.  (Note:  This is the XML
-specification restricted to ASCII.  HTML5 is laxer.)
+An **attribute** consists of whitespace, an attribute name, and an optional attribute value specification.
 
-An **attribute value specification**
-consists of optional whitespace,
-a `=` character, optional whitespace, and an [attribute
-value].
+An **attribute name** consists of an ASCII letter, `_`, or `:`, followed by zero or more ASCII letters, digits, `_`, `.`, `:`, or `-`.  (Note:  This is the XML specification restricted to ASCII.  HTML5 is laxer.)
 
-An **attribute value**
-consists of an unquoted attribute value,
-a single-quoted attribute value, or a double-quoted attribute value.
+An **attribute value specification** consists of optional whitespace, a `=` character, optional whitespace, and an attribute value.
 
-An **unquoted attribute value**
-is a nonempty string of characters not
-including spaces, `"`, `'`, `=`, `<`, `>`, or `` ` ``.
+An **attribute value** consists of an unquoted attribute value, a single-quoted attribute value, or a double-quoted attribute value.
 
-A **single-quoted attribute value**
-consists of `'`, zero or more
-characters not including `'`, and a final `'`.
+An **unquoted attribute value** is a nonempty string of characters not including spaces, `"`, `'`, `=`, `<`, `>`, or `` ` ``.
 
-A **double-quoted attribute value**
-consists of `"`, zero or more
-characters not including `"`, and a final `"`.
+A **single-quoted attribute value** consists of `'`, zero or more characters not including `'`, and a final `'`.
 
-An **open tag** consists of a `<` character, a tag name,
-zero or more attributes, optional whitespace, an optional `/`
-character, and a `>` character.
+A **double-quoted attribute value** consists of `"`, zero or more characters not including `"`, and a final `"`.
 
-A **closing tag** consists of the string `</`, a
-tag name, optional whitespace, and the character `>`.
+An **open tag** consists of a `<` character, a tag name, zero or more attributes, optional whitespace, an optional `/` character, and a `>` character.
 
-An **HTML comment** consists of `<!--` + *text* + `-->`,
-where *text* does not start with `>` or `->`, does not end with `-`,
-and does not contain `--`.  (See the
-[HTML5 spec](http://www.w3.org/TR/html5/syntax.html#comments).)
+A **closing tag** consists of the string `</`, a tag name, optional whitespace, and the character `>`.
 
-A **declaration** consists of the
-string `<!`, a name consisting of one or more uppercase ASCII letters,
-whitespace, a string of characters not including the
-character `>`, and the character `>`.
+An **HTML comment** consists of `<!--` + *text* + `-->`, where *text* does not contain `-->`. (This is a deliberate simplification of the HTML5 spec, which contains some bizarre complexities that are not implemented as described in browsers anyway.)
 
-An **HTML tag** consists of an open tag, a closing tag,
-an HTML comment, or a declaration.
+A **declaration** consists of the string `<!`, a name consisting of one or more uppercase ASCII letters, whitespace, a string of characters not including the character `>`, and the character `>`.
+
+An **HTML tag** is an open tag, a closing tag, an HTML comment, or a declaration.
 
 Here are some simple open tags:
 
@@ -3199,36 +3170,11 @@ Illegal attributes in closing tag:
 Comments:
 
 ```````````````````````````````` example
-foo <!-- this is a
-comment - with hyphen -->
+foo <!-- *this is a
+comment - with hyphen* -->
 .
-<p>foo <!-- this is a
-comment - with hyphen --></p>
-````````````````````````````````
-
-```````````````````````````````` example
-foo <!-- not a comment -- two hyphens -->
-.
-<p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>
-````````````````````````````````
-
-Not comments:
-
-```````````````````````````````` example
-foo <!--> foo -->
-
-foo <!-- foo--->
-.
-<p>foo &lt;!--&gt; foo --&gt;</p>
-<p>foo &lt;!-- foo---&gt;</p>
-````````````````````````````````
-
-Declarations:
-
-```````````````````````````````` example
-foo <!ELEMENT br EMPTY>
-.
-<p>foo <!ELEMENT br EMPTY></p>
+<p>foo <!-- *this is a
+comment - with hyphen* --></p>
 ````````````````````````````````
 
 Entity and numeric character references are preserved in HTML attributes:

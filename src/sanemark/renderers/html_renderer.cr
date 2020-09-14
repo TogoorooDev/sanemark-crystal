@@ -240,5 +240,39 @@ module Sanemark
     private def attrs(node : Node)
       nil
     end
+
+    def out(string : String)
+      lit(escape(string))
+    end
+
+    private ESCAPES = {
+      '&' => "&amp;",
+      '"' => "&quot;",
+      '<' => "&lt;",
+      '>' => "&gt;",
+    }
+
+    def escape(text)
+      # If we can determine that the text has no escape chars
+      # then we can return the text as is, avoiding an allocation
+      # and a lot of processing in `String#gsub`.
+      if has_escape_char?(text)
+        text.gsub(ESCAPES)
+      else
+        text
+      end
+    end
+
+    private def has_escape_char?(text)
+      text.each_byte do |byte|
+        case byte
+        when '&', '"', '<', '>'
+          return true
+        else
+          next
+        end
+      end
+      false
+    end
   end
 end
