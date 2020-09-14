@@ -24,7 +24,8 @@ module Sanemark
     CLOSE_TAG_STRING   = "</#{TAG_NAME_STRING}\\s*[>]"
     COMMENT_STRING     = "<!--(?:-*[^-])*?-->"
     DECLARATION_STRING = "<![A-Z]+" + "\\s+[^>]*>"
-    HTML_TAG_STRING    = "(?:#{OPEN_TAG_STRING}|#{CLOSE_TAG_STRING}|#{COMMENT_STRING}|#{DECLARATION_STRING})"
+    ENTITY_STRING      = "&(?:#[0-9]+|[a-zA-Z0-9]+);"
+    HTML_TAG_STRING    = "(?:#{OPEN_TAG_STRING}|#{CLOSE_TAG_STRING}|#{COMMENT_STRING}|#{DECLARATION_STRING}|#{ENTITY_STRING})"
     HTML_TAG           = /^#{HTML_TAG_STRING}/i
 
     HTML_BLOCK_OPEN = [

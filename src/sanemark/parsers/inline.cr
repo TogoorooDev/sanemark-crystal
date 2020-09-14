@@ -43,7 +43,7 @@ module Sanemark::Parser
               bang(node)
             when ']'
               close_bracket(node)
-            when '<'
+            when '<', '&'
               html_tag(node)
             else
               string(node)

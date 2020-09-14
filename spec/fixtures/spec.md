@@ -3035,7 +3035,7 @@ My ![foo bar](/path/to/train.jpg)
 
 When HTML is being escaped, this section should not be considered.
 
-When HTML is being allowed, text between `<` and `>` that looks like an HTML tag will not be processed as Sanemark. Tag and attribute names are not limited to current HTML tags, so custom tags (and even, say, DocBook tags) may be used.
+When HTML is being allowed, text between `<` and `>` that looks like an HTML tag will not be processed as Sanemark. Tag and attribute names are not limited to current HTML tags, so custom tags work.
 
 Including most of the complexity of the official grammar for HTML tags is very unfortunate, but we do it because Sanemark processing should not happen to tag contents, so we must know whether something is an HTML tag. Here is the grammar for tags:
 
@@ -3177,14 +3177,6 @@ comment - with hyphen* -->
 comment - with hyphen* --></p>
 ````````````````````````````````
 
-Entity and numeric character references are preserved in HTML attributes:
-
-```````````````````````````````` example
-foo <a href="&ouml;">
-.
-<p>foo <a href="&ouml;"></p>
-````````````````````````````````
-
 Backslash escapes do not work in HTML attributes:
 
 ```````````````````````````````` example
@@ -3197,6 +3189,18 @@ foo <a href="\*">
 <a href="\"">
 .
 <p>&lt;a href=&quot;&quot;&quot;&gt;</p>
+````````````````````````````````
+
+### HTML entities
+
+HTML entities are also preserved. Instead of a hard-coded list, a simple grammar is used for HTML entities: `&`, followed by either a non-empty string of alphanumeric characters or `#` followed by a non-empty string of digits, followed by `;`:
+
+```````````````````````````````` example
+&ouml;
+&#39;
+.
+<p>&ouml;
+&#39;</p>
 ````````````````````````````````
 
 ## Soft line breaks
