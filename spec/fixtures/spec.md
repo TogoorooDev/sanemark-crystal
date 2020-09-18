@@ -1,42 +1,5 @@
 In the examples, the `→` character is used to represent tabs.
 
-## Tabs
-
-Tabs in lines are not expanded to spaces. However, in contexts where whitespace helps to define block structure, tabs are equivalent to 4 spaces.
-
-In the following example, a continuation paragraph of a list item is indented with a tab; this has exactly the same effect as indentation with four spaces would:
-
-```````````````````````````````` example
-  - foo
-
-→bar
-.
-<ul>
-<li>
-<p>foo</p>
-<p>bar</p>
-</li>
-</ul>
-````````````````````````````````
-
-```````````````````````````````` example
- - foo
-   - bar
-→ - baz
-.
-<ul>
-<li>foo
-<ul>
-<li>bar
-<ul>
-<li>baz</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-````````````````````````````````
-
 # Blocks and inlines
 
 We can think of a document as a sequence of **blocks** - structural elements like paragraphs, block quotations, lists, headings, rules, and code blocks. Some blocks (like block quotes and list items) contain other blocks; others (like headings and paragraphs) contain **inline** content - text, links, emphasized text, images, code, and so on.
@@ -55,7 +18,7 @@ Indicators of block structure always take precedence over indicators of inline s
 </ul>
 ````````````````````````````````
 
-This means that parsing can proceed in two steps:  first, the block structure of the document can be discerned; second, text lines inside paragraphs, headings, and other block constructs can be parsed for inline structure. Note that the first step requires processing lines in sequence, but the second can be parallelized, since the inline parsing of one block element does not affect the inline parsing of any other.
+This means that parsing can proceed in two steps: first, discern the block structure of the document; second, parse text lines inside paragraphs, headings, and other block constructs for inline structure. Note that the first step requires processing lines in sequence, but the second can be parallelized, since the inline parsing of one block element does not affect the inline parsing of any other.
 
 ## Container blocks and leaf blocks
 
@@ -101,8 +64,7 @@ More than three characters may be used:
 <hr>
 ````````````````````````````````
 
-It is required that all of the non-whitespace characters be the same.
-So, this is not a thematic break:
+It is required that all of the non-whitespace characters be the same. So, this is not a thematic break:
 
 ```````````````````````````````` example
 *-*
@@ -136,37 +98,6 @@ bar
 <p>Foo</p>
 <hr>
 <p>bar</p>
-````````````````````````````````
-
-When both a thematic break and a list item are possible
-interpretations of a line, the thematic break takes precedence:
-
-```````````````````````````````` example
-* Foo
-***
-* Bar
-.
-<ul>
-<li>Foo</li>
-</ul>
-<hr>
-<ul>
-<li>Bar</li>
-</ul>
-````````````````````````````````
-
-If you want a thematic break in a list item, use the other bullet:
-
-```````````````````````````````` example
-- Foo
-- ***
-.
-<ul>
-<li>Foo</li>
-<li>
-<hr>
-</li>
-</ul>
 ````````````````````````````````
 
 ## Headings
@@ -863,55 +794,51 @@ bar
 ````````````````````````````````
 ## List items
 
-A **list marker** is a bullet list marker or an ordered list marker.
+A **list marker** is a bullet list marker or an ordered list marker followed by at least one space.
 
-A **bullet list marker** is a `-`, `+`, or `*` character.
+A **bullet list marker** is `-` or `*`.
 
-An **ordered list marker** is a sequence of 1--9 arabic digits (`0-9`), followed by either a `.` character or a `)` character. (The reason for the length limit is that with 10 digits we start seeing integer overflows in some browsers.)
+An **ordered list marker** is a sequence of 1--9 arabic digits (`0-9`), followed by either `.` or `)`. (The reason for the length limit is that with 10 digits we start seeing integer overflows in some browsers.)
 
-The following rules define list items:
+A list item is started by a list marker followed by some content. The content can be continued by indenting subsequent lines according to indentation criteria. Subsequent lines are part of the list item until a non-empty one is encountered that doesn't meet the indentation criteria.
 
-1.  **Basic case.**  If a sequence of lines *Ls* constitute a sequence of
-    blocks *Bs* starting with a non-whitespace character and not separated
-    from each other by more than one blank line, and *M* is a list
-    marker of width *W* followed by 1 ≤ *N* ≤ 4 spaces, then the result
-    of prepending *M* and the following spaces to the first line of
-    *Ls*, and indenting subsequent lines of *Ls* by *W + N* spaces, is a
-    list item with *Bs* as its contents. The type of the list item
-    (bullet or ordered) is determined by the type of its list marker.
-    If the list item is ordered, then it is also assigned a start
-    number, based on the ordered list marker.
-
-    Exceptions: When the first list item in a list interrupts
-    a paragraph - that is, when it starts on a line that would
-    otherwise count as paragraph continuation text - then (a)
-    the lines *Ls* must not begin with a blank line, and (b) if
-    the list item is ordered, the start number must be 1.
-
-For example, let *Ls* be the lines
+Basic example:
 
 ```````````````````````````````` example
-A paragraph
-with two lines.
-
-> A block quote.
+1. List item
+2. Another list item
 .
-<p>A paragraph
-with two lines.</p>
-<blockquote>
-<p>A block quote.</p>
-</blockquote>
+<ol>
+<li>List item</li>
+<li>Another list item</li>
+</ol>
 ````````````````````````````````
 
-And let *M* be the marker `1.`, and *N* = 2. Then rule #1 says
-that the following is an ordered list item with start number 1,
-and the same contents as *Ls*:
+```````````````````````````````` example
+* List item
+* Another list item
+.
+<ul>
+<li>List item</li>
+<li>Another list item</li>
+</ul>
+````````````````````````````````
+
+The indentation criteria for continuation are:
+
+1. A single tab, or
+
+2. At least the same number of spaces from the left as the first line in the list item has from the list's ancestor.
+
+Here, the list item's content starts with three characters' distance from the list's ancestor (the document root), so three spaces are needed to make subsequent content part of the list item:
 
 ```````````````````````````````` example
-1.  A paragraph
-    with two lines.
+1. A paragraph
+   with two lines.
 
-    > A block quote.
+   > A block quote.
+
+  More text, but only two spaces, so not part of it.
 .
 <ol>
 <li>
@@ -922,68 +849,66 @@ with two lines.</p>
 </blockquote>
 </li>
 </ol>
+<p>More text, but only two spaces, so not part of it.</p>
 ````````````````````````````````
 
-The most important thing to notice is that the position of
-the text after the list marker determines how much indentation
-is needed in subsequent blocks in the list item. If the list
-marker takes up two spaces, and there are three spaces between
-the list marker and the next non-whitespace character, then blocks
-must be indented five spaces in order to fall under the list
-item.
-
-Here are some examples showing how far content must be indented to be
-put under the list item:
+More space examples, with list markers of different width:
 
 ```````````````````````````````` example
-- one
+- start
 
- two
-.
-<ul>
-<li>one</li>
-</ul>
-<p>two</p>
-````````````````````````````````
+  continue
 
-```````````````````````````````` example
-- one
-
-  two
+ end
 .
 <ul>
 <li>
-<p>one</p>
-<p>two</p>
+<p>start</p>
+<p>continue</p>
 </li>
 </ul>
+<p>end</p>
 ````````````````````````````````
 
 ```````````````````````````````` example
- -    one
+9.  This one has two spaces from the list marker's end to align with the
+    content of double-digit items. Its subsequent content must be indented accordingly.
 
-      two
+    Indented
+
+   Not indented
+
+10. Start
+
+    Indented
+
+   Not indented
 .
-<ul>
+<ol start="9">
 <li>
-<p>one</p>
-<p>two</p>
+<p>This one has two spaces from the list marker's end to align with the
+content of double-digit items. Its subsequent content must be indented accordingly.</p>
+<p>Indented</p>
 </li>
-</ul>
+</ol>
+<p>Not indented</p>
+<ol start="10">
+<li>
+<p>Start</p>
+<p>Indented</p>
+</li>
+</ol>
+<p>Not indented</p>
 ````````````````````````````````
 
-It is tempting to think of this in terms of columns:  the continuation
-blocks must be indented at least to the column of the first
-non-whitespace character after the list marker. However, that is not quite right.
-The spaces after the list marker determine how much relative indentation
-is needed. Which column this indentation reaches will depend on
-how the list item is embedded in other constructions, as shown by
-this example:
+It is tempting to think of this as needing to match the column of the list item's first content, but that's not quite right. The spaces after the list marker plus the length of the list marker determine how much indentation *relative to the list's ancestor* is needed. Which column this indentation reaches will depend on how the list item is embedded in other constructs, as shown by this example:
 
 ```````````````````````````````` example
 > > 1.  one
 >>
 >>     two
+>>
+>>    not indented
 .
 <blockquote>
 <blockquote>
@@ -993,18 +918,14 @@ this example:
 <p>two</p>
 </li>
 </ol>
+<p>not indented</p>
 </blockquote>
 </blockquote>
 ````````````````````````````````
 
-Here `two` occurs in the same column as the list marker `1.`,
-but is actually contained in the list item, because there is
-sufficient indentation after the last containing blockquote marker.
+Here `two` occurs one column before `one`, but is also part of the list item because it has the required number of spaces from the list item's ancestor (the second blockquote marker): 5, the same number of characters between the blockquote marker and `one`.
 
-The converse is also possible. In the following example, the word `two`
-occurs far to the right of the initial text of the list item, `one`, but
-it is not considered part of the list item, because it is not indented
-far enough past the blockquote marker:
+The converse is also possible. In the following example, the word `two` is on the same column as `one`, but is not part of the list item, because it is not indented relative to the blockquote marker:
 
 ```````````````````````````````` example
 >>- one
@@ -1021,9 +942,47 @@ far enough past the blockquote marker:
 </blockquote>
 ````````````````````````````````
 
+Tab indentation is generally simpler, and is recommended, although it may not look as nice in plain text:
 
-Note that at least one space is needed between the list marker and
-any following content, so these are not list items:
+```````````````````````````````` example
+1. Start
+
+→Continue, because it's indented one tab.
+.
+<ol>
+<li>
+<p>Start</p>
+<p>Continue, because it's indented one tab.</p>
+</li>
+</ol>
+````````````````````````````````
+
+Tab indentation is simpler to use with nested lists:
+
+```````````````````````````````` example
+1. Parent
+
+	* Child list
+
+→→Part of the child, because it's indented two tabs.
+
+→ Part of the parent, because it's indented one tab.
+.
+<ol>
+<li>
+<p>Parent</p>
+<ul>
+<li>
+<p>Child list</p>
+<p>Part of the child, because it's indented two tabs.</p>
+</li>
+</ul>
+<p>Part of the parent, because it's indented one tab.</p>
+</li>
+</ol>
+````````````````````````````````
+
+Note that at least one space is needed between the list marker and any following content, so these are not list items:
 
 ```````````````````````````````` example
 -one
@@ -1049,7 +1008,6 @@ A list item may contain blocks that are separated by more than one blank line.
 </li>
 </ul>
 ````````````````````````````````
-
 
 A list item may contain any kind of block:
 
@@ -1077,24 +1035,6 @@ A list item may contain any kind of block:
 </ol>
 ````````````````````````````````
 
-Note that ordered list start numbers must be nine digits or less:
-
-```````````````````````````````` example
-123456789. ok
-.
-<ol start="123456789">
-<li>ok</li>
-</ol>
-````````````````````````````````
-
-
-```````````````````````````````` example
-1234567890. not ok
-.
-<p>1234567890. not ok</p>
-````````````````````````````````
-
-
 A start number may begin with 0s:
 
 ```````````````````````````````` example
@@ -1105,7 +1045,6 @@ A start number may begin with 0s:
 </ol>
 ````````````````````````````````
 
-
 ```````````````````````````````` example
 003. ok
 .
@@ -1114,7 +1053,6 @@ A start number may begin with 0s:
 </ol>
 ````````````````````````````````
 
-
 A start number may not be negative:
 
 ```````````````````````````````` example
@@ -1122,49 +1060,6 @@ A start number may not be negative:
 .
 <p>-1. not ok</p>
 ````````````````````````````````
-
-Note that rule #1 only applies to cases in which the lines to be included in a list item begin with a non-whitespace character. In a case like the following, where the first block begins with a three-space indent, the rules do not allow us to form a list item by indenting the whole thing and prepending a list marker:
-
-```````````````````````````````` example
-   foo
-
-bar
-.
-<p>foo</p>
-<p>bar</p>
-````````````````````````````````
-
-
-```````````````````````````````` example
--    foo
-
-  bar
-.
-<ul>
-<li>foo</li>
-</ul>
-<p>bar</p>
-````````````````````````````````
-
-
-This is not a significant restriction, because when a block begins
-with 1-3 spaces indent, the indentation can always be removed without
-a change in interpretation, allowing rule #1 to be applied. So, in
-the above case:
-
-```````````````````````````````` example
--  foo
-
-   bar
-.
-<ul>
-<li>
-<p>foo</p>
-<p>bar</p>
-</li>
-</ul>
-````````````````````````````````
-
 
 2.  **Item starting with a blank line.**  If a sequence of lines *Ls*
     starting with a single blank line constitute a (possibly empty)
