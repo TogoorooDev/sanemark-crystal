@@ -1354,41 +1354,22 @@ A list item can contain a heading:
 
 ## Lists
 
-A **list** is a sequence of one or more
-list items of the same type. The list items
-may be separated by any number of blank lines.
+A **list** is a sequence of one or more list items of the same type. The list items may be separated by any number of blank lines.
 
-Two list items are **of the same type**
-if they begin with a list marker of the same type.
-Two list markers are of the
-same type if (a) they are bullet list markers using the same character
-(`-`, `+`, or `*`) or (b) they are ordered list numbers with the same
-delimiter (either `.` or `)`).
+Two list items are **of the same type** if they begin with a list marker of the same type. Two list markers are of the same type if (a) they are bullet list markers using the same character (`-`, or `*`) or (b) they are ordered list numbers with the same delimiter (either `.` or `)`).
 
-A list is an **ordered list**
-if its constituent list items begin with
-ordered list markers, and a
-**bullet list** if its constituent list
-items begin with bullet list markers.
+A list is an **ordered list** if its constituent list items begin with ordered list markers, and a **bullet list** if its constituent list items begin with bullet list markers.
 
-The **start number**
-of an ordered list is determined by the list number of
-its initial list item. The numbers of subsequent list items are
-disregarded.
+The **start number** of an ordered list is determined by the list number of its initial list item. The numbers of subsequent list items are disregarded.
 
-A list is **loose** if any of its constituent
-list items are separated by blank lines, or if any of its constituent
-list items directly contain two block-level elements with a blank line
-between them. Otherwise a list is **tight**.
-(The difference in HTML output is that paragraphs in a loose list are
-wrapped in `<p>` tags, while paragraphs in a tight list are not.)
+A list is **loose** if any of its constituent list items are separated by blank lines, or if any of its constituent list items directly contain two block-level elements with a blank line between them. Otherwise a list is **tight**. (The difference in HTML output is that paragraphs in a loose list are wrapped in `<p>` tags, while paragraphs in a tight list are not.)
 
 Changing the bullet or ordered list delimiter starts a new list:
 
 ```````````````````````````````` example
 - foo
 - bar
-+ baz
+* baz
 .
 <ul>
 <li>foo</li>
@@ -1398,7 +1379,6 @@ Changing the bullet or ordered list delimiter starts a new list:
 <li>baz</li>
 </ul>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 1. foo
@@ -1414,10 +1394,7 @@ Changing the bullet or ordered list delimiter starts a new list:
 </ol>
 ````````````````````````````````
 
-
-In Sanemark, a list can interrupt a paragraph. That is,
-no blank line is needed to separate a paragraph from a following
-list:
+In Sanemark, a list can interrupt a paragraph. That is, no blank line is needed to separate a paragraph from a following list:
 
 ```````````````````````````````` example
 Foo

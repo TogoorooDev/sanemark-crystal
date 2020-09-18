@@ -2,7 +2,7 @@ module Sanemark::Rule
   struct List
     include Rule
 
-    BULLET_LIST_MARKERS  = {'*', '+', '-'}
+    BULLET_LIST_MARKERS  = {'*', '-'}
     ORDERED_LIST_MARKERS = {'.', ')'}
 
     def match(parser : Parser, container : Node) : MatchValue
