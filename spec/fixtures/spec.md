@@ -1408,70 +1408,7 @@ Foo
 </ul>
 ````````````````````````````````
 
-`Markdown.pl` does not allow this, through fear of triggering a list
-via a numeral in a hard-wrapped line:
-
-``` markdown
-The number of windows in my house is
-14.  The number of doors is 6.
-```
-
-Oddly, though, `Markdown.pl` *does* allow a blockquote to
-interrupt a paragraph, even though the same considerations might
-apply.
-
-In Sanemark, we do allow lists to interrupt paragraphs, for
-two reasons. First, it is natural and not uncommon for people
-to start lists without blank lines:
-
-``` markdown
-I need to buy
-- new shoes
-- a coat
-- a plane ticket
-```
-
-Second, we are attracted to a
-
-> **principle of uniformity**:
-> if a chunk of text has a certain
-> meaning, it will continue to have the same meaning when put into a
-> container block (such as a list item or blockquote).
-
-(Indeed, the spec for list items and block quotes presupposes
-this principle.) This principle implies that if
-
-``` markdown
-  * I need to buy
-    - new shoes
-    - a coat
-    - a plane ticket
-```
-
-is a list item containing a paragraph followed by a nested sublist,
-as all Markdown implementations agree it is (though the paragraph
-may be rendered without `<p>` tags, since the list is "tight"),
-then
-
-``` markdown
-I need to buy
-- new shoes
-- a coat
-- a plane ticket
-```
-
-by itself should be a paragraph followed by a nested sublist.
-
-Since it is well established Markdown practice to allow lists to
-interrupt paragraphs inside list items, the [principle of
-uniformity] requires us to allow this outside list items as
-well. ([reStructuredText](http://docutils.sourceforge.net/rst.html)
-takes a different approach, requiring blank lines before lists
-even inside other list items.)
-
-In order to solve of unwanted lists in paragraphs with
-hard-wrapped numerals, we allow only lists starting with `1` to
-interrupt paragraphs. Thus,
+In order to solve of unwanted lists in paragraphs with hard-wrapped numerals, we allow only lists starting with `1` to interrupt paragraphs. Thus,
 
 ```````````````````````````````` example
 The number of windows in my house is
@@ -1542,7 +1479,7 @@ There can be any number of blank lines between items:
 </ul>
 ````````````````````````````````
 
-To separate consecutive lists of the same type, you can insert a blank HTML comment:
+To separate consecutive lists of the same type, you can insert a blank HTML comment (TODO this won't work without HTML, need a better system):
 
 ```````````````````````````````` example
 - foo
@@ -1564,10 +1501,7 @@ To separate consecutive lists of the same type, you can insert a blank HTML comm
 </ul>
 ````````````````````````````````
 
-List items need not be indented to the same level. The following
-list items will be treated as items at the same list level,
-since none is indented enough to belong to the previous list
-item:
+List items need not be indented to the same level. The following list items will be treated as items at the same list level, since none is indented enough to belong to the previous list item:
 
 ```````````````````````````````` example
 - a
@@ -1593,7 +1527,6 @@ item:
 </ul>
 ````````````````````````````````
 
-
 ```````````````````````````````` example
 1. a
 
@@ -1614,9 +1547,7 @@ item:
 </ol>
 ````````````````````````````````
 
-
-This is a loose list, because there is a blank line between
-two of the list items:
+This is a loose list, because there is a blank line between two of the list items:
 
 ```````````````````````````````` example
 - a
@@ -1637,8 +1568,7 @@ two of the list items:
 </ul>
 ````````````````````````````````
 
-
-So is this, with a empty second item:
+So is this, with an empty second item:
 
 ```````````````````````````````` example
 * a
@@ -1657,10 +1587,7 @@ So is this, with a empty second item:
 </ul>
 ````````````````````````````````
 
-
-These are loose lists, even though there is no space between the items,
-because one of the items directly contains two block-level elements
-with a blank line between them:
+These are loose lists, even though there is no space between the items, because one of the items directly contains two block-level elements with a blank line between them:
 
 ```````````````````````````````` example
 - a
@@ -1682,7 +1609,6 @@ with a blank line between them:
 </li>
 </ul>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 - a
@@ -1707,7 +1633,6 @@ with a blank line between them:
 </ul>
 ````````````````````````````````
 
-
 This is a tight list, because the blank lines are in a code block:
 
 ```````````````````````````````` example
@@ -1731,10 +1656,7 @@ This is a tight list, because the blank lines are in a code block:
 </ul>
 ````````````````````````````````
 
-
-This is a tight list, because the blank line is between two
-paragraphs of a sublist. So the sublist is loose while
-the outer list is tight:
+This is a tight list, because the blank line is between two paragraphs of a sublist. So the sublist is loose while the outer list is tight:
 
 ```````````````````````````````` example
 - a
@@ -1756,9 +1678,7 @@ the outer list is tight:
 </ul>
 ````````````````````````````````
 
-
-This is a tight list, because the blank line is inside the
-block quote:
+This is a tight list, because the blank line is inside the block quote:
 
 ```````````````````````````````` example
 * a
@@ -1776,9 +1696,7 @@ block quote:
 </ul>
 ````````````````````````````````
 
-
-This list is tight, because the consecutive block elements
-are not separated by blank lines:
+This list is tight, because the consecutive block elements are not separated by blank lines:
 
 ```````````````````````````````` example
 - a
@@ -1800,7 +1718,6 @@ are not separated by blank lines:
 </ul>
 ````````````````````````````````
 
-
 A single-paragraph list is tight:
 
 ```````````````````````````````` example
@@ -1810,7 +1727,6 @@ A single-paragraph list is tight:
 <li>a</li>
 </ul>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 - a
@@ -1825,9 +1741,7 @@ A single-paragraph list is tight:
 </ul>
 ````````````````````````````````
 
-
-This list is loose, because of the blank line between the
-two block elements in the list item:
+This list is loose, because of the blank line between the two block elements in the list item:
 
 ```````````````````````````````` example
 1. ```
@@ -1844,7 +1758,6 @@ two block elements in the list item:
 </li>
 </ol>
 ````````````````````````````````
-
 
 Here the outer list is loose, the inner list tight:
 
@@ -1864,7 +1777,6 @@ Here the outer list is loose, the inner list tight:
 </li>
 </ul>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 - a
