@@ -1061,17 +1061,6 @@ A start number may not be negative:
 <p>-1. not ok</p>
 ````````````````````````````````
 
-2.  **Item starting with a blank line.**  If a sequence of lines *Ls*
-    starting with a single blank line constitute a (possibly empty)
-    sequence of blocks *Bs*, not separated from each other by more than
-    one blank line, and *M* is a list marker of width *W*,
-    then the result of prepending *M* to the first line of *Ls*, and
-    indenting subsequent lines of *Ls* by *W + 1* spaces, is a list
-    item with *Bs* as its contents.
-    If a line is empty, then it need not be indented. The type of the
-    list item (bullet or ordered) is determined by the type of its list
-    marker. If the list item is ordered, then it is also assigned a
-    start number, based on the ordered list marker.
 
 Here are some list items that start with a blank line but are not empty:
 
@@ -1130,7 +1119,6 @@ Here is an empty bullet list item:
 </ul>
 ````````````````````````````````
 
-
 It does not matter whether there are spaces following the list marker:
 
 ```````````````````````````````` example
@@ -1184,51 +1172,7 @@ foo
 1.</p>
 ````````````````````````````````
 
-3.  **Indentation.**  If a sequence of lines *Ls* constitutes a list item
-    according to rule #1, #2, or #3, then the result of indenting each line
-    of *Ls* by 1-3 spaces (the same for each line) also constitutes a
-    list item with the same contents and attributes. If a line is
-    empty, then it need not be indented.
-
-Indented one space:
-
-```````````````````````````````` example
- 1.  A paragraph
-     with two lines.
-
-     > A block quote.
-.
-<ol>
-<li>
-<p>A paragraph
-with two lines.</p>
-<blockquote>
-<p>A block quote.</p>
-</blockquote>
-</li>
-</ol>
-````````````````````````````````
-
-Indented two spaces:
-
-```````````````````````````````` example
-  1.  A paragraph
-      with two lines.
-
-      > A block quote.
-.
-<ol>
-<li>
-<p>A paragraph
-with two lines.</p>
-<blockquote>
-<p>A block quote.</p>
-</blockquote>
-</li>
-</ol>
-````````````````````````````````
-
-Indented three spaces:
+List items can be indented without a change in interpretation, like so:
 
 ```````````````````````````````` example
    1.  A paragraph
@@ -1291,9 +1235,7 @@ continued here.</p>
 </ul>
 ````````````````````````````````
 
-The rules for sublists follow from the general rules above. A sublist
-must be indented the same number of spaces a paragraph would need to be
-in order to be included in the list item.
+The rules for sublists follow from the general rules above. A sublist must be indented the same number of spaces a paragraph would need to be in order to be included in the list item.
 
 So, in this case we need two spaces indent:
 
@@ -1320,7 +1262,6 @@ So, in this case we need two spaces indent:
 </ul>
 ````````````````````````````````
 
-
 One is not enough:
 
 ```````````````````````````````` example
@@ -1337,8 +1278,7 @@ One is not enough:
 </ul>
 ````````````````````````````````
 
-
-Here we need four, because the list marker is wider:
+Here we need 4, because the list marker is 3 characters:
 
 ```````````````````````````````` example
 10) foo
@@ -1352,7 +1292,6 @@ Here we need four, because the list marker is wider:
 </li>
 </ol>
 ````````````````````````````````
-
 
 Three is not enough:
 
@@ -1368,7 +1307,6 @@ Three is not enough:
 </ul>
 ````````````````````````````````
 
-
 A list may be the first block in a list item:
 
 ```````````````````````````````` example
@@ -1382,7 +1320,6 @@ A list may be the first block in a list item:
 </li>
 </ul>
 ````````````````````````````````
-
 
 ```````````````````````````````` example
 1. - 2. foo
@@ -1400,7 +1337,6 @@ A list may be the first block in a list item:
 </ol>
 ````````````````````````````````
 
-
 A list item can contain a heading:
 
 ```````````````````````````````` example
@@ -1415,193 +1351,6 @@ A list item can contain a heading:
 </li>
 </ul>
 ````````````````````````````````
-
-
-### Motivation
-
-John Gruber's Markdown spec says the following about list items:
-
-1. "List markers typically start at the left margin, but may be indented
-   by up to three spaces. List markers must be followed by one or more
-   spaces or a tab."
-
-2. "To make lists look nice, you can wrap items with hanging indents....
-   But if you don't want to, you don't have to."
-
-3. "List items may consist of multiple paragraphs. Each subsequent
-   paragraph in a list item must be indented by either 4 spaces or one
-   tab."
-
-4. "It looks nice if you indent every line of the subsequent paragraphs,
-   but here again, Markdown will allow you to be lazy."
-
-5. "To put a blockquote within a list item, the blockquote's `>`
-   delimiters need to be indented."
-
-6. "To put a code block within a list item, the code block needs to be
-   indented twice — 8 spaces or two tabs."
-
-These rules specify that a paragraph under a list item must be indented
-four spaces (presumably, from the left margin, rather than the start of
-the list marker, but this is not said), and that code under a list item
-must be indented eight spaces instead of the usual four. They also say
-that a block quote must be indented, but not by how much; however, the
-example given has four spaces indentation. Although nothing is said
-about other kinds of block-level content, it is certainly reasonable to
-infer that *all* block elements under a list item, including other
-lists, must be indented four spaces. This principle has been called the
-*four-space rule*.
-
-The four-space rule is clear and principled, and if the reference
-implementation `Markdown.pl` had followed it, it probably would have
-become the standard. However, `Markdown.pl` allowed paragraphs and
-sublists to start with only two spaces indentation, at least on the
-outer level. Worse, its behavior was inconsistent: a sublist of an
-outer-level list needed two spaces indentation, but a sublist of this
-sublist needed three spaces. It is not surprising, then, that different
-implementations of Markdown have developed very different rules for
-determining what comes under a list item. (Pandoc and python-Markdown,
-for example, stuck with Gruber's syntax description and the four-space
-rule, while discount, redcarpet, marked, PHP Markdown, and others
-followed `Markdown.pl`'s behavior more closely.)
-
-Unfortunately, given the divergences between implementations, there
-is no way to give a spec for list items that will be guaranteed not
-to break any existing documents. However, the spec given here should
-correctly handle lists formatted with either the four-space rule or
-the more forgiving `Markdown.pl` behavior, provided they are laid out
-in a way that is natural for a human to read.
-
-The strategy here is to let the width and indentation of the list marker
-determine the indentation necessary for blocks to fall under the list
-item, rather than having a fixed and arbitrary number. The writer can
-think of the body of the list item as a unit which gets indented to the
-right enough to fit the list marker (and any indentation on the list
-marker). (The laziness rule, #5, then allows continuation lines to be
-unindented if needed.)
-
-This rule is superior, we claim, to any rule requiring a fixed level of
-indentation from the margin. The four-space rule is clear but
-unnatural. It is quite unintuitive that
-
-``` markdown
-- foo
-
-  bar
-
-  - baz
-```
-
-should be parsed as two lists with an intervening paragraph,
-
-``` html
-<ul>
-<li>foo</li>
-</ul>
-<p>bar</p>
-<ul>
-<li>baz</li>
-</ul>
-```
-
-as the four-space rule demands, rather than a single list,
-
-``` html
-<ul>
-<li>
-<p>foo</p>
-<p>bar</p>
-<ul>
-<li>baz</li>
-</ul>
-</li>
-</ul>
-```
-
-The choice of four spaces is arbitrary. It can be learned, but it is
-not likely to be guessed, and it trips up beginners regularly.
-
-Would it help to adopt a two-space rule?  The problem is that such
-a rule, together with the rule allowing 1--3 spaces indentation of the
-initial list marker, allows text that is indented *less than* the
-original list marker to be included in the list item. For example,
-`Markdown.pl` parses
-
-``` markdown
-   - one
-
-  two
-```
-
-as a single list item, with `two` a continuation paragraph:
-
-``` html
-<ul>
-<li>
-<p>one</p>
-<p>two</p>
-</li>
-</ul>
-```
-
-and similarly
-
-``` markdown
->   - one
->
->  two
-```
-
-as
-
-``` html
-<blockquote>
-<ul>
-<li>
-<p>one</p>
-<p>two</p>
-</li>
-</ul>
-</blockquote>
-```
-
-This is extremely unintuitive.
-
-Rather than requiring a fixed indent from the margin, we could require
-a fixed indent (say, two spaces, or even one space) from the list marker (which
-may itself be indented). This proposal would remove the last anomaly
-discussed. Unlike the spec presented above, it would count the following
-as a list item with a subparagraph, even though the paragraph `bar`
-is not indented as far as the first paragraph `foo`:
-
-``` markdown
- 10. foo
-
-   bar  
-```
-
-Arguably this text does read like a list item with `bar` as a subparagraph,
-which may count in favor of the proposal. However, on this proposal indented
-code would have to be indented six spaces after the list marker. And this
-would break a lot of existing Markdown, which has the pattern:
-
-``` markdown
-1.  foo
-
-        indented code
-```
-
-where the code is indented eight spaces. The spec above, by contrast, will
-parse this text as expected, since the code block's indentation is measured
-from the beginning of `foo`.
-
-The one case that needs special treatment is a list item that *starts*
-with indented code. How much indentation is required in that case, since
-we don't have a "first paragraph" to measure from?  Rule #2 simply stipulates
-that in such cases, we require one space indentation from the list marker
-(and then the normal four spaces for the indented code). This will match the
-four-space rule in cases where the list marker plus its initial indentation
-takes four spaces (a common case), but diverge in other cases.
 
 ## Lists
 
