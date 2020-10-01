@@ -340,16 +340,6 @@ module Sanemark::Parser
       end
     end
 
-    private def link(match : String, email = false) : Node
-      dest = match[1..-2]
-      destination = email ? "mailto:#{dest}" : dest
-
-      node = Node.new(Node::Type::Link)
-      node.data["destination"] = normalize_uri(destination)
-      node.append_child(text(dest))
-      node
-    end
-
     private def link_destination
       save_pos = @pos
       open_parens = 0
@@ -371,8 +361,7 @@ module Sanemark::Parser
           @pos += 1
         end
       end
-      dest = @text.byte_slice(save_pos, @pos - save_pos)
-      normalize_uri(Utils.escape(dest))
+      Utils.escape(@text[save_pos .. @pos-1])
     end
 
     private def delim(char : Char, node : Node)
@@ -479,22 +468,6 @@ module Sanemark::Parser
     end
 
     private RESERVED_CHARS = ['&', '+', ',', '(', ')', '#', '*', '!', '#', '$', '/', ':', ';', '?', '@', '=']
-
-    def normalize_uri(uri : String)
-      String.build(capacity: uri.bytesize) do |io|
-        URI.encode(decode_uri(uri), io) do |byte|
-          URI.unreserved?(byte) || RESERVED_CHARS.includes?(byte.chr)
-        end
-      end
-    end
-
-    def decode_uri(text : String)
-      decoded = URI.decode(text)
-      if decoded.includes?('&') && decoded.includes?(';')
-        decoded = decoded.gsub(/^&(\w+);$/) { |chars| chars }
-      end
-      decoded
-    end
 
     class Bracket
       property node : Node

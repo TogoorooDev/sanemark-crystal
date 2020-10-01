@@ -2392,7 +2392,7 @@ Note that a backslash before a non-escapable character is just a backslash:
 ```````````````````````````````` example
 [link](foo\bar)
 .
-<p><a href="foo%5Cbar">link</a></p>
+<p><a href="foo\bar">link</a></p>
 ````````````````````````````````
 
 URL-escaping should be left alone inside the destination, as all URL-escaped characters are also valid URL characters. However HTML must still be escaped.
