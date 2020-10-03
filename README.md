@@ -1,7 +1,5 @@
 A [Crystal](https://crystal-lang.org) implementation of [Sanemark](https://yujiri.xyz/sanemark). Forked from [markd](https://github.com/icyleaf/markd), an implementation of commonmark.
 
-*There are a few failing tests right now because I've changed the way emphasis works and I'm not quite sure what I* want *the behavior to be in some edge cases.*
-
 ## Quick start
 
 ```crystal

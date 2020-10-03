@@ -1994,21 +1994,28 @@ Text enclosed in a single asterisk is emphasized, rendered with `<em>` in HTML (
 <em>in italics <strong>bold</strong></em></p>
 ````````````````````````````````
 
-Asterisks surrounded by whitespace on both sides are interpreted literally.
+Asterisks cannot open emphasis if followed by whitespace, and cannot close emphasis if preceded by whitespace:
 
 ```````````````````````````````` example
-foo * bar
+foo* bar*
+
+*bar *
+
+foo * bar *
 .
-<p>foo * bar</p>
+<p>foo* bar*</p>
+<p>*bar *</p>
+<p>foo * bar *</p>
 ````````````````````````````````
 
-This is not emphasis, because the opening `*` is followed by
-whitespace, and hence not part of a left-flanking delimiter run:
+A newline also counts as whitespace:
 
 ```````````````````````````````` example
-a * foo bar*
+*foo
+*
 .
-<p>a * foo bar*</p>
+<p>*foo
+*</p>
 ````````````````````````````````
 
 Unicode nonbreaking spaces do not count as whitespace:
@@ -2019,17 +2026,7 @@ Unicode nonbreaking spaces do not count as whitespace:
 <p><em> a </em></p>
 ````````````````````````````````
 
-A newline also counts as whitespace:
-
-```````````````````````````````` example
-*foo bar
-*
-.
-<p>*foo bar
-*</p>
-````````````````````````````````
-
-Intraword emphasis is permitted:
+Intraword emphasis:
 
 ```````````````````````````````` example
 foo*bar*
@@ -2045,14 +2042,6 @@ foo<em>b</em>ar
 foo<strong>bar</strong>
 foo<strong>b</strong>ar
 <strong>foo</strong>bar</p>
-````````````````````````````````
-
-This is not emphasis, because the closing `*` is preceded by whitespace:
-
-```````````````````````````````` example
-*foo bar *
-.
-<p>*foo bar *</p>
 ````````````````````````````````
 
 ```````````````````````````````` example
@@ -2073,16 +2062,24 @@ Any nonempty sequence of inline elements can be the contents of an emphasized sp
 
 ```````````````````````````````` example
 *foo [bar](/url)*
+
+**foo [bar](/url)**
 .
 <p><em>foo <a href="/url">bar</a></em></p>
+<p><strong>foo <a href="/url">bar</a></strong></p>
 ````````````````````````````````
 
 ```````````````````````````````` example
 *foo
 bar*
+
+**foo
+bar**
 .
 <p><em>foo
 bar</em></p>
+<p><strong>foo
+bar</strong></p>
 ````````````````````````````````
 
 ```````````````````````````````` example
@@ -2127,22 +2124,6 @@ There can be no empty emphasis or strong emphasis:
 **** is not an empty strong emphasis
 .
 <p>**** is not an empty strong emphasis</p>
-````````````````````````````````
-
-Any nonempty sequence of inline elements can be the contents of an strongly emphasized span.
-
-```````````````````````````````` example
-**foo [bar](/url)**
-.
-<p><strong>foo <a href="/url">bar</a></strong></p>
-````````````````````````````````
-
-```````````````````````````````` example
-**foo
-bar**
-.
-<p><strong>foo
-bar</strong></p>
 ````````````````````````````````
 
 ```````````````````````````````` example
@@ -2202,18 +2183,6 @@ foo **\***
 Note that when delimiters do not match evenly, the excess literal `*` characters will appear outside of the emphasis, rather than inside it:
 
 ```````````````````````````````` example
-**foo*
-.
-<p>*<em>foo</em></p>
-````````````````````````````````
-
-```````````````````````````````` example
-*foo**
-.
-<p><em>foo</em>*</p>
-````````````````````````````````
-
-```````````````````````````````` example
 ***foo**
 .
 <p>*<strong>foo</strong></p>
@@ -2237,7 +2206,21 @@ Note that when delimiters do not match evenly, the excess literal `*` characters
 <p><em>foo</em>***</p>
 ````````````````````````````````
 
-When triple asterisks match, emphasis goes outside of stong:
+While three or more asterisks can be interpreted as "both emphasis and strong plus some literal asterisks", two asterisks can never be interpeted as "emphasis plus one literal"; if they do not match another double asterisk with which to make bold, they are literal:
+
+```````````````````````````````` example
+**foo*
+.
+<p>**foo*</p>
+````````````````````````````````
+
+```````````````````````````````` example
+*foo**
+.
+<p>*foo**</p>
+````````````````````````````````
+
+When triple asterisks match, emphasis goes outside of strong:
 
 ```````````````````````````````` example
 ***foo***
