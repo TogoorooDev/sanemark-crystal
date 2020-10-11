@@ -4,11 +4,25 @@ module Sanemark
   class HTMLRenderer < Renderer
     @disable_tag = 0
     @last_output = "\n"
-    enum EmphasisType
+    enum DelimiterType
       Bold
       Italics
+      Spoiler
     end
-    @emphasis_stack = [] of EmphasisType
+    DELIM_TAGS = {
+      DelimiterType::Bold => {"strong", nil},
+      DelimiterType::Italics => {"em", nil},
+      DelimiterType::Spoiler => {"span", {"class" => "spoiler"}},
+    }
+    NODE_TYPE_TO_DELIM_TYPE = {
+      Node::Type::OpenEmphasis => DelimiterType::Italics,
+      Node::Type::CloseEmphasis => DelimiterType::Italics,
+      Node::Type::OpenStrong => DelimiterType::Bold,
+      Node::Type::CloseStrong => DelimiterType::Bold,
+      Node::Type::OpenSpoiler => DelimiterType::Spoiler,
+      Node::Type::CloseSpoiler => DelimiterType::Spoiler,
+    }
+    @delim_stack = [] of DelimiterType
 
     private HEADINGS = %w(h1 h2 h3 h4 h5 h6)
 
@@ -159,24 +173,27 @@ module Sanemark
       end
     end
 
-    def open_emphasis(node : Node)
-      @emphasis_stack << EmphasisType::Italics
-      tag("em")
+    def open_delim(node : Node)
+      delim_type = NODE_TYPE_TO_DELIM_TYPE[node.type]
+      @delim_stack << delim_type
+      tag(*DELIM_TAGS[delim_type])
     end
 
-    def close_emphasis(node : Node)
-      if @emphasis_stack[-1] == EmphasisType::Italics
-        tag("em", end_tag: true)
-        @emphasis_stack.pop
-        # If we're closing italics, but there's an unclosed bold inside the italics,
+    def close_delim(node : Node)
+      delim_type = NODE_TYPE_TO_DELIM_TYPE[node.type]
+      if @delim_stack[-1] == delim_type
+        tag(DELIM_TAGS[delim_type][0], end_tag: true)
+        @delim_stack.pop
+        # If we're closing one type of delimiter, but there's an unclosed one of another type inside,
         # we need to close and reopen it, because HTML tags can't overlap.
       else
-        tag("strong", end_tag: true)
-        @emphasis_stack.pop
-        tag("em", end_tag: true)
-        @emphasis_stack.pop
-        tag("strong")
-        @emphasis_stack << EmphasisType::Bold
+        inner_delim = @delim_stack[-1]
+        tag(DELIM_TAGS[inner_delim][0], end_tag: true)
+        @delim_stack.pop
+        tag(DELIM_TAGS[delim_type][0], end_tag: true)
+        @delim_stack.pop
+        tag(*DELIM_TAGS[inner_delim])
+        @delim_stack << inner_delim
       end
     end
 
@@ -186,27 +203,6 @@ module Sanemark
 
     def line_break(node : Node, entering : Bool)
       tag("br")
-    end
-
-    def open_strong(node : Node)
-      @emphasis_stack << EmphasisType::Bold
-      tag("strong")
-    end
-
-    def close_strong(node : Node)
-      if @emphasis_stack[-1] == EmphasisType::Bold
-        tag("strong", end_tag: true)
-        @emphasis_stack.pop
-        # If we're closing bold, but there's an unclosed italics inside the bold,
-        # we need to close and reopen it, because HTML tags can't overlap.
-      else
-        tag("em", end_tag: true)
-        @emphasis_stack.pop
-        tag("strong", end_tag: true)
-        @emphasis_stack.pop
-        tag("em")
-        @emphasis_stack << EmphasisType::Italics
-      end
     end
 
     def text(node : Node, entering : Bool)

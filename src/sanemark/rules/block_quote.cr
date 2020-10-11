@@ -36,7 +36,8 @@ module Sanemark::Rule
     end
 
     private def match?(parser)
-      parser.line[parser.offset]? == '>'
+      # If spoilers are enabled, avoid interpreting spoilers as blockquotes.
+      parser.line[parser.offset]? == '>' && (parser.line[parser.offset + 1]? != '!' || !parser.options.spoilers)
     end
 
     private def seek(parser : Parser)

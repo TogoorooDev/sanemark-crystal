@@ -7,7 +7,7 @@ module Sanemark::Parser
     end
 
     property! tip : Node?
-    property offset, column
+    property offset, column, options
 
     getter line, current_line, blank, inline_lexer, indent, next_nonspace
 
@@ -151,7 +151,7 @@ module Sanemark::Parser
 
       container_type = container.type
       last_line_blank = @blank && !(container_type.block_quote? || container.fenced? ||
-                          (container_type.item? && !container.first_child?))
+                                    (container_type.item? && !container.first_child?))
 
       cont = container
       while cont

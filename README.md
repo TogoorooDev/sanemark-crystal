@@ -17,6 +17,7 @@ Sanemark.to_html(markdown, options)
 | Name        | Type   | Default value | Description                                                                                                                                                                   |
 | ----------- | ------ | ------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | allow_html  | `Bool` | false         | let HTML through according to the Sanemark spec. By default, all HTML is escaped. This option also turns off sanitization of dangerous link protocols.                        |
+| spoilers    | `Bool` | false         | Enable spoilers, delimited by >! and !<. They are inline elements that have the same precedence as asterisks.                                                                 |
 | time        | `Bool` | false         | render time spent during block parsing, inline parsing, and rendering.                                                                                                        |
 
 ## Advanced

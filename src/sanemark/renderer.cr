@@ -5,7 +5,6 @@ module Sanemark
       @last_output = "\n"
     end
 
-
     def lit(string : String)
       @output_io << string
       @last_output = string
@@ -41,14 +40,10 @@ module Sanemark
             html_inline(node, entering)
           when Node::Type::Paragraph
             paragraph(node, entering)
-          when Node::Type::OpenEmphasis
-            open_emphasis(node)
-          when Node::Type::CloseEmphasis
-            close_emphasis(node)
-          when Node::Type::OpenStrong
-            open_strong(node)
-          when Node::Type::CloseStrong
-            close_strong(node)
+          when Node::Type::OpenEmphasis, Node::Type::OpenStrong, Node::Type::OpenSpoiler
+            open_delim(node)
+          when Node::Type::CloseEmphasis, Node::Type::CloseStrong, Node::Type::CloseSpoiler
+            close_delim(node)
           when Node::Type::SoftBreak
             soft_break(node, entering)
           when Node::Type::LineBreak

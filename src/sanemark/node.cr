@@ -8,6 +8,8 @@ module Sanemark
       CloseStrong
       OpenEmphasis
       CloseEmphasis
+      OpenSpoiler
+      CloseSpoiler
       Link
       Image
       Heading

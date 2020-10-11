@@ -5,11 +5,13 @@ module Sanemark::Parser
     include Parser
 
     private getter! brackets
+    property spoiler_opener : Node?
 
     def initialize(@options : Options)
       @text = ""
       @pos = 0
       @delimiters = [] of Delimiter
+      @spoiler_opener = nil
     end
 
     def parse(node : Node)
@@ -45,6 +47,8 @@ module Sanemark::Parser
               close_bracket(node)
             when '<', '&'
               html_tag(node)
+            when '>'
+              spoiler(node)
             else
               string(node)
             end
@@ -115,6 +119,22 @@ module Sanemark::Parser
     end
 
     private def bang(node : Node)
+      # A bang could mean a spoiler closer. If we're in a bracket,
+      # match its opener, otherwise, match the global one.
+      opener_to_check = @brackets.nil? ? @spoiler_opener : @brackets.not_nil!.spoiler_opener
+      if @spoiler_opener && @text[@pos + 1]? == '<'
+        @pos += 2
+        if @brackets.nil?
+          @spoiler_opener.not_nil!.insert_after(Node.new Node::Type::OpenSpoiler)
+          @spoiler_opener.not_nil!.unlink
+        else
+          @brackets.not_nil!.spoiler_opener.not_nil!.insert_after(Node.new Node::Type::OpenSpoiler)
+          @brackets.not_nil!.spoiler_opener.not_nil!.unlink
+        end
+        node.append_child(Node.new Node::Type::CloseSpoiler)
+        return true
+      end
+      # Otherwise, it could mean the beginning of an image.
       start_pos = @pos
       @pos += 1
       if @text[@pos]? == '['
@@ -331,6 +351,14 @@ module Sanemark::Parser
       end
     end
 
+    private def spoiler(node : Node)
+      return false if !@options.spoilers || @text[@pos + 1]? != '!'
+      @pos += 2
+      opener = text(">!")
+      node.append_child(opener)
+      @spoiler_opener ||= opener
+    end
+
     private def string(node : Node)
       if text = match_main
         node.append_child(text(text))
@@ -361,7 +389,7 @@ module Sanemark::Parser
           @pos += 1
         end
       end
-      Utils.escape(@text[save_pos .. @pos-1])
+      Utils.escape(@text[save_pos..@pos - 1])
     end
 
     private def delim(char : Char, node : Node)
@@ -454,7 +482,7 @@ module Sanemark::Parser
 
     private def main_char?(char)
       case char
-      when '\n', '`', '[', ']', '\\', '!', '<', '&', '*', '_', '\'', '"'
+      when '\n', '`', '[', ']', '\\', '!', '<', '>', '&', '*', '_', '\'', '"'
         false
       else
         true
@@ -473,6 +501,7 @@ module Sanemark::Parser
       property node : Node
       property! previous : Bracket?
       property delimiters : Array(Delimiter)
+      property spoiler_opener : Node?
       property index : Int32
       property image : Bool
       property active : Bool
@@ -480,6 +509,7 @@ module Sanemark::Parser
 
       def initialize(@node, @previous, @delimiters, @index, @image, @active = true)
         @bracket_after = false
+        @spoiler_opener = previous.nil? ? nil : previous.spoiler_opener
       end
     end
 

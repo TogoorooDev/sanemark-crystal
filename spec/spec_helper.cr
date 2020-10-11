@@ -1,7 +1,7 @@
 require "spec"
 require "../src/sanemark"
 
-def describe_spec(file, render = false)
+def describe_spec(file, options = Sanemark::Options.new(), render = false)
   specs = extract_spec_tests(file)
 
   skip_examples = [] of Int32
@@ -26,24 +26,23 @@ def describe_spec(file, render = false)
   specs.each_with_index do |(section, examples), index|
     no = index + 1
     next if skip_examples.includes?(no)
-    assert_section(file, section, examples)
+    assert_section(file, section, examples, options)
   end
 end
 
-def assert_section(file, section, examples)
+def assert_section(file, section, examples, options)
   describe section do
     examples.each do |index, example|
-      assert_example(file, section, index, example)
+      assert_example(file, section, index, example, options)
     end
   end
 end
 
-def assert_example(file, section, index, example)
+def assert_example(file, section, index, example, options)
   markdown = example["markdown"].gsub("→", "\t").chomp
   html = example["html"].gsub("→", "\t")
   line = example["line"].to_i
 
-  options = Sanemark::Options.new(allow_html: true)
   it "- #{index}\n#{show_space(markdown)}", file, line do
     output = Sanemark.to_html(markdown, options)
     output.should eq(html), file, line
