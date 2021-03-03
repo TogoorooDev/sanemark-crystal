@@ -459,9 +459,9 @@ module Sanemark::Parser
     end
 
     private def match(regex : Regex) : String?
-      text = @text.byte_slice(@pos)
+      text = @text[@pos..]
       if match = text.match(regex)
-        @pos += match.byte_end.not_nil!
+        @pos += match.end.not_nil!
         return match[0]
       end
     end

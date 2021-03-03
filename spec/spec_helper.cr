@@ -45,7 +45,7 @@ def assert_example(file, section, index, example, options)
 
   it "- #{index}\n#{show_space(markdown)}", file, line do
     output = Sanemark.to_html(markdown, options)
-    output.should eq(html), file, line
+    output.should eq(html), file: file, line: line
   end
 end
 

@@ -18,10 +18,9 @@ a***b* c*
 <p>a**<em>b</em> c*</p>
 ````````````````````````````````
 
-Issue jgm/CommonMark#468 - backslash at end of link definition
-
+Unicode messing up inline HTML when HTML is allowed.
 ```````````````````````````````` example
-[\]: test
+<span>ɑ</span>
 .
-<p>[]: test</p>
+<p><span>ɑ</span></p>
 ````````````````````````````````
