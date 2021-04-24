@@ -132,6 +132,7 @@ module Sanemark::Parser
           @brackets.not_nil!.spoiler_opener.not_nil!.unlink
         end
         node.append_child(Node.new Node::Type::CloseSpoiler)
+        @spoiler_opener = nil
         return true
       end
       # Otherwise, it could mean the beginning of an image.

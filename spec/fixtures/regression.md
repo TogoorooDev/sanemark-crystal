@@ -24,3 +24,9 @@ Unicode messing up inline HTML when HTML is allowed.
 .
 <p><span>ɑ</span></p>
 ````````````````````````````````
+
+Multiple spoilers.
+```````````````````````````````` example
+>! a !<
+>! b !<
+````````````````````````````````
