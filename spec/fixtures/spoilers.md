@@ -3,9 +3,9 @@
 Basic spoiler:
 
 ```````````````````````````````` example
->! spoiler text !<
+>! spoiler text !< is not shown by default.
 .
-<p><span class="spoiler"> spoiler text </span></p>
+<p><span class="spoiler"> spoiler text </span> is not shown by default.</p>
 ````````````````````````````````
 
 Inside another block element:
@@ -32,4 +32,13 @@ Emphasis crossing the boundary:
 *start italics >! more italics* not italic !<
 .
 <p><em>start italics <span class="spoiler"> more italics</span></em><span class="spoiler"> not italic </span></p>
+````````````````````````````````
+
+Multiple spoilers.
+```````````````````````````````` example
+>! a !<
+>! b !<
+.
+<p><span class="spoiler"> a </span>
+<span class="spoiler"> b </span></p>
 ````````````````````````````````
