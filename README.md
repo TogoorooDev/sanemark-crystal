@@ -45,4 +45,4 @@ This should be better documented, but for now it isn't.
 
 ## Donate
 
-I take donations via [Paypal](https://paypal.me/yujiri).
+My cashapp tag is $yujiri.
