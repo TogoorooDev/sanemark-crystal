@@ -16,5 +16,10 @@ module Sanemark
     def self.escape(text : String) : String
       text.gsub(ESCAPE_REGEX) { |text| text[1].to_s }
     end
+    def self.slugify(text : String) : String
+      # Trim apostrophes (can't should = cant, not can-t), then downcase, then replace any
+      # string of non-alphanumeric characters with "-" then trim leading and trailing "-".
+      text.gsub("'", "").downcase.gsub(/[^a-z0-9]+/, "-").lchop("-").chomp("-")
+    end
   end
 end

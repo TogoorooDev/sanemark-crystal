@@ -2,8 +2,15 @@ require "uri"
 
 module Sanemark
   class HTMLRenderer < Renderer
-    @disable_tag = 0
-    @last_output = "\n"
+    def initialize(@options = Options.new)
+      @output_io = String::Builder.new
+      @saved_io = @output_io
+      @last_output = "\n"
+      @disable_tag = 0
+      @in_heading = false
+      @plaintext = "" # Keeps track of the text seen while rendering a heading, excluding Sanemark syntax.
+    end
+
     enum DelimiterType
       Bold
       Italics
@@ -28,12 +35,31 @@ module Sanemark
 
     def heading(node : Node, entering : Bool)
       tag_name = HEADINGS[node.data["level"].as(Int32) - 1]
-      if entering
-        cr
-        tag(tag_name, attrs(node))
+      if !@options.heading_ids
+        if entering
+          cr
+          tag(tag_name, attrs(node))
+        else
+          tag(tag_name, end_tag: true)
+          cr
+        end
       else
-        tag(tag_name, end_tag: true)
-        cr
+        if entering
+          # Computing a heading ID requires seeing the entire content of the heading first,
+          # so replace our output IO with a buffer that we'll write out when the heading is over.
+          @saved_io = @output_io
+          @output_io = String::Builder.new
+          @in_heading = true
+        else
+          cr
+          @output_io, @saved_io = @saved_io, @output_io
+          tag(tag_name, {"id" => Utils.slugify(@plaintext)})
+          @output_io << @saved_io.to_s
+          @in_heading = false
+          @plaintext = ""
+          tag(tag_name, end_tag: true)
+          cr
+        end
       end
     end
 
@@ -238,6 +264,7 @@ module Sanemark
     end
 
     def out(string : String)
+      @plaintext += string if @in_heading
       lit(escape(string))
     end
 
