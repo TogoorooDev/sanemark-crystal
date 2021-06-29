@@ -6,4 +6,5 @@ authors:
   - icyleaf <icyleaf.cn@gmail.com>
   - Yujiri <yujiri@protonmail.com>
 
+crystal: "*"
 license: GPLv3
